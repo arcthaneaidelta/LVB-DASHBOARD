@@ -14,9 +14,11 @@ import { DashboardPage } from '../features/dashboard/DashboardPage';
 import { StudentsPage } from '../features/students/StudentsPage';
 import { ClassesPage } from '../features/classes/ClassesPage';
 import { ClassLogPage } from '../features/class-log/ClassLogPage';
+import { DepositsPage } from '../features/deposits/DepositsPage';
 import { PaymentsPage } from '../features/payments/PaymentsPage';
 import { CashHandoffPage } from '../features/cash-handoff/CashHandoffPage';
 import { DailyCashReportPage } from '../features/reports/DailyCashReportPage';
+import { ReportsHubPage } from '../features/reports/ReportsHubPage';
 import { AccountingPage } from '../features/accounting/AccountingPage';
 import { MissedClassesPage } from '../features/missed-classes/MissedClassesPage';
 import { StudioToursPage } from '../features/tours/StudioToursPage';
@@ -28,6 +30,7 @@ import { CalendarPage } from '../features/calendar/CalendarPage';
 import { SuggestionsPage } from '../features/suggestions/SuggestionsPage';
 import { DocumentsPage } from '../features/documents/DocumentsPage';
 import { TeamAccessPage } from '../features/team/TeamAccessPage';
+import { SettingsPage } from '../features/settings/SettingsPage';
 
 const ModuleGuard: React.FC<{
   module: AppModule;
@@ -107,6 +110,14 @@ export const AppRouter: React.FC = () => (
         }
       />
       <Route
+        path="deposits"
+        element={
+          <ModuleGuard module="deposits">
+            <DepositsPage />
+          </ModuleGuard>
+        }
+      />
+      <Route
         path="payments"
         element={
           <ModuleGuard module="payments">
@@ -119,6 +130,14 @@ export const AppRouter: React.FC = () => (
         element={
           <ModuleGuard module="cash-handoff">
             <CashHandoffPage />
+          </ModuleGuard>
+        }
+      />
+      <Route
+        path="reports"
+        element={
+          <ModuleGuard module="reports">
+            <ReportsHubPage />
           </ModuleGuard>
         }
       />
@@ -215,6 +234,14 @@ export const AppRouter: React.FC = () => (
         element={
           <ModuleGuard module="team">
             <TeamAccessPage />
+          </ModuleGuard>
+        }
+      />
+      <Route
+        path="settings"
+        element={
+          <ModuleGuard module="settings">
+            <SettingsPage />
           </ModuleGuard>
         }
       />

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import { CheckSquare, Plus, CheckCircle2, Circle, Calendar } from 'lucide-react';
 import { useApp } from '../../services/store';
 import {
@@ -87,8 +87,8 @@ export const TasksPage: React.FC = () => {
             onClick={() => setStatusFilter(st)}
             className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
               statusFilter === st
-                ? 'bg-navy text-white border-navy'
-                : 'bg-white text-slatewarm border-borderwarm hover:text-navy'
+                ? 'bg-olive text-white border-olive'
+                : 'bg-white text-softgray border-hairline hover:text-charcoal'
             }`}
           >
             {st === 'all' ? t('all') : st.replace('_', ' ')}
@@ -112,7 +112,7 @@ export const TasksPage: React.FC = () => {
               <Card
                 key={task.id}
                 onClick={() => setSelectedTaskId(task.id)}
-                className={`p-4 sm:p-5 ${overdue ? 'border-terracotta/50' : ''}`}
+                className={`p-4 sm:p-5 ${overdue ? 'border-status-red/50' : ''}`}
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="space-y-1">
@@ -123,8 +123,8 @@ export const TasksPage: React.FC = () => {
                       </Badge>
                       {overdue && <Badge tone="terracotta">Overdue</Badge>}
                     </div>
-                    <h3 className="font-semibold text-navy text-sm">{task.title}</h3>
-                    <div className="text-xs text-slatewarm flex items-center gap-3 flex-wrap">
+                    <h3 className="font-semibold text-charcoal text-sm">{task.title}</h3>
+                    <div className="text-xs text-softgray flex items-center gap-3 flex-wrap">
                       <span>{task.assigneeName}</span>
                       <span className="inline-flex items-center gap-1 tabular-nums">
                         <Calendar className="w-3 h-3" /> Due {task.dueDate}
@@ -147,7 +147,7 @@ export const TasksPage: React.FC = () => {
                       onChange={(e) =>
                         updateTask(task.id, { status: e.target.value as TaskStatus })
                       }
-                      className="h-9 px-2.5 text-xs rounded-lg border border-borderwarm bg-porcelain text-navy font-medium"
+                      className="h-9 px-2.5 text-xs rounded-lg border border-hairline bg-porcelain text-charcoal font-medium"
                     >
                       <option value="not_started">Not Started</option>
                       <option value="in_progress">In Progress</option>
@@ -181,12 +181,12 @@ export const TasksPage: React.FC = () => {
                 {selectedTask.status.replace('_', ' ')}
               </Badge>
             </div>
-            <Card className="p-4 text-sm text-navy leading-relaxed">
+            <Card className="p-4 text-sm text-charcoal leading-relaxed">
               {selectedTask.description || 'No additional description.'}
             </Card>
             {selectedTask.checklist.length > 0 && (
               <Card className="p-4 space-y-2">
-                <h4 className="text-xs font-semibold uppercase tracking-wider text-slatewarm">
+                <h4 className="text-xs font-semibold uppercase tracking-wider text-softgray">
                   Checklist
                 </h4>
                 {selectedTask.checklist.map((item) => (
@@ -202,11 +202,11 @@ export const TasksPage: React.FC = () => {
                     className="w-full flex items-center gap-2.5 p-2 rounded-lg hover:bg-porcelain text-left text-xs"
                   >
                     {item.done ? (
-                      <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-status-green shrink-0" />
                     ) : (
-                      <Circle className="w-4 h-4 text-slatewarm shrink-0" />
+                      <Circle className="w-4 h-4 text-softgray shrink-0" />
                     )}
-                    <span className={item.done ? 'line-through text-slatewarm' : 'text-navy'}>
+                    <span className={item.done ? 'line-through text-softgray' : 'text-charcoal'}>
                       {item.label}
                     </span>
                   </button>
@@ -265,31 +265,31 @@ export const TasksPage: React.FC = () => {
           className="space-y-4"
         >
           <label className="block text-sm">
-            <span className="text-xs font-medium text-navy">Title *</span>
+            <span className="text-xs font-medium text-charcoal">Title *</span>
             <input
               type="text"
               required
               value={form.title}
               onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-              className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+              className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
             />
           </label>
           <label className="block text-sm">
-            <span className="text-xs font-medium text-navy">Description</span>
+            <span className="text-xs font-medium text-charcoal">Description</span>
             <textarea
               rows={2}
               value={form.description}
               onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-              className="mt-1 w-full p-2.5 rounded-lg border border-borderwarm bg-porcelain"
+              className="mt-1 w-full p-2.5 rounded-lg border border-hairline bg-porcelain"
             />
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
             <label className="block">
-              <span className="text-xs font-medium text-navy">Assignee</span>
+              <span className="text-xs font-medium text-charcoal">Assignee</span>
               <select
                 value={form.assigneeId}
                 onChange={(e) => setForm((f) => ({ ...f, assigneeId: e.target.value }))}
-                className="mt-1 w-full h-10 px-2.5 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-2.5 rounded-lg border border-hairline bg-porcelain"
               >
                 {state.users.map((u) => (
                   <option key={u.id} value={u.id}>
@@ -299,13 +299,13 @@ export const TasksPage: React.FC = () => {
               </select>
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">Priority</span>
+              <span className="text-xs font-medium text-charcoal">Priority</span>
               <select
                 value={form.priority}
                 onChange={(e) =>
                   setForm((f) => ({ ...f, priority: e.target.value as PriorityLevel }))
                 }
-                className="mt-1 w-full h-10 px-2.5 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-2.5 rounded-lg border border-hairline bg-porcelain"
               >
                 <option value="low">Low</option>
                 <option value="normal">Normal</option>
@@ -314,13 +314,13 @@ export const TasksPage: React.FC = () => {
               </select>
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">Due Date</span>
+              <span className="text-xs font-medium text-charcoal">Due Date</span>
               <input
                 type="date"
                 required
                 value={form.dueDate}
                 onChange={(e) => setForm((f) => ({ ...f, dueDate: e.target.value }))}
-                className="mt-1 w-full h-10 px-2.5 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-2.5 rounded-lg border border-hairline bg-porcelain"
               />
             </label>
           </div>

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   CheckCircle2,
@@ -28,10 +28,10 @@ import type { AttendanceStatus, PaymentMethod, Student } from '../../types';
 import type { TranslationKey } from '../../translations/dictionary';
 
 const ATTENDANCE_OPTIONS: { code: AttendanceStatus; labelKey: TranslationKey; activeClass: string }[] = [
-  { code: 'P', labelKey: 'att_P', activeClass: 'bg-sage-dark text-white border-sage-dark' },
-  { code: 'A', labelKey: 'att_A', activeClass: 'bg-terracotta text-white border-terracotta' },
-  { code: 'C', labelKey: 'att_C', activeClass: 'bg-slatewarm text-white border-slatewarm' },
-  { code: 'E', labelKey: 'att_E', activeClass: 'bg-amberwarm text-white border-amberwarm' },
+  { code: 'P', labelKey: 'att_P', activeClass: 'bg-status-green text-white border-status-green' },
+  { code: 'A', labelKey: 'att_A', activeClass: 'bg-status-red text-white border-status-red' },
+  { code: 'C', labelKey: 'att_C', activeClass: 'bg-charcoal text-white border-charcoal' },
+  { code: 'E', labelKey: 'att_E', activeClass: 'bg-status-amber text-white border-status-amber' },
 ];
 
 const METHODS: PaymentMethod[] = ['cash', 'card', 'zelle', 'venmo', 'cash_app', 'check', 'other'];
@@ -189,7 +189,7 @@ export const ClassLogPage: React.FC = () => {
 
   if (!selectedClass) {
     return (
-      <div className="p-6 text-sm text-slatewarm">
+      <div className="p-6 text-sm text-softgray">
         {state.language === 'es'
           ? 'No tienes clases asignadas.'
           : 'No classes assigned to your account.'}
@@ -209,12 +209,12 @@ export const ClassLogPage: React.FC = () => {
         }
         actions={
           <div className="flex items-center gap-2">
-            <div className="inline-flex rounded-lg border border-borderwarm bg-white p-0.5">
+            <div className="inline-flex rounded-lg border border-hairline bg-white p-0.5">
               <button
                 type="button"
                 onClick={() => setViewMode('weekly')}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md inline-flex items-center gap-1.5 ${
-                  viewMode === 'weekly' ? 'bg-navy text-white' : 'text-slatewarm'
+                  viewMode === 'weekly' ? 'bg-olive text-white' : 'text-softgray'
                 }`}
               >
                 <ListChecks className="w-3.5 h-3.5" />
@@ -224,7 +224,7 @@ export const ClassLogPage: React.FC = () => {
                 type="button"
                 onClick={() => setViewMode('grid')}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md inline-flex items-center gap-1.5 ${
-                  viewMode === 'grid' ? 'bg-navy text-white' : 'text-slatewarm'
+                  viewMode === 'grid' ? 'bg-olive text-white' : 'text-softgray'
                 }`}
               >
                 <Grid3X3 className="w-3.5 h-3.5" />
@@ -247,7 +247,7 @@ export const ClassLogPage: React.FC = () => {
                 if (nextCls) setSelectedWeek(nextCls.currentWeek);
               }}
               aria-label="Select class"
-              className="h-10 px-3 rounded-lg border border-borderwarm bg-porcelain text-sm font-semibold text-navy"
+              className="h-10 px-3 rounded-lg border border-hairline bg-porcelain text-sm font-semibold text-charcoal"
             >
               {authorizedClasses.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -256,10 +256,10 @@ export const ClassLogPage: React.FC = () => {
               ))}
             </select>
 
-            <div className="flex items-center gap-2 text-xs text-slatewarm flex-wrap">
+            <div className="flex items-center gap-2 text-xs text-softgray flex-wrap">
               <span>{instructorNames}</span>
               <span>·</span>
-              <span className="font-medium text-navy">{sessionDate}</span>
+              <span className="font-medium text-charcoal">{sessionDate}</span>
               <Badge tone={submission ? 'sage' : 'amber'}>
                 {submission
                   ? state.language === 'es'
@@ -273,16 +273,16 @@ export const ClassLogPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3 text-xs">
-            <div className="px-3 py-1.5 rounded-lg bg-porcelain border border-borderwarm">
-              <span className="text-slatewarm">
+            <div className="px-3 py-1.5 rounded-lg bg-porcelain border border-hairline">
+              <span className="text-softgray">
                 {state.language === 'es' ? 'Asistencia:' : 'Logged:'}{' '}
               </span>
-              <span className="font-semibold text-navy tabular-nums">
+              <span className="font-semibold text-charcoal tabular-nums">
                 {sessionStats.loggedCount}/{roster.length}
               </span>
             </div>
-            <div className="px-3 py-1.5 rounded-lg bg-champagne-light/70 border border-champagne/40">
-              <span className="text-slatewarm">
+            <div className="px-3 py-1.5 rounded-lg bg-mist/70 border border-clay/40">
+              <span className="text-softgray">
                 {currentUser?.role === 'owner'
                   ? state.language === 'es'
                     ? 'Cobrado Sem.:'
@@ -291,7 +291,7 @@ export const ClassLogPage: React.FC = () => {
                     ? 'Mis Cobros:'
                     : 'My Collected:'}{' '}
               </span>
-              <span className="font-semibold text-navy tabular-nums">
+              <span className="font-semibold text-charcoal tabular-nums">
                 {formatCurrencyExact(sessionStats.collectedTotal, state.language)}
               </span>
             </div>
@@ -312,8 +312,8 @@ export const ClassLogPage: React.FC = () => {
                 onClick={() => setSelectedWeek(wk)}
                 className={`px-3.5 py-2 rounded-lg text-xs font-medium border transition-colors shrink-0 inline-flex items-center gap-1.5 ${
                   active
-                    ? 'bg-navy text-white border-navy'
-                    : 'bg-porcelain text-navy border-borderwarm hover:border-champagne'
+                    ? 'bg-olive text-white border-olive'
+                    : 'bg-porcelain text-charcoal border-hairline hover:border-clay'
                 }`}
               >
                 <span>
@@ -321,7 +321,7 @@ export const ClassLogPage: React.FC = () => {
                 </span>
                 {isSub && (
                   <CheckCircle2
-                    className={`w-3.5 h-3.5 ${active ? 'text-champagne-soft' : 'text-sage-dark'}`}
+                    className={`w-3.5 h-3.5 ${active ? 'text-mist' : 'text-status-green'}`}
                   />
                 )}
               </button>
@@ -331,17 +331,17 @@ export const ClassLogPage: React.FC = () => {
       </Card>
 
       {/* Attendance Legend / Rule Helper */}
-      <div className="px-4 py-2.5 rounded-xl bg-white border border-borderwarm text-xs text-slatewarm flex items-center gap-2 flex-wrap">
-        <Info className="w-4 h-4 text-champagne shrink-0" />
+      <div className="px-4 py-2.5 rounded-xl bg-white border border-hairline text-xs text-softgray flex items-center gap-2 flex-wrap">
+        <Info className="w-4 h-4 text-clay-dark shrink-0" />
         <span>
-          <strong className="text-navy">P</strong> ({t('att_P')}) ={' '}
+          <strong className="text-charcoal">P</strong> ({t('att_P')}) ={' '}
           {state.language === 'es' ? 'habilita cobro' : 'payment enabled'} ·{' '}
-          <strong className="text-navy">A</strong> ({t('att_A')}) &{' '}
-          <strong className="text-navy">E</strong> ({t('att_E')}) ={' '}
+          <strong className="text-charcoal">A</strong> ({t('att_A')}) &{' '}
+          <strong className="text-charcoal">E</strong> ({t('att_E')}) ={' '}
           {state.language === 'es'
             ? 'omite cobro y crea clase perdida'
             : 'skips week payment & creates missed-class record'}{' '}
-          · <strong className="text-navy">C</strong> ({t('att_C')}) ={' '}
+          · <strong className="text-charcoal">C</strong> ({t('att_C')}) ={' '}
           {state.language === 'es'
             ? 'omite cobro sin falta'
             : 'skips payment, no makeup needed'}
@@ -386,7 +386,7 @@ export const ClassLogPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => navigate(`/app/students?studentId=${student.id}`)}
-                        className="font-semibold text-navy hover:text-champagne transition-colors text-left"
+                        className="font-semibold text-charcoal hover:text-clay-dark transition-colors text-left"
                       >
                         {student.fullName}
                       </button>
@@ -399,10 +399,10 @@ export const ClassLogPage: React.FC = () => {
                         </Badge>
                       )}
                     </div>
-                    <div className="text-xs text-slatewarm mt-1 flex items-center gap-3 flex-wrap">
+                    <div className="text-xs text-softgray mt-1 flex items-center gap-3 flex-wrap">
                       <span>
                         {t('dueThisWeek')}:{' '}
-                        <strong className="text-navy tabular-nums">
+                        <strong className="text-charcoal tabular-nums">
                           {canCollectHere
                             ? formatCurrencyExact(fin.dueThisWeek, state.language)
                             : '$0.00 (skipped)'}
@@ -410,12 +410,12 @@ export const ClassLogPage: React.FC = () => {
                       </span>
                       <span>
                         {t('remainingBalance')}:{' '}
-                        <strong className="text-navy tabular-nums">
+                        <strong className="text-charcoal tabular-nums">
                           {formatCurrencyExact(fin.remainingBalance, state.language)}
                         </strong>
                       </span>
                       {paidThisWeek > 0 && (
-                        <span className="text-sage-dark font-semibold tabular-nums">
+                        <span className="text-status-green font-semibold tabular-nums">
                           ✓ {state.language === 'es' ? 'Cobrado:' : 'Collected:'}{' '}
                           {formatCurrencyExact(paidThisWeek, state.language)} (
                           {weekPayments
@@ -430,7 +430,7 @@ export const ClassLogPage: React.FC = () => {
                   {/* Fast One-Tap Segmented Attendance Control */}
                   <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 shrink-0">
                     <div
-                      className="grid grid-cols-4 gap-1 bg-porcelain p-1 rounded-xl border border-borderwarm"
+                      className="grid grid-cols-4 gap-1 bg-porcelain p-1 rounded-xl border border-hairline"
                       role="group"
                       aria-label={`Attendance for ${student.fullName}`}
                     >
@@ -444,7 +444,7 @@ export const ClassLogPage: React.FC = () => {
                             className={`h-10 px-2.5 sm:px-3 rounded-lg text-xs font-semibold border transition-all flex flex-col items-center justify-center leading-none ${
                               isSelected
                                 ? opt.activeClass
-                                : 'bg-white text-navy border-transparent hover:border-borderwarm'
+                                : 'bg-white text-charcoal border-transparent hover:border-hairline'
                             }`}
                             title={t(opt.labelKey)}
                           >
@@ -490,11 +490,11 @@ export const ClassLogPage: React.FC = () => {
 
           {/* Session Submit Footer */}
           <Card className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white">
-            <div className="text-xs text-slatewarm">
+            <div className="text-xs text-softgray">
               {submission ? (
                 <span>
                   {state.language === 'es' ? 'Último envío por' : 'Last submitted by'}{' '}
-                  <strong className="text-navy">{submission.submittedByName}</strong> (
+                  <strong className="text-charcoal">{submission.submittedByName}</strong> (
                   {submission.submittedAt.slice(0, 16).replace('T', ' ')})
                 </span>
               ) : (
@@ -534,7 +534,7 @@ export const ClassLogPage: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="bg-porcelain border-b border-borderwarm text-slatewarm uppercase tracking-wider">
+                <tr className="bg-porcelain border-b border-hairline text-softgray uppercase tracking-wider">
                   <th className="py-3 px-4 sticky left-0 bg-porcelain z-10 min-w-[180px]">
                     {state.language === 'es' ? 'Alumna' : 'Student'}
                   </th>
@@ -548,7 +548,7 @@ export const ClassLogPage: React.FC = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-borderwarm">
+              <tbody className="divide-y divide-hairline">
                 {roster.map((stu) => {
                   const fin = getStudentFinancialSummary(
                     stu,
@@ -558,7 +558,7 @@ export const ClassLogPage: React.FC = () => {
                   );
                   return (
                     <tr key={stu.id} className="hover:bg-porcelain/50">
-                      <td className="py-3 px-4 font-semibold text-navy sticky left-0 bg-white">
+                      <td className="py-3 px-4 font-semibold text-charcoal sticky left-0 bg-white">
                         {stu.fullName}
                       </td>
                       {Array.from({ length: selectedClass.weeks }, (_, i) => i + 1).map((wk) => {
@@ -586,7 +586,7 @@ export const ClassLogPage: React.FC = () => {
                               setSelectedWeek(wk);
                               setViewMode('weekly');
                             }}
-                            className="py-2.5 px-2 text-center cursor-pointer hover:bg-champagne-light/40"
+                            className="py-2.5 px-2 text-center cursor-pointer hover:bg-mist/40"
                           >
                             {att ? (
                               <div className="flex flex-col items-center gap-0.5">
@@ -604,18 +604,18 @@ export const ClassLogPage: React.FC = () => {
                                   {t(`attShort_${att.status}` as TranslationKey)}
                                 </Badge>
                                 {wkPaid > 0 && (
-                                  <span className="text-[11px] font-medium text-navy tabular-nums">
+                                  <span className="text-[11px] font-medium text-charcoal tabular-nums">
                                     ${wkPaid}
                                   </span>
                                 )}
                               </div>
                             ) : (
-                              <span className="text-slatewarm/50">—</span>
+                              <span className="text-softgray/50">—</span>
                             )}
                           </td>
                         );
                       })}
-                      <td className="py-3 px-4 text-right font-semibold text-navy tabular-nums">
+                      <td className="py-3 px-4 text-right font-semibold text-charcoal tabular-nums">
                         {formatCurrencyExact(fin.remainingBalance, state.language)}
                       </td>
                     </tr>
@@ -640,13 +640,13 @@ export const ClassLogPage: React.FC = () => {
       >
         <form onSubmit={handleQuickPaySubmit} className="space-y-4">
           {payError && (
-            <div className="p-3 rounded-lg bg-terracotta-light text-terracotta-dark text-xs">
+            <div className="p-3 rounded-lg bg-status-redBg text-status-red text-xs">
               {payError}
             </div>
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             <label className="block">
-              <span className="text-xs font-medium text-navy">{t('amount')} ($)</span>
+              <span className="text-xs font-medium text-charcoal">{t('amount')} ($)</span>
               <input
                 type="number"
                 step="0.01"
@@ -654,15 +654,15 @@ export const ClassLogPage: React.FC = () => {
                 required
                 value={payAmount}
                 onChange={(e) => setPayAmount(e.target.value)}
-                className="mt-1 w-full h-11 px-3 rounded-lg border border-borderwarm bg-porcelain text-base font-semibold tabular-nums"
+                className="mt-1 w-full h-11 px-3 rounded-lg border border-hairline bg-porcelain text-base font-semibold tabular-nums"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">{t('paymentMethod')}</span>
+              <span className="text-xs font-medium text-charcoal">{t('paymentMethod')}</span>
               <select
                 value={payMethod}
                 onChange={(e) => setPayMethod(e.target.value as PaymentMethod)}
-                className="mt-1 w-full h-11 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-11 px-3 rounded-lg border border-hairline bg-porcelain"
               >
                 {METHODS.map((m) => (
                   <option key={m} value={m}>
@@ -673,13 +673,13 @@ export const ClassLogPage: React.FC = () => {
             </label>
           </div>
           <label className="block text-sm">
-            <span className="text-xs font-medium text-navy">{t('notes')}</span>
+            <span className="text-xs font-medium text-charcoal">{t('notes')}</span>
             <input
               type="text"
               value={payNote}
               onChange={(e) => setPayNote(e.target.value)}
               placeholder={state.language === 'es' ? 'Nota opcional...' : 'Optional note...'}
-              className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+              className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
             />
           </label>
           <div className="flex justify-end gap-2 pt-2">

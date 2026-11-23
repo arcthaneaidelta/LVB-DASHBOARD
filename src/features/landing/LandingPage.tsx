@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
   CheckCircle2,
-  CreditCard,
-  Users,
-  ClipboardCheck,
-  Banknote,
-  Landmark,
-  ShieldCheck,
-  Package,
-  FileText,
-  ChevronRight,
+  Circle,
+  Pause,
+  Play,
+  Menu,
+  X,
   Lock,
+  MapPin,
+  Package,
+  MessageSquareWarning,
+  CalendarDays,
+  ChevronRight,
 } from 'lucide-react';
 import { useApp } from '../../services/store';
 import { getDefaultRouteForUser } from '../../permissions/permissions';
@@ -20,46 +21,66 @@ import {
   formatCurrency,
   formatCurrencyExact,
   getStudentFinancialSummary,
+  roundCurrency,
 } from '../../calculations/paymentEngine';
-import { Badge, Button, Card, LVBMonogram } from '../../components/ui/Primitives';
+import { Badge, Button, LVBMonogram } from '../../components/ui/Primitives';
 
-const LOADER_SESSION_KEY = 'lvb_pulse_loader_shown';
+const LOADER_KEY = 'lvb_pulse_v2_loader_seen';
 
 export const LandingPage: React.FC = () => {
   const { state, selectUser, setLanguage, t } = useApp();
   const navigate = useNavigate();
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const [showLoader, setShowLoader] = useState(() => {
     try {
-      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (reduced) return false;
-      return !sessionStorage.getItem(LOADER_SESSION_KEY);
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+      return !sessionStorage.getItem(LOADER_KEY);
     } catch {
       return false;
     }
   });
   const [loaderFading, setLoaderFading] = useState(false);
-  const [activeLoopStep, setActiveLoopStep] = useState(0);
-  const [previewTab, setPreviewTab] = useState<
-    'students' | 'class_log' | 'collections' | 'inventory' | 'reports'
-  >('students');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [videoPlaying, setVideoPlaying] = useState(true);
+  const [videoFailed, setVideoFailed] = useState(false);
+
+  // Interactive landing demos (Section B: Live Class Log Simulator & Section C: Checklist)
+  const [simAttendance, setSimAttendance] = useState<Record<string, 'P' | 'A' | 'C' | 'E'>>({
+    'stu-02': 'P',
+    'stu-03': 'A',
+    'stu-04': 'P',
+  });
+  const [simChecks, setSimChecks] = useState([true, true, true, false]);
 
   useEffect(() => {
     if (!showLoader) return;
-    const t1 = window.setTimeout(() => setLoaderFading(true), 850);
+    const t1 = window.setTimeout(() => setLoaderFading(true), 700);
     const t2 = window.setTimeout(() => {
       setShowLoader(false);
       try {
-        sessionStorage.setItem(LOADER_SESSION_KEY, '1');
+        sessionStorage.setItem(LOADER_KEY, '1');
       } catch {
         // ignore
       }
-    }, 1200);
+    }, 1050);
     return () => {
       window.clearTimeout(t1);
       window.clearTimeout(t2);
     };
   }, [showLoader]);
+
+  const toggleVideo = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) {
+      v.play().catch(() => {});
+      setVideoPlaying(true);
+    } else {
+      v.pause();
+      setVideoPlaying(false);
+    }
+  };
 
   const enterAsUser = (userId: string) => {
     const user = state.users.find((u) => u.id === userId);
@@ -68,84 +89,30 @@ export const LandingPage: React.FC = () => {
     navigate(getDefaultRouteForUser(user));
   };
 
-  const moneyLoopStages = [
-    {
-      step: '01',
-      title: state.language === 'es' ? 'Pago de Alumna' : 'Student Payment',
-      icon: CreditCard,
-      headline:
-        state.language === 'es'
-          ? 'Cuotas dinámicas calculadas con precisión'
-          : 'Dynamic weekly dues calculated automatically',
-      detail:
-        state.language === 'es'
-          ? 'A partir de $250 totales ($50 depósito + $50 primera clase), el motor recalcula automáticamente cada cuota semanal (5 × $30). Si paga de más, las siguientes cuotas bajan; si falta, se redistribuyen sin errores.'
-          : 'Starting from course total, confirmed deposit, and prior payments, LVB Pulse dynamically recalculates every student’s weekly due amount. Overpayments lower future dues; missed weeks carry forward cleanly.',
-      meta: 'due_w = (total − deposit − paid_before_w) / (weeks − w + 1)',
-    },
-    {
-      step: '02',
-      title: state.language === 'es' ? 'Cobro por Instructora' : 'Instructor Collection',
-      icon: ClipboardCheck,
-      headline:
-        state.language === 'es'
-          ? 'Registro rápido en clase desde el teléfono'
-          : 'One-tap studio collection during class',
-      detail:
-        state.language === 'es'
-          ? 'Marisol o Julietha marcan asistencia en un toque y registran efectivo, tarjeta, Zelle, Venmo o Cash App con recibo secuencial LVB-000XX.'
-          : 'Instructors mark Present/Absent/Cancelled/Excused in one tap and collect cash, card, Zelle, Venmo, or Cash App with sequential LVB-000XX receipt numbering.',
-      meta: 'Sequential receipts: LVB-00031, LVB-00032, LVB-00033...',
-    },
-    {
-      step: '03',
-      title: state.language === 'es' ? 'Entrega de Efectivo' : 'Cash Handoff',
-      icon: Banknote,
-      headline:
-        state.language === 'es'
-          ? 'Corte diario vinculado al efectivo físico'
-          : 'Daily cash envelope tied to individual receipts',
-      detail:
-        state.language === 'es'
-          ? 'Al terminar la clase, la instructora revisa su desglose diario (efectivo vs. tarjeta/digital) y envía la Entrega de Efectivo para revisión del propietario.'
-          : 'At the end of class, the instructor reviews their daily breakdown (cash vs. card/digital) and submits a formal Cash Handoff with a printable Daily Cash Report.',
-      meta: 'Status: Pending Owner Confirmation',
-    },
-    {
-      step: '04',
-      title: state.language === 'es' ? 'Confirmación de Propietario' : 'Owner Confirmation',
-      icon: ShieldCheck,
-      headline:
-        state.language === 'es'
-          ? 'Verificación de efectivo y bloqueo de registros'
-          : 'Cash verification, variance check & entry locking',
-      detail:
-        state.language === 'es'
-          ? 'Rudy o Sidney cuentan el efectivo recibido, registran cualquier diferencia con nota obligatoria y confirman. Las entradas confirmadas quedan bloqueadas.'
-          : 'Rudy or Sidney verifies physical cash received, records any variance with a mandatory discrepancy note, and confirms. Confirmed cash entries become locked against edits.',
-      meta: 'Confirmed Cash → Permanently Locked',
-    },
-    {
-      step: '05',
-      title: state.language === 'es' ? 'Contabilidad' : 'Accounting',
-      icon: Landmark,
-      headline:
-        state.language === 'es'
-          ? 'Inteligencia financiera en tiempo real'
-          : 'Real-time academy ledger & branded PDF/CSV reports',
-      detail:
-        state.language === 'es'
-          ? 'Cada cobro, depósito confirmado y entrega alimenta automáticamente el panel de propietarios, los saldos pendientes, la conciliación y las exportaciones PDF/CSV.'
-          : 'Every verified payment, deposit, and locked handoff automatically feeds the Owner Dashboard, student behind-schedule tracking, cash reconciliation, and PDF/CSV reporting.',
-      meta: 'Single source of truth · Zero duplicate spreadsheets',
-    },
-  ];
+  // Real derived totals from shared demo dataset for Section D (Financial Visibility)
+  const confirmedTotal = roundCurrency(
+    state.payments
+      .filter((p) => p.status === 'confirmed')
+      .reduce((s, p) => s + p.amount, 0)
+  );
+  const outstandingTotal = roundCurrency(
+    state.students.reduce((sum, stu) => {
+      const cls = state.classes.find((c) => c.id === stu.classId);
+      return (
+        sum +
+        getStudentFinancialSummary(stu, cls, state.payments, state.deposits)
+          .remainingBalance
+      );
+    }, 0)
+  );
+  const lockedHandoffs = state.cashHandoffs.filter((h) => h.status === 'confirmed').length;
+  const orderNowCount = state.inventory.filter((i) => i.quantity <= 5).length;
 
-  const activeStage = moneyLoopStages[activeLoopStep];
+  const allSimChecksDone = simChecks.every(Boolean);
 
   return (
-    <div className="min-h-screen bg-porcelain text-navy">
-      {/* Branded Initial Loader */}
+    <div className="min-h-screen bg-porcelain text-charcoal">
+      {/* Short Refined Loading Transition (Section 6.1) */}
       {showLoader && (
         <div
           className={`fixed inset-0 z-[100] bg-porcelain flex flex-col items-center justify-center px-6 transition-opacity duration-350 ${
@@ -153,58 +120,55 @@ export const LandingPage: React.FC = () => {
           }`}
           aria-label="Loading LVB Pulse"
         >
-          <div className="flex flex-col items-center animate-fade-in">
-            <LVBMonogram size="lg" />
-            <div className="font-editorial text-3xl text-navy mt-4 tracking-wide">
+          <div className="flex flex-col items-center">
+            <div className="font-editorial text-4xl sm:text-5xl text-charcoal tracking-tight">
               LVB Pulse
             </div>
-            <div className="text-[11px] uppercase tracking-[0.22em] text-champagne mt-1.5">
+            <div className="text-[11px] uppercase tracking-[0.24em] text-olive mt-2">
               La Voute Beauty Academy
             </div>
-            <div className="w-40 h-[2px] bg-borderwarm mt-6 overflow-hidden rounded-full">
-              <div className="h-full bg-champagne animate-progress-line" />
+            <div className="w-32 h-[1.5px] bg-hairline mt-6 overflow-hidden">
+              <div className="h-full bg-olive animate-hairline" />
             </div>
           </div>
         </div>
       )}
 
-      {/* Navigation Bar over Hero */}
-      <header className="sticky top-0 z-40 bg-navy/95 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <LVBMonogram size="sm" />
-            <div>
-              <div className="font-editorial text-lg leading-none text-white">
-                LVB Pulse
-              </div>
-              <div className="text-[9.5px] uppercase tracking-[0.16em] text-champagne-soft mt-0.5 hidden sm:block">
+      {/* Minimal Editorial Header (Section 6.2) */}
+      <header className="sticky top-0 z-40 bg-porcelain/90 backdrop-blur-md border-b border-hairline">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 h-16 flex items-center justify-between gap-4">
+          <a href="#" className="flex items-center gap-2.5">
+            <LVBMonogram size="sm" tone="olive" />
+            <div className="leading-none">
+              <span className="font-editorial text-xl text-charcoal block">LVB Pulse</span>
+              <span className="text-[9.5px] uppercase tracking-[0.16em] text-softgray hidden sm:block mt-0.5">
                 La Voute Beauty Academy
-              </div>
+              </span>
             </div>
-          </div>
+          </a>
 
-          <nav className="hidden md:flex items-center gap-7 text-xs font-medium text-white/75">
-            <a href="#platform" className="hover:text-white transition-colors">
-              {state.language === 'es' ? 'Plataforma' : 'Platform'}
+          <nav className="hidden md:flex items-center gap-8 text-[13px] font-medium text-charcoal/75">
+            <a href="#overview" className="hover:text-olive transition-colors">
+              {state.language === 'es' ? 'Visión General' : 'Platform Overview'}
             </a>
-            <a href="#money-loop" className="hover:text-white transition-colors">
-              {state.language === 'es' ? 'Ciclo Financiero' : 'Money Loop'}
+            <a href="#features" className="hover:text-olive transition-colors">
+              {state.language === 'es' ? 'Asistencia y Pagos' : 'Features'}
             </a>
-            <a href="#roles" className="hover:text-white transition-colors">
-              {state.language === 'es' ? 'Roles' : 'Four Roles'}
+            <a href="#operations" className="hover:text-olive transition-colors">
+              {state.language === 'es' ? 'Operaciones' : 'Academy Operations'}
             </a>
-            <a href="#preview" className="hover:text-white transition-colors">
-              {state.language === 'es' ? 'Vista Operativa' : 'Live Preview'}
+            <a href="#team" className="hover:text-olive transition-colors">
+              {state.language === 'es' ? 'Roles' : 'Team Roles'}
             </a>
           </nav>
 
           <div className="flex items-center gap-2">
-            <div className="inline-flex rounded-lg border border-white/15 bg-navy-deep p-0.5">
+            <div className="inline-flex rounded-lg border border-hairline bg-white p-0.5">
               <button
                 type="button"
                 onClick={() => setLanguage('en')}
-                className={`px-2 py-1 text-[11px] font-medium rounded-md ${
-                  state.language === 'en' ? 'bg-champagne text-white' : 'text-white/70'
+                className={`px-2 py-1 text-[11px] font-semibold rounded-md ${
+                  state.language === 'en' ? 'bg-olive text-white' : 'text-softgray'
                 }`}
               >
                 EN
@@ -212,611 +176,791 @@ export const LandingPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setLanguage('es')}
-                className={`px-2 py-1 text-[11px] font-medium rounded-md ${
-                  state.language === 'es' ? 'bg-champagne text-white' : 'text-white/70'
+                className={`px-2 py-1 text-[11px] font-semibold rounded-md ${
+                  state.language === 'es' ? 'bg-olive text-white' : 'text-softgray'
                 }`}
               >
                 ES
               </button>
             </div>
-            <Button
-              size="sm"
-              variant="champagne"
-              onClick={() => navigate('/app')}
-            >
-              {t('enterApp')}
+
+            <Button size="sm" onClick={() => navigate('/app')} className="hidden sm:inline-flex">
+              {t('landingPrimaryCta')}
               <ArrowRight className="w-3.5 h-3.5" />
             </Button>
+
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen((v) => !v)}
+              className="md:hidden p-2 rounded-lg text-charcoal hover:bg-mist"
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Nav Dropdown */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-hairline bg-porcelain px-5 py-4 space-y-3 text-sm">
+            <a
+              href="#overview"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block py-1 text-charcoal font-medium"
+            >
+              {state.language === 'es' ? 'Visión General' : 'Platform Overview'}
+            </a>
+            <a
+              href="#features"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block py-1 text-charcoal font-medium"
+            >
+              {state.language === 'es' ? 'Asistencia y Pagos' : 'Features'}
+            </a>
+            <a
+              href="#operations"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block py-1 text-charcoal font-medium"
+            >
+              {state.language === 'es' ? 'Operaciones' : 'Academy Operations'}
+            </a>
+            <a
+              href="#team"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block py-1 text-charcoal font-medium"
+            >
+              {state.language === 'es' ? 'Equipo y Roles' : 'Team Roles'}
+            </a>
+            <Button className="w-full" onClick={() => navigate('/app')}>
+              {t('landingPrimaryCta')}
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </div>
+        )}
       </header>
 
-      {/* HERO SECTION */}
-      <section className="relative min-h-[82vh] flex items-center overflow-hidden bg-navy">
-        <img
-          src="/images/hero-studio.jpg"
-          alt="La Voute Beauty Academy Nail Studio"
-          className="absolute inset-0 w-full h-full object-cover object-center opacity-50"
-          onError={(e) => {
-            (e.currentTarget as HTMLImageElement).style.display = 'none';
-          }}
-        />
+      {/* HERO SECTION WITH LIVE MP4 VIDEO BACKGROUND (Section 1.1 & 6.3) */}
+      <section className="relative min-h-[86vh] flex items-end sm:items-center overflow-hidden bg-charcoal">
+        {/* Background Live MP4 Video with graceful static-image fallback */}
+        {!videoFailed ? (
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster="/images/hero-studio.jpg"
+            onError={() => setVideoFailed(true)}
+            className="absolute inset-0 w-full h-full object-cover object-center opacity-60 scale-[1.01]"
+          >
+            <source src="/videos/hero-atelier.mp4" type="video/mp4" />
+          </video>
+        ) : (
+          <img
+            src="/images/hero-studio.jpg"
+            alt="La Voute Beauty Academy Studio"
+            className="absolute inset-0 w-full h-full object-cover object-center opacity-55"
+          />
+        )}
+
+        {/* Calm Atelier Charcoal & Deep Olive Scrim */}
         <div
-          className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/80 to-navy/45"
+          className="absolute inset-0 bg-gradient-to-t from-charcoal/95 via-charcoal/65 to-olive/45"
           aria-hidden="true"
         />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 w-full">
-          <div className="max-w-2xl animate-fade-in">
-            <div className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-champagne-soft mb-5">
-              <span className="w-6 h-[1px] bg-champagne" />
-              {t('landingEyebrow')}
-            </div>
-
-            <h1 className="font-editorial text-[44px] sm:text-[58px] lg:text-[66px] leading-[1.04] text-white tracking-tight">
-              {t('landingHeadlineLine1')}
-              <br />
-              <span className="text-champagne-soft">{t('landingHeadlineLine2')}</span>
-            </h1>
-
-            <p className="mt-6 text-base sm:text-lg text-white/80 leading-relaxed max-w-xl">
-              {t('landingSubtitle')}
-            </p>
-
-            <div className="mt-9 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-              <Button
-                size="lg"
-                variant="champagne"
-                onClick={() => navigate('/app')}
-                className="h-12 px-7 text-sm"
-              >
-                {t('landingPrimaryCta')}
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-              <a
-                href="#platform"
-                className="h-12 px-6 rounded-lg border border-white/25 text-white hover:bg-white/10 transition-colors inline-flex items-center justify-center text-sm font-medium"
-              >
-                {t('landingSecondaryCta')}
-              </a>
-            </div>
-
-            {/* Restrained single-line academy status detail */}
-            <div className="mt-12 pt-6 border-t border-white/15 inline-flex items-center gap-2.5 text-xs text-white/70">
-              <span className="w-2 h-2 rounded-full bg-sage" />
-              <span>{t('landingStatusLive')}</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION A: THE PLATFORM INTRODUCTION (4 PILLARS) */}
-      <section id="platform" className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="max-w-2xl mb-12">
-          <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-champagne mb-2.5">
-            {state.language === 'es' ? 'ECOSISTEMA OPERATIVO' : 'OPERATIONAL ECOSYSTEM'}
-          </div>
-          <h2 className="font-editorial text-3xl sm:text-4xl text-navy leading-tight">
-            {t('landingPillarsTitle')}
-          </h2>
-          <p className="text-sm sm:text-base text-slatewarm mt-3 leading-relaxed">
-            {t('landingPillarsSub')}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {[
-            {
-              img: '/images/pillar-students.jpg',
-              num: '01',
-              title: t('pillar1Title'),
-              desc: t('pillar1Desc'),
-              badge: '14 Seeded Students · 4-Step Checklist',
-            },
-            {
-              img: '/images/pillar-classes.jpg',
-              num: '02',
-              title: t('pillar2Title'),
-              desc: t('pillar2Desc'),
-              badge: 'One-Tap Mobile Class Log',
-            },
-            {
-              img: '/images/pillar-operations.jpg',
-              num: '03',
-              title: t('pillar3Title'),
-              desc: t('pillar3Desc'),
-              badge: 'Sequential LVB Receipts & Cash Locking',
-            },
-            {
-              img: '/images/hero-studio.jpg',
-              num: '04',
-              title: t('pillar4Title'),
-              desc: t('pillar4Desc'),
-              badge: '101 Inventory Items · Tours · Reports',
-            },
-          ].map((pillar) => (
-            <Card key={pillar.num} className="overflow-hidden flex flex-col">
-              <div className="h-52 bg-ivory relative overflow-hidden">
-                <img
-                  src={pillar.img}
-                  alt={pillar.title}
-                  loading="lazy"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute top-3 left-3">
-                  <Badge tone="navy" className="bg-navy/90 border-white/15">
-                    {pillar.num}
-                  </Badge>
-                </div>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-16 sm:py-24 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end">
+            <div className="lg:col-span-8 animate-fade-in">
+              <div className="inline-flex items-center gap-2.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-mist mb-6">
+                <span className="w-7 h-[1px] bg-clay" />
+                {t('landingEyebrow')}
               </div>
-              <div className="p-6 flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="font-editorial text-2xl text-navy">{pillar.title}</h3>
-                  <p className="text-sm text-slatewarm mt-2 leading-relaxed">
-                    {pillar.desc}
-                  </p>
-                </div>
-                <div className="mt-4 pt-3 border-t border-borderwarm text-xs font-medium text-champagne">
-                  {pillar.badge}
-                </div>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </section>
 
-      {/* SECTION B: THE INTERACTIVE MONEY LOOP */}
-      <section
-        id="money-loop"
-        className="py-20 sm:py-24 bg-ivory border-y border-borderwarm px-4 sm:px-6 lg:px-8"
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="max-w-2xl mb-10">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-champagne mb-2.5">
-              {t('moneyLoopEyebrow')}
-            </div>
-            <h2 className="font-editorial text-3xl sm:text-4xl text-navy leading-tight">
-              {t('moneyLoopTitle')}
-            </h2>
-            <p className="text-sm sm:text-base text-slatewarm mt-3 leading-relaxed">
-              {t('moneyLoopSub')}
-            </p>
-          </div>
+              <h1 className="font-editorial text-[42px] sm:text-[58px] lg:text-[68px] leading-[1.03] text-porcelain tracking-tight">
+                {t('landingHeadlineLine1')}
+                <br />
+                <span className="italic text-mist/90">{t('landingHeadlineLine2')}</span>
+              </h1>
 
-          {/* 5 Interactive Stage Selectors */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 mb-6">
-            {moneyLoopStages.map((stage, idx) => {
-              const Icon = stage.icon;
-              const active = idx === activeLoopStep;
-              return (
-                <button
-                  key={stage.step}
-                  type="button"
-                  onClick={() => setActiveLoopStep(idx)}
-                  className={`p-4 rounded-card border text-left transition-all duration-150 ${
-                    active
-                      ? 'bg-navy text-white border-navy shadow-card'
-                      : 'bg-white text-navy border-borderwarm hover:border-champagne'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span
-                      className={`text-[11px] font-mono ${
-                        active ? 'text-champagne-soft' : 'text-slatewarm'
-                      }`}
-                    >
-                      {stage.step}
-                    </span>
-                    <Icon
-                      className={`w-4 h-4 ${active ? 'text-champagne-soft' : 'text-champagne'}`}
-                    />
-                  </div>
-                  <div className="text-sm font-semibold leading-snug">{stage.title}</div>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Active Stage Explanation Panel */}
-          <Card className="p-6 sm:p-8 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div className="space-y-2 max-w-2xl">
-              <Badge tone="champagne">
-                Stage {activeStage.step} · {activeStage.title}
-              </Badge>
-              <h3 className="font-editorial text-2xl sm:text-3xl text-navy">
-                {activeStage.headline}
-              </h3>
-              <p className="text-sm text-slatewarm leading-relaxed">
-                {activeStage.detail}
+              <p className="mt-6 text-base sm:text-lg text-mist/85 leading-relaxed max-w-xl">
+                {t('landingSubtitle')}
               </p>
-            </div>
-            <div className="p-4 rounded-xl bg-porcelain border border-borderwarm lg:min-w-[300px] shrink-0">
-              <div className="text-[10.5px] uppercase tracking-wider text-slatewarm font-semibold">
-                {state.language === 'es' ? 'Regla del Sistema' : 'System Guarantee'}
-              </div>
-              <div className="font-mono text-xs text-navy mt-1.5 leading-relaxed">
-                {activeStage.meta}
-              </div>
-              <Button
-                size="sm"
-                className="mt-4 w-full"
-                onClick={() => navigate('/app')}
-              >
-                {state.language === 'es' ? 'Probar en el Demo' : 'Try This Workflow Live'}
-                <ChevronRight className="w-3.5 h-3.5" />
-              </Button>
-            </div>
-          </Card>
-        </div>
-      </section>
 
-      {/* SECTION C: ONE ACADEMY, FOUR ROLES */}
-      <section id="roles" className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="max-w-2xl mb-12">
-          <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-champagne mb-2.5">
-            {t('rolesEyebrow')}
-          </div>
-          <h2 className="font-editorial text-3xl sm:text-4xl text-navy leading-tight">
-            {t('rolesTitle')}
-          </h2>
-          <p className="text-sm sm:text-base text-slatewarm mt-3 leading-relaxed">
-            {t('rolesSub')}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            {
-              role: t('role_owner'),
-              people: 'Rudy Figueroa · Sidney Figueroa',
-              userId: 'user-rudy',
-              cta: state.language === 'es' ? 'Entrar como Rudy' : 'Explore as Rudy',
-              points: [
-                'Owner Dashboard & Accounting',
-                'Confirm & Lock Cash Handoffs',
-                'Confirm Deposits & Clear Makeups',
-                'Full Inventory Valuation & Projects',
-              ],
-            },
-            {
-              role: t('role_instructor'),
-              people: 'Marisol · Julietha Delgado',
-              userId: 'user-marisol',
-              cta: state.language === 'es' ? 'Entrar como Marisol' : 'Explore as Marisol',
-              points: [
-                'Assigned Classes & Attendance Only',
-                'Collect Weekly Payments & Deposits',
-                'Submit Daily Cash Reports & Handoffs',
-                'Schedule Makeups & Counts-Only Stock',
-              ],
-            },
-            {
-              role: t('role_telemarketing'),
-              people: 'Jessica',
-              userId: 'user-jessica',
-              cta: state.language === 'es' ? 'Entrar como Jessica' : 'Explore as Jessica',
-              points: [
-                'Enroll & Edit Students (4-Step Check)',
-                'Book & Update Studio Tours',
-                'Take Deposits & View Missed Classes',
-                'Policy-Controlled Balance Visibility',
-              ],
-            },
-            {
-              role: t('role_staff'),
-              people: 'Lizy Amador',
-              userId: 'user-lizy',
-              cta: state.language === 'es' ? 'Entrar como Lizy' : 'Explore as Lizy',
-              points: [
-                'Front-Desk Tours & Basic Student Info',
-                'Update 101-Item Inventory Counts',
-                'Private Weekly Reports & Tasks',
-                'Zero Financial or Valuation Exposure',
-              ],
-            },
-          ].map((item) => (
-            <Card key={item.userId} className="p-5 flex flex-col justify-between gap-5">
-              <div>
-                <Badge tone="champagne">{item.role}</Badge>
-                <h3 className="font-editorial text-2xl text-navy mt-3">{item.role}</h3>
-                <p className="text-xs font-medium text-slatewarm mt-0.5">{item.people}</p>
-                <ul className="mt-4 space-y-2 text-xs text-navy">
-                  {item.points.map((pt) => (
-                    <li key={pt} className="flex items-start gap-2">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-sage-dark shrink-0 mt-0.5" />
-                      <span>{pt}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <Button
-                variant="secondary"
-                size="sm"
-                className="w-full"
-                onClick={() => enterAsUser(item.userId)}
-              >
-                {item.cta}
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Button>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {/* SECTION D: CURATED LIVE OPERATIONAL PREVIEW (Real App Data!) */}
-      <section
-        id="preview"
-        className="py-20 sm:py-24 bg-white border-t border-borderwarm px-4 sm:px-6 lg:px-8"
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-            <div>
-              <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-champagne mb-2">
-                {t('previewEyebrow')}
-              </div>
-              <h2 className="font-editorial text-3xl sm:text-4xl text-navy">
-                {t('previewTitle')}
-              </h2>
-            </div>
-
-            <div className="flex items-center gap-1 bg-porcelain border border-borderwarm rounded-xl p-1 overflow-x-auto">
-              {(
-                [
-                  ['students', 'Students', Users],
-                  ['class_log', 'Class Log', ClipboardCheck],
-                  ['collections', 'Collections', CreditCard],
-                  ['inventory', 'Inventory', Package],
-                  ['reports', 'Reports', FileText],
-                ] as const
-              ).map(([key, label, Icon]) => (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => setPreviewTab(key)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium inline-flex items-center gap-1.5 whitespace-nowrap transition-colors ${
-                    previewTab === key ? 'bg-navy text-white' : 'text-slatewarm hover:text-navy'
-                  }`}
+              <div className="mt-9 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <Button
+                  size="lg"
+                  variant="clay"
+                  onClick={() => navigate('/app')}
+                  className="h-12 px-7 text-sm"
                 >
-                  <Icon className="w-3.5 h-3.5" />
-                  {label}
+                  {t('landingPrimaryCta')}
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+                <a
+                  href="#overview"
+                  className="h-12 px-6 rounded-lg border border-porcelain/30 text-porcelain hover:bg-porcelain/10 transition-colors inline-flex items-center justify-center text-sm font-medium"
+                >
+                  {t('landingSecondaryCta')}
+                </a>
+              </div>
+            </div>
+
+            {/* Minimal Asymmetrical Atelier Pulse Readout + Ambient Video Control */}
+            <div className="lg:col-span-4 lg:text-right flex flex-col lg:items-end gap-4">
+              <div className="border-l-2 lg:border-l-0 lg:border-r-2 border-clay pl-4 lg:pl-0 lg:pr-4 text-xs text-mist/80 space-y-1.5">
+                <div className="text-[10.5px] uppercase tracking-[0.18em] text-clay font-semibold">
+                  {state.language === 'es' ? 'Pulso del Estudio' : 'Studio Snapshot'}
+                </div>
+                <div className="text-porcelain font-medium">
+                  2 {state.language === 'es' ? 'Grupos Activos' : 'Active Cohorts'} · 14{' '}
+                  {state.language === 'es' ? 'Alumnas' : 'Enrolled Students'}
+                </div>
+                <div className="text-mist/70">
+                  101 {state.language === 'es' ? 'Productos en Inventario' : 'Inventory Items'} · EN / ES
+                </div>
+              </div>
+
+              {!videoFailed && (
+                <button
+                  type="button"
+                  onClick={toggleVideo}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-charcoal/60 border border-white/15 text-[11px] text-mist/85 hover:text-white transition-colors w-fit"
+                  aria-label={videoPlaying ? 'Pause background video' : 'Play background video'}
+                >
+                  {videoPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
+                  <span>
+                    {videoPlaying
+                      ? state.language === 'es'
+                        ? 'Pausar fondo'
+                        : 'Ambient video'
+                      : state.language === 'es'
+                        ? 'Reproducir'
+                        : 'Paused'}
+                  </span>
                 </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION A: ACADEMY OPERATIONS OVERVIEW (Asymmetrical Editorial Split) */}
+      <section
+        id="overview"
+        className="py-20 sm:py-28 px-4 sm:px-6 lg:px-10 max-w-7xl mx-auto"
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+          <div className="lg:col-span-5 space-y-6">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-olive">
+              {state.language === 'es' ? '01 · OPERACIÓN UNIFICADA' : '01 · ONE ORGANIZED WORKSPACE'}
+            </div>
+            <h2 className="font-editorial text-3xl sm:text-5xl text-charcoal leading-[1.08]">
+              {state.language === 'es'
+                ? 'Diseñado alrededor del ritmo real de La Voute.'
+                : 'Built around how La Voute actually runs.'}
+            </h2>
+            <p className="text-sm sm:text-base text-softgray leading-relaxed">
+              {state.language === 'es'
+                ? 'Los prospectos permanecen en HubSpot. En el momento en que una alumna se inscribe, LVB Pulse coordina sus clases, cuotas semanales, entregas de efectivo, visitas al estudio y suministros sin hojas dispersas.'
+                : 'Unconverted leads stay in HubSpot. The moment a student enrolls, LVB Pulse unifies their classes, dynamic weekly tuition, cash envelopes, studio tours, and 101 supply items in one calm system.'}
+            </p>
+
+            <div className="divide-y divide-hairline border-y border-hairline">
+              {[
+                {
+                  label: state.language === 'es' ? 'Trazabilidad Completa' : 'Complete Traceability',
+                  detail:
+                    state.language === 'es'
+                      ? 'Cada recibo secuencial LVB-000XX se vincula a alumna, clase, cobrador y corte de caja.'
+                      : 'Every sequential LVB-000XX receipt connects student, class week, collector, and locked handoff.',
+                },
+                {
+                  label: state.language === 'es' ? 'Hecho para Teléfono en Clase' : 'Phone-First in Studio',
+                  detail:
+                    state.language === 'es'
+                      ? 'Asistencia y cobro en un toque en español e inglés mientras la instructora enseña.'
+                      : 'One-tap Spanish and English attendance & collection crafted for instructors on the studio floor.',
+                },
+                {
+                  label: state.language === 'es' ? 'Privacidad por Rol' : 'Role-Scoped Clarity',
+                  detail:
+                    state.language === 'es'
+                      ? 'Propietarios, instructoras, telemercadeo y personal ven exactamente lo que necesitan.'
+                      : 'Owners, instructors, telemarketing, and staff each see only their authorized records.',
+                },
+              ].map((item) => (
+                <div key={item.label} className="py-4">
+                  <div className="text-sm font-semibold text-charcoal">{item.label}</div>
+                  <div className="text-xs text-softgray mt-1 leading-relaxed">{item.detail}</div>
+                </div>
               ))}
             </div>
           </div>
 
-          <Card className="bg-porcelain p-4 sm:p-6">
-            {previewTab === 'students' && (
-              <div className="space-y-2.5">
-                {state.students.slice(0, 4).map((stu) => {
-                  const cls = state.classes.find((c) => c.id === stu.classId);
-                  const fin = getStudentFinancialSummary(stu, cls, state.payments, state.deposits);
-                  return (
-                    <div
-                      key={stu.id}
-                      className="bg-white border border-borderwarm rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
-                    >
-                      <div>
-                        <span className="font-semibold text-navy text-sm">{stu.fullName}</span>
-                        <div className="text-slatewarm">{cls?.name} · {stu.source}</div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Badge tone={stu.enrollmentStatus === 'enrolled' ? 'sage' : 'amber'}>
-                          {stu.enrollmentStatus === 'enrolled' ? 'Fully Enrolled' : 'Pending'}
-                        </Badge>
-                        <span className="font-semibold text-navy tabular-nums">
-                          Paid {formatCurrency(fin.totalPaid)} / {formatCurrency(fin.courseTotal)}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-
-            {previewTab === 'class_log' && (
-              <div className="space-y-2.5">
-                {state.students
-                  .filter((s) => s.classId === 'class-tue-nails')
-                  .slice(0, 4)
-                  .map((stu) => {
-                    const cls = state.classes[0];
-                    const fin = getStudentFinancialSummary(stu, cls, state.payments, state.deposits, 4);
-                    return (
-                      <div
-                        key={stu.id}
-                        className="bg-white border border-borderwarm rounded-xl px-4 py-3 flex items-center justify-between gap-3 text-xs"
-                      >
-                        <div>
-                          <div className="font-semibold text-navy text-sm">{stu.fullName}</div>
-                          <div className="text-slatewarm">
-                            Due Week 4: {formatCurrencyExact(fin.dueThisWeek)}
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          {['P', 'A', 'C', 'E'].map((code, i) => (
-                            <span
-                              key={code}
-                              className={`w-7 h-7 rounded-md text-xs font-semibold flex items-center justify-center ${
-                                i === 0
-                                  ? 'bg-sage-dark text-white'
-                                  : 'bg-porcelain text-slatewarm border border-borderwarm'
-                              }`}
-                            >
-                              {code}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-            )}
-
-            {previewTab === 'collections' && (
-              <div className="space-y-2.5">
-                {state.payments.slice(-4).reverse().map((p) => {
-                  const stu = state.students.find((s) => s.id === p.studentId);
-                  return (
-                    <div
-                      key={p.id}
-                      className="bg-white border border-borderwarm rounded-xl px-4 py-3 flex items-center justify-between gap-2 text-xs"
-                    >
-                      <div>
-                        <span className="font-mono font-semibold text-navy">{p.receiptNumber}</span> ·{' '}
-                        <span className="font-medium text-navy">{stu?.fullName}</span>
-                        <div className="text-slatewarm">{p.date} · {p.collectorName}</div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Badge tone="champagne">{p.method}</Badge>
-                        {p.locked && <Lock className="w-3.5 h-3.5 text-champagne" />}
-                        <span className="font-semibold text-navy tabular-nums">
-                          {formatCurrencyExact(p.amount)}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-
-            {previewTab === 'inventory' && (
-              <div className="space-y-2.5">
-                {state.inventory
-                  .filter((i) => i.quantity <= 5)
-                  .slice(0, 4)
-                  .map((item) => (
-                    <div
-                      key={item.id}
-                      className="bg-white border border-borderwarm rounded-xl px-4 py-3 flex items-center justify-between gap-2 text-xs"
-                    >
-                      <div>
-                        <div className="font-semibold text-navy text-sm">{item.name}</div>
-                        <div className="text-slatewarm">{item.category} · {item.supplier}</div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Badge tone="terracotta">Order Now ({item.quantity} left)</Badge>
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            )}
-
-            {previewTab === 'reports' && (
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                {[
-                  { title: 'Collections PDF & CSV', meta: `${state.payments.length} live ledger entries` },
-                  { title: 'Daily Cash Sheet PDF', meta: 'Printable collector signature lines' },
-                  { title: 'Student Balances & Behind', meta: 'Dynamic formula across 14 students' },
-                ].map((r) => (
-                  <div key={r.title} className="bg-white border border-borderwarm rounded-xl p-4">
-                    <div className="font-semibold text-navy text-sm">{r.title}</div>
-                    <div className="text-slatewarm mt-1">{r.meta}</div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <div className="mt-5 flex justify-end">
-              <Button onClick={() => navigate('/app')}>
-                {state.language === 'es' ? 'Abrir Aplicación Interactiva' : 'Open Full Interactive Application'}
-                <ArrowRight className="w-4 h-4" />
-              </Button>
+          <div className="lg:col-span-7 grid grid-cols-12 gap-4 items-end">
+            <div className="col-span-7 overflow-hidden rounded-atelier bg-mist">
+              <img
+                src="/images/pillar-students.jpg"
+                alt="Nail academy training session"
+                loading="lazy"
+                className="w-full h-[360px] sm:h-[440px] object-cover"
+              />
             </div>
-          </Card>
+            <div className="col-span-5 space-y-4">
+              <div className="overflow-hidden rounded-atelier bg-mist">
+                <img
+                  src="/images/pillar-classes.jpg"
+                  alt="Manicure workstation and tools"
+                  loading="lazy"
+                  className="w-full h-[200px] sm:h-[250px] object-cover"
+                />
+              </div>
+              <div className="p-5 rounded-atelier bg-olive text-porcelain">
+                <div className="text-[10px] uppercase tracking-[0.18em] text-mist/75">
+                  City Terrace · Los Angeles
+                </div>
+                <div className="font-editorial text-2xl mt-1.5 text-white">
+                  {state.language === 'es' ? 'Cero hojas duplicadas' : 'Zero duplicate spreadsheets'}
+                </div>
+                <p className="text-xs text-mist/80 mt-1.5 leading-relaxed">
+                  {state.language === 'es'
+                    ? 'Cada pago actualiza saldos, tablero y reportes al instante.'
+                    : 'Every entry updates balances, dashboards, and PDFs simultaneously.'}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* SECTION E: FINAL CTA */}
-      <section className="py-20 bg-navy text-white px-4 sm:px-6 lg:px-8 border-t border-champagne/30">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="w-12 h-[1px] bg-champagne mx-auto mb-6" />
-          <h2 className="font-editorial text-3xl sm:text-5xl leading-tight text-white">
-            {t('finalCtaTitle')}
-          </h2>
-          <p className="text-sm sm:text-base text-white/70 mt-4 max-w-xl mx-auto">
-            {state.language === 'es'
-              ? 'Explora los cuatro roles, prueba el ciclo completo de pagos y entregas de efectivo, y exporta reportes PDF en vivo.'
-              : 'Explore all four operational roles, test the end-to-end money loop, and generate live branded PDF receipts and reports.'}
-          </p>
-          <div className="mt-8">
-            <Button
-              size="lg"
-              variant="champagne"
-              onClick={() => navigate('/app')}
-              className="h-12 px-8 text-sm"
-            >
-              {t('finalCtaButton')}
+      {/* SECTION B: ATTENDANCE & PAYMENTS (Interactive Studio Preview on Mist Band) */}
+      <section
+        id="features"
+        className="py-20 sm:py-28 bg-mist/65 border-y border-hairline px-4 sm:px-6 lg:px-10"
+      >
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          {/* Interactive Phone-Style Class Log Preview */}
+          <div className="lg:col-span-6 order-2 lg:order-1">
+            <div className="bg-white border border-hairline rounded-2xl shadow-atelier overflow-hidden max-w-lg mx-auto">
+              <div className="bg-olive text-white px-5 py-4 flex items-center justify-between">
+                <div>
+                  <div className="text-[10.5px] uppercase tracking-[0.16em] text-mist/80">
+                    {state.language === 'es' ? 'Registro de Clase · En Vivo' : 'Live Class Log Preview'}
+                  </div>
+                  <div className="font-editorial text-xl mt-0.5">
+                    Tuesday Nail Foundations · Week 4
+                  </div>
+                </div>
+                <Badge tone="clay">Marisol</Badge>
+              </div>
+
+              <div className="divide-y divide-hairline">
+                {[
+                  { id: 'stu-02', name: 'Valeria Mendoza Cruz', due: 30, note: '$250 standard plan' },
+                  { id: 'stu-03', name: 'Camila Sofia Navarro', due: 37.5, note: 'Recalculated after W3 absence' },
+                  { id: 'stu-04', name: 'Daniela Isabel Ortiz', due: 25, note: 'Lowered after W2 overpayment' },
+                ].map((stu) => {
+                  const status = simAttendance[stu.id] ?? 'P';
+                  const skipped = status !== 'P';
+                  return (
+                    <div key={stu.id} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div>
+                        <div className="text-sm font-semibold text-charcoal">{stu.name}</div>
+                        <div className="text-xs text-softgray mt-0.5">
+                          {skipped ? (
+                            <span className="text-clay-dark font-medium">
+                              {status === 'C'
+                                ? state.language === 'es'
+                                  ? 'Pago omitido · Sin falta'
+                                  : 'Payment skipped · No makeup'
+                                : state.language === 'es'
+                                  ? 'Pago omitido · Crea clase perdida'
+                                  : 'Payment skipped · Opens missed class'}
+                            </span>
+                          ) : (
+                            <span>
+                              Due: <strong className="text-charcoal tabular-nums">${stu.due.toFixed(2)}</strong> · {stu.note}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="inline-flex gap-1 bg-porcelain p-1 rounded-lg border border-hairline shrink-0">
+                        {(['P', 'A', 'C', 'E'] as const).map((code) => (
+                          <button
+                            key={code}
+                            type="button"
+                            onClick={() =>
+                              setSimAttendance((prev) => ({ ...prev, [stu.id]: code }))
+                            }
+                            className={`w-8 h-8 rounded-md text-xs font-semibold transition-colors ${
+                              status === code
+                                ? code === 'P'
+                                  ? 'bg-status-green text-white'
+                                  : code === 'A'
+                                    ? 'bg-status-red text-white'
+                                    : code === 'E'
+                                      ? 'bg-status-amber text-white'
+                                      : 'bg-charcoal text-white'
+                                : 'text-softgray hover:bg-white'
+                            }`}
+                          >
+                            {code}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="px-5 py-3 bg-porcelain border-t border-hairline flex items-center justify-between text-xs">
+                <span className="font-mono text-softgray">
+                  due_w = (total − deposit − paid) / (weeks − w + 1)
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="lg:col-span-6 order-1 lg:order-2 space-y-5">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-olive">
+              {state.language === 'es' ? '02 · ASISTENCIA Y PAGOS' : '02 · ATTENDANCE & DYNAMIC TUITION'}
+            </div>
+            <h2 className="font-editorial text-3xl sm:text-5xl text-charcoal leading-[1.08]">
+              {state.language === 'es'
+                ? 'Un toque para asistencia. Cero cálculos manuales.'
+                : 'One tap for attendance. Zero manual payment math.'}
+            </h2>
+            <p className="text-sm sm:text-base text-softgray leading-relaxed">
+              {state.language === 'es'
+                ? 'Toca los botones P / A / C / E en la vista interactiva. Cuando una alumna paga de más, sus próximas cuotas bajan automáticamente; si falta, se omite el pago de la semana y se abre su registro de reposición.'
+                : 'Try tapping P / A / C / E on the live preview. Extra payments automatically lower later weekly dues, skipped weeks redistribute cleanly across remaining sessions, and absences automatically open a makeup record.'}
+            </p>
+            <div className="pt-2">
+              <Button variant="secondary" onClick={() => enterAsUser('user-marisol')}>
+                {state.language === 'es'
+                  ? 'Probar Registro de Clase como Marisol'
+                  : 'Open Full Class Log as Marisol'}
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION C: STUDENT MANAGEMENT & 4-STEP CHECKLIST */}
+      <section className="py-20 sm:py-28 px-4 sm:px-6 lg:px-10 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="lg:col-span-5 space-y-5">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-olive">
+              {state.language === 'es' ? '03 · GESTIÓN DE ALUMNAS' : '03 · ENROLLED STUDENT LIFECYCLE'}
+            </div>
+            <h2 className="font-editorial text-3xl sm:text-5xl text-charcoal leading-[1.08]">
+              {state.language === 'es'
+                ? 'Del depósito inicial hasta la inscripción completa.'
+                : 'From initial deposit to fully enrolled — nothing skipped.'}
+            </h2>
+            <p className="text-sm sm:text-base text-softgray leading-relaxed">
+              {state.language === 'es'
+                ? 'Cada alumna permanece en estado Pendiente hasta completar las 4 verificaciones clave. Los depósitos tomados por el equipo requieren confirmación del propietario antes de contabilizarse.'
+                : 'Every enrolled student stays Pending until all four verification milestones are complete. Deposits collected by instructors or telemarketing stay pending until confirmed by Rudy or Sidney.'}
+            </p>
+            <Button variant="secondary" onClick={() => enterAsUser('user-jessica')}>
+              {state.language === 'es'
+                ? 'Explorar Alumnas como Jessica'
+                : 'Explore Student CRM as Jessica'}
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </div>
+
+          <div className="lg:col-span-7">
+            <div className="bg-white border border-hairline rounded-atelier p-6 sm:p-8">
+              <div className="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-hairline">
+                <div>
+                  <div className="text-xs text-softgray">
+                    {state.language === 'es' ? 'Progresión Interactiva' : 'Interactive Enrollment Progression'}
+                  </div>
+                  <div className="font-editorial text-2xl text-charcoal mt-0.5">
+                    Catherine Alejandra Pereira Hastomir
+                  </div>
+                </div>
+                <Badge tone={allSimChecksDone ? 'green' : 'amber'}>
+                  {allSimChecksDone ? t('status_enrolled') : t('status_pending')}
+                </Badge>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5">
+                {[
+                  t('check_depositConfirmed'),
+                  t('check_webSubscriptionConfirmed'),
+                  t('check_welcomeEmailSent'),
+                  t('check_attendanceConfirmedBySidney'),
+                ].map((label, idx) => {
+                  const done = simChecks[idx];
+                  return (
+                    <button
+                      key={label}
+                      type="button"
+                      onClick={() =>
+                        setSimChecks((prev) => prev.map((v, i) => (i === idx ? !v : v)))
+                      }
+                      className={`p-4 rounded-atelier border text-left flex items-start gap-3 transition-colors ${
+                        done
+                          ? 'bg-status-greenBg/60 border-status-green/30'
+                          : 'bg-porcelain border-hairline hover:border-olive'
+                      }`}
+                    >
+                      {done ? (
+                        <CheckCircle2 className="w-4 h-4 text-status-green shrink-0 mt-0.5" />
+                      ) : (
+                        <Circle className="w-4 h-4 text-softgray shrink-0 mt-0.5" />
+                      )}
+                      <div>
+                        <div className="text-[10.5px] font-semibold uppercase tracking-wider text-softgray">
+                          Step 0{idx + 1}
+                        </div>
+                        <div className="text-xs font-semibold text-charcoal mt-0.5">
+                          {label}
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="text-[11.5px] text-softgray mt-4">
+                {state.language === 'es'
+                  ? 'Haz clic en el paso 4 para ver la transición automática a Inscrita Completa.'
+                  : 'Click step 4 above to preview the automatic transition to Fully Enrolled.'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION D: FINANCIAL VISIBILITY (Soft Charcoal Editorial Band) */}
+      <section className="py-20 sm:py-28 bg-charcoal text-porcelain px-4 sm:px-6 lg:px-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end mb-12">
+            <div className="lg:col-span-7 space-y-4">
+              <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-clay">
+                {state.language === 'es' ? '04 · VISIBILIDAD FINANCIERA' : '04 · OWNER FINANCIAL VISIBILITY'}
+              </div>
+              <h2 className="font-editorial text-3xl sm:text-5xl text-white leading-[1.08]">
+                {state.language === 'es'
+                  ? 'Claridad absoluta desde la mesa hasta la contabilidad.'
+                  : 'Clear visibility from every station to the ledger.'}
+              </h2>
+            </div>
+            <p className="lg:col-span-5 text-sm text-mist/80 leading-relaxed">
+              {state.language === 'es'
+                ? 'Rudy y Sidney revisan entregas de efectivo, aprueban depósitos pendientes, monitorean atrasos y exportan reportes PDF y CSV desde un único libro compartido.'
+                : 'Rudy and Sidney verify cash handoffs, approve pending deposits, track behind-schedule balances, and export branded PDF/CSV reports from one reconciled ledger.'}
+            </p>
+          </div>
+
+          {/* Hairline-divided Architectural Financial Strip */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-y border-white/15 divide-y sm:divide-y-0 sm:divide-x divide-white/15">
+            <div className="py-7 sm:px-6 first:sm:pl-0">
+              <div className="text-[11px] uppercase tracking-[0.16em] text-mist/70">
+                {state.language === 'es' ? 'Cobranza Confirmada (Demo)' : 'Confirmed Ledger (Demo)'}
+              </div>
+              <div className="font-editorial text-4xl text-white mt-2 tabular-nums">
+                {formatCurrency(confirmedTotal, state.language)}
+              </div>
+              <div className="text-xs text-mist/70 mt-1.5">
+                {state.payments.length} sequential LVB receipts
+              </div>
+            </div>
+            <div className="py-7 sm:px-6">
+              <div className="text-[11px] uppercase tracking-[0.16em] text-mist/70">
+                {t('kpiOutstandingBalances')}
+              </div>
+              <div className="font-editorial text-4xl text-white mt-2 tabular-nums">
+                {formatCurrency(outstandingTotal, state.language)}
+              </div>
+              <div className="text-xs text-mist/70 mt-1.5">
+                Derived live across 14 students
+              </div>
+            </div>
+            <div className="py-7 sm:px-6">
+              <div className="text-[11px] uppercase tracking-[0.16em] text-mist/70">
+                {state.language === 'es' ? 'Cortes Confirmados' : 'Locked Cash Handoffs'}
+              </div>
+              <div className="font-editorial text-4xl text-white mt-2 tabular-nums flex items-center gap-2">
+                <span>{lockedHandoffs}</span>
+                <Lock className="w-5 h-5 text-clay" />
+              </div>
+              <div className="text-xs text-mist/70 mt-1.5">
+                Draft → Submitted → Confirmed → Locked
+              </div>
+            </div>
+            <div className="py-7 sm:px-6 last:sm:pr-0">
+              <div className="text-[11px] uppercase tracking-[0.16em] text-mist/70">
+                {state.language === 'es' ? 'Secuencia de Recibos' : 'Receipt Sequence'}
+              </div>
+              <div className="font-editorial text-4xl text-clay mt-2 font-mono">
+                LVB-00031+
+              </div>
+              <div className="text-xs text-mist/70 mt-1.5">
+                Continuous with paper contracts
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 flex justify-end">
+            <Button variant="clay" onClick={() => enterAsUser('user-rudy')}>
+              {state.language === 'es'
+                ? 'Abrir Contabilidad como Rudy'
+                : 'Inspect Owner Dashboard as Rudy'}
               <ArrowRight className="w-4 h-4" />
             </Button>
           </div>
         </div>
       </section>
 
-      {/* SECTION F: FOOTER */}
-      <footer className="bg-navy-deep text-white/75 py-12 px-4 sm:px-6 lg:px-8 border-t border-white/10">
+      {/* SECTION E: ACADEMY OPERATIONS (Editorial Index Strip) */}
+      <section
+        id="operations"
+        className="py-20 sm:py-28 px-4 sm:px-6 lg:px-10 max-w-7xl mx-auto"
+      >
+        <div className="max-w-2xl mb-12">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-olive mb-2">
+            {state.language === 'es' ? '05 · OPERACIONES DEL ESTUDIO' : '05 · COMPLETE STUDIO OPERATIONS'}
+          </div>
+          <h2 className="font-editorial text-3xl sm:text-5xl text-charcoal leading-[1.08]">
+            {state.language === 'es'
+              ? 'Más allá de los pagos: todo lo que sostiene al estudio.'
+              : 'Beyond tuition: every operational detail under one roof.'}
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-t border-hairline">
+          {[
+            {
+              icon: MapPin,
+              title: t('nav_tours'),
+              stat: `${state.tours.length} tours`,
+              desc:
+                state.language === 'es'
+                  ? 'Calendario y lista de visitas, asistencia y tasa de conversión.'
+                  : 'Calendar and list scheduling, show rate, and enrollment conversion.',
+            },
+            {
+              icon: Package,
+              title: t('nav_inventory'),
+              stat: `101 items · ${orderNowCount} Order Now`,
+              desc:
+                state.language === 'es'
+                  ? '5 secciones, alertas China y Legacy Nails, valuación solo para propietarios.'
+                  : '5 sections, China & Legacy Nails lead-time warnings, owner-only costs.',
+            },
+            {
+              icon: MessageSquareWarning,
+              title: t('nav_weeklyReports'),
+              stat: `${state.reports.length} reports`,
+              desc:
+                state.language === 'es'
+                  ? 'Asistencia inmediata, suministros y quejas con privacidad para el personal.'
+                  : 'Immediate assistance, supplies, and complaints with private staff visibility.',
+            },
+            {
+              icon: CalendarDays,
+              title: `${t('nav_tasks')} & ${t('nav_calendar')}`,
+              stat: `${state.tasks.length} tasks · ${state.projects.length} projects`,
+              desc:
+                state.language === 'es'
+                  ? 'Tareas asignadas, proyectos estratégicos y reuniones privadas por invitación.'
+                  : 'Assigned tasks, Owner-only strategic projects, and invitation-based meetings.',
+            },
+          ].map((op) => {
+            const Icon = op.icon;
+            return (
+              <div
+                key={op.title}
+                className="py-7 md:pr-8 border-b border-hairline flex flex-col justify-between gap-4"
+              >
+                <div>
+                  <Icon className="w-5 h-5 text-olive mb-4" />
+                  <h3 className="font-editorial text-2xl text-charcoal">{op.title}</h3>
+                  <p className="text-xs text-softgray mt-2 leading-relaxed">{op.desc}</p>
+                </div>
+                <div className="text-xs font-semibold text-clay-dark">{op.stat}</div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* SECTION F: DESIGNED FOR THE ENTIRE TEAM (4 Role Tracks) */}
+      <section
+        id="team"
+        className="py-20 sm:py-28 bg-mist/60 border-t border-hairline px-4 sm:px-6 lg:px-10"
+      >
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+            <div className="max-w-xl">
+              <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-olive mb-2">
+                {state.language === 'es' ? '06 · PARA TODO EL EQUIPO' : '06 · DESIGNED FOR THE ENTIRE TEAM'}
+              </div>
+              <h2 className="font-editorial text-3xl sm:text-5xl text-charcoal leading-[1.08]">
+                {state.language === 'es'
+                  ? 'Cuatro roles. Cuatro espacios enfocados.'
+                  : 'Four roles. Four focused workspaces.'}
+              </h2>
+            </div>
+            <p className="text-xs text-softgray max-w-sm">
+              {state.language === 'es'
+                ? 'Haz clic en cualquier rol para ingresar directamente a su entorno en vivo.'
+                : 'Select any role below to jump straight into its live permissioned workspace.'}
+            </p>
+          </div>
+
+          <div className="bg-white border border-hairline rounded-atelier divide-y lg:divide-y-0 lg:divide-x divide-hairline grid grid-cols-1 lg:grid-cols-4 overflow-hidden">
+            {[
+              {
+                role: t('role_owner'),
+                people: 'Rudy Figueroa · Sidney Figueroa',
+                userId: 'user-rudy',
+                summary:
+                  state.language === 'es'
+                    ? 'Panel financiero, contabilidad, confirmación de efectivo y depósitos, costos de inventario y proyectos.'
+                    : 'Full financial command center, cash locking, deposit confirmation, inventory costs, and strategic projects.',
+              },
+              {
+                role: t('role_instructor'),
+                people: 'Marisol · Julietha Delgado',
+                userId: 'user-marisol',
+                summary:
+                  state.language === 'es'
+                    ? 'Solo clases asignadas, asistencia en teléfono, cobros propios, cortes de caja y reposiciones.'
+                    : 'Assigned classes only, mobile attendance, own collections, daily cash handoffs, and makeup scheduling.',
+              },
+              {
+                role: t('role_telemarketing'),
+                people: 'Jessica',
+                userId: 'user-jessica',
+                summary:
+                  state.language === 'es'
+                    ? 'Inscripciones, seguimiento de visitas al estudio, toma de depósitos y saldos controlados por política.'
+                    : 'Student onboarding, studio tour booking, deposit intake, and policy-governed balance visibility.',
+              },
+              {
+                role: t('role_staff'),
+                people: 'Lizy Amador',
+                userId: 'user-lizy',
+                summary:
+                  state.language === 'es'
+                    ? 'Visitas al estudio, información básica de alumnas, conteo de inventario y reportes semanales.'
+                    : 'Front-desk studio tours, basic student info, counts-only inventory, tasks, and private reports.',
+              },
+            ].map((track) => (
+              <button
+                key={track.userId}
+                type="button"
+                onClick={() => enterAsUser(track.userId)}
+                className="p-6 sm:p-7 text-left hover:bg-porcelain/70 transition-colors flex flex-col justify-between gap-6 group"
+              >
+                <div>
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-clay-dark">
+                    {track.role}
+                  </div>
+                  <h3 className="font-editorial text-2xl text-charcoal mt-1.5">
+                    {track.people.split(' · ')[0]}
+                  </h3>
+                  <div className="text-xs text-softgray mt-0.5">{track.people}</div>
+                  <p className="text-xs text-charcoal/80 mt-4 leading-relaxed">
+                    {track.summary}
+                  </p>
+                </div>
+                <span className="inline-flex items-center gap-1 text-xs font-semibold text-olive group-hover:translate-x-0.5 transition-transform">
+                  {state.language === 'es' ? 'Entrar al espacio' : 'Preview workspace'}
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION G: FINAL CTA (Deep Olive Atelier Band) */}
+      <section className="py-20 sm:py-24 bg-olive text-porcelain px-4 sm:px-6 lg:px-10">
+        <div className="max-w-4xl mx-auto text-center space-y-5">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-mist/80">
+            LA VOUTE BEAUTY ACADEMY LLC
+          </div>
+          <h2 className="font-editorial text-3xl sm:text-5xl text-white leading-[1.08]">
+            {state.language === 'es'
+              ? 'Una operación tan cuidada como el trabajo que enseñas.'
+              : 'An academy workspace as considered as the craft you teach.'}
+          </h2>
+          <p className="text-sm sm:text-base text-mist/85 max-w-xl mx-auto leading-relaxed">
+            {state.language === 'es'
+              ? 'Explora los cuatro roles, prueba el registro de asistencia, confirma entregas de efectivo y genera recibos PDF en tiempo real.'
+              : 'Explore all four team roles, test live attendance and payment recalculation, lock cash handoffs, and export branded PDFs.'}
+          </p>
+          <div className="pt-3">
+            <Button
+              size="lg"
+              variant="clay"
+              onClick={() => navigate('/app')}
+              className="h-12 px-8 text-sm"
+            >
+              {t('landingPrimaryCta')}
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* MINIMAL FOOTER */}
+      <footer className="bg-charcoal text-mist/75 py-12 px-4 sm:px-6 lg:px-10 border-t border-white/10">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-8">
           <div className="space-y-3 max-w-md">
-            <div className="flex items-center gap-3">
-              <LVBMonogram size="sm" />
+            <div className="flex items-center gap-2.5">
+              <LVBMonogram size="sm" tone="porcelain" />
               <div>
-                <div className="font-editorial text-lg text-white leading-none">
-                  LVB Pulse
-                </div>
-                <div className="text-[10px] uppercase tracking-[0.16em] text-champagne-soft mt-0.5">
+                <div className="font-editorial text-lg text-white leading-none">LVB Pulse</div>
+                <div className="text-[10px] uppercase tracking-[0.16em] text-mist/60 mt-0.5">
                   La Voute Beauty Academy LLC
                 </div>
               </div>
             </div>
-            <p className="text-xs text-white/60 leading-relaxed">
-              {t('footerDisclaimer')}
-            </p>
+            <p className="text-xs text-mist/65 leading-relaxed">{t('footerDisclaimer')}</p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-8 text-xs">
+          <div className="flex flex-wrap gap-10 text-xs">
             <div className="space-y-2">
-              <div className="font-semibold text-white uppercase tracking-wider text-[11px]">
-                Platform
+              <div className="font-semibold text-white uppercase tracking-wider text-[10.5px]">
+                {state.language === 'es' ? 'Plataforma' : 'Platform'}
               </div>
-              <a href="#platform" className="block hover:text-white">
-                Overview
+              <a href="#overview" className="block hover:text-white">
+                {state.language === 'es' ? 'Visión General' : 'Overview'}
               </a>
-              <a href="#money-loop" className="block hover:text-white">
-                Money Loop
+              <a href="#features" className="block hover:text-white">
+                {state.language === 'es' ? 'Asistencia y Pagos' : 'Attendance & Payments'}
               </a>
-              <a href="#roles" className="block hover:text-white">
-                Four Roles
+              <a href="#operations" className="block hover:text-white">
+                {state.language === 'es' ? 'Operaciones' : 'Operations'}
               </a>
             </div>
             <div className="space-y-2">
-              <div className="font-semibold text-white uppercase tracking-wider text-[11px]">
-                Demonstration
+              <div className="font-semibold text-white uppercase tracking-wider text-[10.5px]">
+                {state.language === 'es' ? 'Demostración' : 'Live Demo'}
               </div>
-              <button
-                type="button"
-                onClick={() => navigate('/app')}
-                className="block hover:text-white text-left"
-              >
-                {t('enterApp')}
+              <button type="button" onClick={() => navigate('/app')} className="block hover:text-white text-left">
+                {t('landingPrimaryCta')}
               </button>
-              <button
-                type="button"
-                onClick={() => enterAsUser('user-rudy')}
-                className="block hover:text-white text-left"
-              >
-                Owner Demo (Rudy)
+              <button type="button" onClick={() => enterAsUser('user-rudy')} className="block hover:text-white text-left">
+                Rudy Figueroa ({t('role_owner')})
               </button>
-              <button
-                type="button"
-                onClick={() => enterAsUser('user-marisol')}
-                className="block hover:text-white text-left"
-              >
-                Instructor Demo (Marisol)
+              <button type="button" onClick={() => enterAsUser('user-marisol')} className="block hover:text-white text-left">
+                Marisol ({t('role_instructor')})
               </button>
             </div>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between gap-2 text-[11px] text-white/50">
-          <span>© 2026 La Voute Beauty Academy LLC. LVB Pulse — Client Demonstration Edition.</span>
+        <div className="max-w-7xl mx-auto mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between gap-2 text-[11px] text-mist/50">
+          <span>© 2026 La Voute Beauty Academy LLC · LVB Pulse Showcase</span>
           <span>City Terrace, Los Angeles, California</span>
         </div>
       </footer>

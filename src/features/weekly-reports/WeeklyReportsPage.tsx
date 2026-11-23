@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import { MessageSquareWarning, Plus, CheckCircle2 } from 'lucide-react';
 import { useApp } from '../../services/store';
 import { canManageReports, canViewReport } from '../../permissions/permissions';
@@ -85,8 +85,8 @@ export const WeeklyReportsPage: React.FC = () => {
               onClick={() => setCategoryFilter(cat)}
               className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                 categoryFilter === cat
-                  ? 'bg-navy text-white border-navy'
-                  : 'bg-white text-slatewarm border-borderwarm hover:text-navy'
+                  ? 'bg-olive text-white border-olive'
+                  : 'bg-white text-softgray border-hairline hover:text-charcoal'
               }`}
             >
               {cat === 'all' ? t('all') : catLabel(cat)}
@@ -145,17 +145,17 @@ export const WeeklyReportsPage: React.FC = () => {
                       {rep.status}
                     </Badge>
                   </div>
-                  <h3 className="font-semibold text-navy text-sm">{rep.subject}</h3>
-                  <p className="text-xs text-slatewarm line-clamp-2">{rep.description}</p>
+                  <h3 className="font-semibold text-charcoal text-sm">{rep.subject}</h3>
+                  <p className="text-xs text-softgray line-clamp-2">{rep.description}</p>
                   {rep.ownerResponse && (
-                    <div className="text-xs text-sage-dark bg-sage-light/60 px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5 mt-1">
+                    <div className="text-xs text-status-green bg-status-greenBg/60 px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5 mt-1">
                       <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
                       <span>Owner response: {rep.ownerResponse}</span>
                     </div>
                   )}
                 </div>
-                <div className="text-xs text-slatewarm shrink-0 sm:text-right">
-                  <div className="font-medium text-navy">{rep.submittedByName}</div>
+                <div className="text-xs text-softgray shrink-0 sm:text-right">
+                  <div className="font-medium text-charcoal">{rep.submittedByName}</div>
                   <div className="tabular-nums">{rep.date}</div>
                 </div>
               </div>
@@ -186,7 +186,7 @@ export const WeeklyReportsPage: React.FC = () => {
                 {selectedReport.status}
               </Badge>
             </div>
-            <Card className="p-4 text-sm text-navy leading-relaxed">
+            <Card className="p-4 text-sm text-charcoal leading-relaxed">
               {selectedReport.description}
             </Card>
 
@@ -203,13 +203,13 @@ export const WeeklyReportsPage: React.FC = () => {
                 className="space-y-3 pt-2"
               >
                 <label className="block text-sm">
-                  <span className="text-xs font-medium text-navy">{t('status')}</span>
+                  <span className="text-xs font-medium text-charcoal">{t('status')}</span>
                   <select
                     value={ownerStatus}
                     onChange={(e) =>
                       setOwnerStatus(e.target.value as WeeklyReport['status'])
                     }
-                    className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-white"
+                    className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-white"
                   >
                     <option value="open">Open</option>
                     <option value="in_review">In Review</option>
@@ -217,14 +217,14 @@ export const WeeklyReportsPage: React.FC = () => {
                   </select>
                 </label>
                 <label className="block text-sm">
-                  <span className="text-xs font-medium text-navy">
+                  <span className="text-xs font-medium text-charcoal">
                     {state.language === 'es' ? 'Respuesta del Propietario' : 'Owner Response'}
                   </span>
                   <textarea
                     rows={3}
                     value={ownerReply}
                     onChange={(e) => setOwnerReply(e.target.value)}
-                    className="mt-1 w-full p-2.5 rounded-lg border border-borderwarm bg-white"
+                    className="mt-1 w-full p-2.5 rounded-lg border border-hairline bg-white"
                   />
                 </label>
                 <Button type="submit" className="w-full">
@@ -233,7 +233,7 @@ export const WeeklyReportsPage: React.FC = () => {
               </form>
             ) : (
               selectedReport.ownerResponse && (
-                <Card className="p-4 bg-sage-light/40 border-sage/30 text-xs text-navy">
+                <Card className="p-4 bg-status-greenBg/40 border-sage/30 text-xs text-charcoal">
                   <div className="font-semibold mb-1">Owner Response</div>
                   <p>{selectedReport.ownerResponse}</p>
                 </Card>
@@ -268,13 +268,13 @@ export const WeeklyReportsPage: React.FC = () => {
         >
           <div className="grid grid-cols-2 gap-3 text-sm">
             <label className="block">
-              <span className="text-xs font-medium text-navy">Category</span>
+              <span className="text-xs font-medium text-charcoal">Category</span>
               <select
                 value={form.category}
                 onChange={(e) =>
                   setForm((f) => ({ ...f, category: e.target.value as ReportCategory }))
                 }
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               >
                 <option value="immediate_assistance">{catLabel('immediate_assistance')}</option>
                 <option value="supplies">{catLabel('supplies')}</option>
@@ -283,7 +283,7 @@ export const WeeklyReportsPage: React.FC = () => {
               </select>
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">Urgency</span>
+              <span className="text-xs font-medium text-charcoal">Urgency</span>
               <select
                 value={form.urgency}
                 onChange={(e) =>
@@ -292,7 +292,7 @@ export const WeeklyReportsPage: React.FC = () => {
                     urgency: e.target.value as WeeklyReport['urgency'],
                   }))
                 }
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               >
                 <option value="low">Low</option>
                 <option value="normal">Normal</option>
@@ -302,23 +302,23 @@ export const WeeklyReportsPage: React.FC = () => {
             </label>
           </div>
           <label className="block text-sm">
-            <span className="text-xs font-medium text-navy">Subject *</span>
+            <span className="text-xs font-medium text-charcoal">Subject *</span>
             <input
               type="text"
               required
               value={form.subject}
               onChange={(e) => setForm((f) => ({ ...f, subject: e.target.value }))}
-              className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+              className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
             />
           </label>
           <label className="block text-sm">
-            <span className="text-xs font-medium text-navy">Description *</span>
+            <span className="text-xs font-medium text-charcoal">Description *</span>
             <textarea
               rows={3}
               required
               value={form.description}
               onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-              className="mt-1 w-full p-2.5 rounded-lg border border-borderwarm bg-porcelain"
+              className="mt-1 w-full p-2.5 rounded-lg border border-hairline bg-porcelain"
             />
           </label>
           <div className="flex justify-end gap-2">

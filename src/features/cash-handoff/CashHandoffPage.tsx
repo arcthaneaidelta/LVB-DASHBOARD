@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import {
   Banknote,
   Lock,
@@ -99,17 +99,38 @@ export const CashHandoffPage: React.FC = () => {
         }
       />
 
-      {/* Submit Today's Handoff Panel (Instructors & Owners who collected today) */}
+      {/* Explicit 5-State Lifecycle Indicator (V2.0 Section 13) */}
+      <div className="bg-white border border-hairline rounded-atelier px-4 py-3 flex items-center gap-2 flex-wrap text-xs">
+        <span className="font-semibold text-charcoal mr-1">
+          {state.language === 'es' ? 'Estados:' : 'Lifecycle:'}
+        </span>
+        <Badge tone="gray">{state.language === 'es' ? '1. Borrador' : '1. Draft'}</Badge>
+        <span className="text-softgray">→</span>
+        <Badge tone="clay">{state.language === 'es' ? '2. Enviado' : '2. Submitted'}</Badge>
+        <span className="text-softgray">→</span>
+        <Badge tone="amber">{state.language === 'es' ? '3. Pendiente de Confirmación' : '3. Awaiting Confirmation'}</Badge>
+        <span className="text-softgray">→</span>
+        <Badge tone="green">{state.language === 'es' ? '4. Confirmado' : '4. Confirmed'}</Badge>
+        <span className="text-softgray">→</span>
+        <Badge tone="olive">
+          <Lock className="w-3 h-3" /> {state.language === 'es' ? '5. Bloqueado' : '5. Locked'}
+        </Badge>
+      </div>
+
+      {/* Submit Today's Handoff Panel (Draft State) */}
       <Card className="p-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div>
-            <h2 className="text-base font-semibold text-navy">
-              {state.language === 'es'
-                ? 'Cobranza del Día Sin Entregar'
-                : 'Unsubmitted Daily Collection'}
-            </h2>
-            <p className="text-xs text-slatewarm mt-0.5">
-              {t('collector')}: <strong className="text-navy">{currentUser?.name}</strong>
+            <div className="flex items-center gap-2">
+              <h2 className="text-base font-semibold text-charcoal">
+                {state.language === 'es'
+                  ? 'Borrador — Cobranza del Día Sin Entregar'
+                  : 'Draft — Unsubmitted Daily Collection'}
+              </h2>
+              <Badge tone="gray">{state.language === 'es' ? 'Borrador' : 'Draft'}</Badge>
+            </div>
+            <p className="text-xs text-softgray mt-0.5">
+              {t('collector')}: <strong className="text-charcoal">{currentUser?.name}</strong>
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -117,7 +138,7 @@ export const CashHandoffPage: React.FC = () => {
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="h-9 px-3 text-xs rounded-lg border border-borderwarm bg-porcelain text-navy"
+              className="h-9 px-3 text-xs rounded-lg border border-hairline bg-porcelain text-charcoal"
               aria-label="Collection date"
             />
             <Button
@@ -132,31 +153,31 @@ export const CashHandoffPage: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs">
-          <div className="p-3 rounded-xl bg-porcelain border border-borderwarm">
-            <div className="text-slatewarm">{state.language === 'es' ? 'Transacciones' : 'Transactions'}</div>
-            <div className="text-lg font-semibold text-navy tabular-nums mt-0.5">
+          <div className="p-3 rounded-xl bg-porcelain border border-hairline">
+            <div className="text-softgray">{state.language === 'es' ? 'Transacciones' : 'Transactions'}</div>
+            <div className="text-lg font-semibold text-charcoal tabular-nums mt-0.5">
               {unsubmittedSummary.count}
             </div>
           </div>
-          <div className="p-3 rounded-xl bg-champagne-light/70 border border-champagne/40">
-            <div className="text-slatewarm">{state.language === 'es' ? 'Efectivo Total' : 'Cash Total'}</div>
-            <div className="text-lg font-semibold text-navy tabular-nums mt-0.5">
+          <div className="p-3 rounded-xl bg-mist/70 border border-clay/40">
+            <div className="text-softgray">{state.language === 'es' ? 'Efectivo Total' : 'Cash Total'}</div>
+            <div className="text-lg font-semibold text-charcoal tabular-nums mt-0.5">
               {formatCurrencyExact(unsubmittedSummary.cashTotal, state.language)}
             </div>
           </div>
-          <div className="p-3 rounded-xl bg-porcelain border border-borderwarm">
-            <div className="text-slatewarm">{t('method_card')}</div>
-            <div className="text-lg font-semibold text-navy tabular-nums mt-0.5">
+          <div className="p-3 rounded-xl bg-porcelain border border-hairline">
+            <div className="text-softgray">{t('method_card')}</div>
+            <div className="text-lg font-semibold text-charcoal tabular-nums mt-0.5">
               {formatCurrencyExact(unsubmittedSummary.cardTotal, state.language)}
             </div>
           </div>
-          <div className="p-3 rounded-xl bg-porcelain border border-borderwarm">
-            <div className="text-slatewarm">{state.language === 'es' ? 'Digital (Zelle/etc)' : 'Digital Totals'}</div>
-            <div className="text-lg font-semibold text-navy tabular-nums mt-0.5">
+          <div className="p-3 rounded-xl bg-porcelain border border-hairline">
+            <div className="text-softgray">{state.language === 'es' ? 'Digital (Zelle/etc)' : 'Digital Totals'}</div>
+            <div className="text-lg font-semibold text-charcoal tabular-nums mt-0.5">
               {formatCurrencyExact(unsubmittedSummary.digitalTotal, state.language)}
             </div>
           </div>
-          <div className="p-3 rounded-xl bg-navy text-white col-span-2 sm:col-span-1">
+          <div className="p-3 rounded-xl bg-olive text-white col-span-2 sm:col-span-1">
             <div className="text-white/70">{state.language === 'es' ? 'Total General' : 'Overall Total'}</div>
             <div className="text-lg font-semibold tabular-nums mt-0.5">
               {formatCurrencyExact(unsubmittedSummary.overallTotal, state.language)}
@@ -165,16 +186,16 @@ export const CashHandoffPage: React.FC = () => {
         </div>
 
         {unsubmittedToday.length > 0 && (
-          <div className="mt-4 pt-3 border-t border-borderwarm divide-y divide-borderwarm text-xs">
+          <div className="mt-4 pt-3 border-t border-hairline divide-y divide-hairline text-xs">
             {unsubmittedToday.map((p) => {
               const stu = state.students.find((s) => s.id === p.studentId);
               return (
                 <div key={p.id} className="py-2 flex items-center justify-between gap-2">
                   <div>
-                    <span className="font-mono font-semibold text-navy">{p.receiptNumber}</span> ·{' '}
-                    <span className="text-navy">{stu?.fullName}</span> ({t(`method_${p.method}` as TranslationKey)})
+                    <span className="font-mono font-semibold text-charcoal">{p.receiptNumber}</span> ·{' '}
+                    <span className="text-charcoal">{stu?.fullName}</span> ({t(`method_${p.method}` as TranslationKey)})
                   </div>
-                  <span className="font-semibold text-navy tabular-nums">
+                  <span className="font-semibold text-charcoal tabular-nums">
                     {formatCurrencyExact(p.amount, state.language)}
                   </span>
                 </div>
@@ -187,7 +208,7 @@ export const CashHandoffPage: React.FC = () => {
       {/* Handoffs History & Owner Review Queue */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold text-navy">
+          <h2 className="text-base font-semibold text-charcoal">
             {isOwner
               ? state.language === 'es'
                 ? 'Cola de Confirmación e Historial'
@@ -196,8 +217,8 @@ export const CashHandoffPage: React.FC = () => {
                 ? 'Mis Entregas Enviadas'
                 : 'My Submitted Cash Handoffs'}
           </h2>
-          <span className="text-xs text-slatewarm inline-flex items-center gap-1">
-            <ShieldCheck className="w-3.5 h-3.5 text-champagne" />
+          <span className="text-xs text-softgray inline-flex items-center gap-1">
+            <ShieldCheck className="w-3.5 h-3.5 text-clay-dark" />
             {state.language === 'es'
               ? 'Los registros confirmados quedan bloqueados'
               : 'Confirmed entries become locked'}
@@ -223,19 +244,19 @@ export const CashHandoffPage: React.FC = () => {
                 key={h.id}
                 className={`p-5 ${
                   h.status === 'pending'
-                    ? 'border-champagne bg-champagne-light/20'
+                    ? 'border-clay bg-mist/20'
                     : isFlagged
-                      ? 'border-terracotta/50 bg-terracotta-light/25'
+                      ? 'border-status-red/50 bg-status-redBg/25'
                       : ''
                 }`}
               >
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div className="space-y-1.5">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-semibold text-navy text-sm">
+                      <span className="font-semibold text-charcoal text-sm">
                         {h.collectorName}
                       </span>
-                      <span className="text-xs text-slatewarm tabular-nums">{h.date}</span>
+                      <span className="text-xs text-softgray tabular-nums">{h.date}</span>
                       <Badge
                         tone={
                           isConfirmed ? 'sage' : isFlagged ? 'terracotta' : 'amber'
@@ -257,28 +278,28 @@ export const CashHandoffPage: React.FC = () => {
                       </Badge>
                     </div>
 
-                    <div className="flex items-center gap-4 flex-wrap text-xs text-slatewarm">
+                    <div className="flex items-center gap-4 flex-wrap text-xs text-softgray">
                       <span>
                         {state.language === 'es' ? 'Efectivo esperado:' : 'Expected Cash:'}{' '}
-                        <strong className="text-navy tabular-nums">
+                        <strong className="text-charcoal tabular-nums">
                           {formatCurrencyExact(h.expectedCash, state.language)}
                         </strong>
                       </span>
                       <span>
                         {t('method_card')}:{' '}
-                        <strong className="text-navy tabular-nums">
+                        <strong className="text-charcoal tabular-nums">
                           {formatCurrencyExact(h.cardTotal, state.language)}
                         </strong>
                       </span>
                       <span>
                         Digital:{' '}
-                        <strong className="text-navy tabular-nums">
+                        <strong className="text-charcoal tabular-nums">
                           {formatCurrencyExact(h.digitalTotal, state.language)}
                         </strong>
                       </span>
                       <span>
                         {state.language === 'es' ? 'Total:' : 'Overall:'}{' '}
-                        <strong className="text-navy tabular-nums">
+                        <strong className="text-charcoal tabular-nums">
                           {formatCurrencyExact(h.overallTotal, state.language)}
                         </strong>{' '}
                         ({h.transactionCount})
@@ -286,7 +307,7 @@ export const CashHandoffPage: React.FC = () => {
                     </div>
 
                     {isConfirmed && (
-                      <div className="text-xs text-sage-dark flex items-center gap-1.5">
+                      <div className="text-xs text-status-green flex items-center gap-1.5">
                         <CheckCircle2 className="w-3.5 h-3.5" />
                         <span>
                           Received {formatCurrencyExact(h.receivedCash ?? h.expectedCash, state.language)} ·
@@ -297,7 +318,7 @@ export const CashHandoffPage: React.FC = () => {
                     )}
 
                     {isFlagged && h.flagNote && (
-                      <div className="text-xs text-terracotta-dark bg-terracotta-light/60 px-3 py-1.5 rounded-lg inline-block">
+                      <div className="text-xs text-status-red bg-status-redBg/60 px-3 py-1.5 rounded-lg inline-block">
                         Variance {formatCurrencyExact(h.variance ?? 0, state.language)} — {h.flagNote}
                       </div>
                     )}
@@ -331,29 +352,29 @@ export const CashHandoffPage: React.FC = () => {
         title={state.language === 'es' ? 'Confirmar Envío de Entrega' : 'Confirm Cash Handoff Submission'}
       >
         <div className="space-y-4">
-          <p className="text-xs text-slatewarm">
+          <p className="text-xs text-softgray">
             {state.language === 'es'
               ? 'Se enviará el corte del día para revisión y confirmación de Rudy o Sidney.'
               : 'This will create a Pending Owner Confirmation handoff linking all unsubmitted payments for this date.'}
           </p>
-          <div className="p-4 rounded-xl bg-porcelain border border-borderwarm space-y-2 text-sm">
+          <div className="p-4 rounded-xl bg-porcelain border border-hairline space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-slatewarm">{t('date')}</span>
-              <span className="font-semibold text-navy">{selectedDate}</span>
+              <span className="text-softgray">{t('date')}</span>
+              <span className="font-semibold text-charcoal">{selectedDate}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slatewarm">{t('collector')}</span>
-              <span className="font-semibold text-navy">{currentUser?.name}</span>
+              <span className="text-softgray">{t('collector')}</span>
+              <span className="font-semibold text-charcoal">{currentUser?.name}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slatewarm">{state.language === 'es' ? 'Efectivo a entregar' : 'Cash Expected'}</span>
-              <span className="font-semibold text-navy tabular-nums">
+              <span className="text-softgray">{state.language === 'es' ? 'Efectivo a entregar' : 'Cash Expected'}</span>
+              <span className="font-semibold text-charcoal tabular-nums">
                 {formatCurrencyExact(unsubmittedSummary.cashTotal, state.language)}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slatewarm">{state.language === 'es' ? 'Total general' : 'Overall Total'}</span>
-              <span className="font-semibold text-navy tabular-nums">
+              <span className="text-softgray">{state.language === 'es' ? 'Total general' : 'Overall Total'}</span>
+              <span className="font-semibold text-charcoal tabular-nums">
                 {formatCurrencyExact(unsubmittedSummary.overallTotal, state.language)}
               </span>
             </div>
@@ -393,21 +414,21 @@ export const CashHandoffPage: React.FC = () => {
           return (
             <div className="space-y-4">
               {reviewError && (
-                <div className="p-3 rounded-lg bg-terracotta-light text-terracotta-dark text-xs">
+                <div className="p-3 rounded-lg bg-status-redBg text-status-red text-xs">
                   {reviewError}
                 </div>
               )}
 
               <div className="grid grid-cols-3 gap-2.5 text-xs">
                 <div className="p-3 rounded-lg bg-porcelain">
-                  <div className="text-slatewarm">Expected Cash</div>
-                  <div className="text-base font-semibold text-navy tabular-nums mt-0.5">
+                  <div className="text-softgray">Expected Cash</div>
+                  <div className="text-base font-semibold text-charcoal tabular-nums mt-0.5">
                     {formatCurrencyExact(reviewHandoff.expectedCash, state.language)}
                   </div>
                 </div>
                 <div className="p-3 rounded-lg bg-porcelain">
-                  <div className="text-slatewarm">Card + Digital</div>
-                  <div className="text-base font-semibold text-navy tabular-nums mt-0.5">
+                  <div className="text-softgray">Card + Digital</div>
+                  <div className="text-base font-semibold text-charcoal tabular-nums mt-0.5">
                     {formatCurrencyExact(
                       roundCurrency(reviewHandoff.cardTotal + reviewHandoff.digitalTotal),
                       state.language
@@ -415,10 +436,10 @@ export const CashHandoffPage: React.FC = () => {
                   </div>
                 </div>
                 <div className="p-3 rounded-lg bg-porcelain">
-                  <div className="text-slatewarm">Variance</div>
+                  <div className="text-softgray">Variance</div>
                   <div
                     className={`text-base font-semibold tabular-nums mt-0.5 ${
-                      liveVariance === 0 ? 'text-sage-dark' : 'text-terracotta-dark'
+                      liveVariance === 0 ? 'text-status-green' : 'text-status-red'
                     }`}
                   >
                     {liveVariance >= 0 ? '+' : ''}
@@ -428,7 +449,7 @@ export const CashHandoffPage: React.FC = () => {
               </div>
 
               <label className="block text-sm">
-                <span className="text-xs font-medium text-navy">
+                <span className="text-xs font-medium text-charcoal">
                   {state.language === 'es'
                     ? 'Efectivo Físico Recibido ($)'
                     : 'Physical Cash Received ($)'}
@@ -439,12 +460,12 @@ export const CashHandoffPage: React.FC = () => {
                   min="0"
                   value={receivedInput}
                   onChange={(e) => setReceivedInput(e.target.value)}
-                  className="mt-1 w-full h-11 px-3 rounded-lg border border-borderwarm bg-porcelain text-base font-semibold tabular-nums"
+                  className="mt-1 w-full h-11 px-3 rounded-lg border border-hairline bg-porcelain text-base font-semibold tabular-nums"
                 />
               </label>
 
               {/* Included transactions breakdown */}
-              <div className="max-h-40 overflow-y-auto border border-borderwarm rounded-lg divide-y divide-borderwarm text-xs">
+              <div className="max-h-40 overflow-y-auto border border-hairline rounded-lg divide-y divide-hairline text-xs">
                 {linked.map((p) => {
                   const stu = state.students.find((s) => s.id === p.studentId);
                   return (
@@ -462,7 +483,7 @@ export const CashHandoffPage: React.FC = () => {
               </div>
 
               <label className="block text-sm">
-                <span className="text-xs font-medium text-navy">
+                <span className="text-xs font-medium text-charcoal">
                   {state.language === 'es'
                     ? 'Nota de discrepancia (obligatoria solo si marcas discrepancia)'
                     : 'Discrepancy Note (required if flagging variance)'}
@@ -472,11 +493,11 @@ export const CashHandoffPage: React.FC = () => {
                   value={flagNote}
                   onChange={(e) => setFlagNote(e.target.value)}
                   placeholder="e.g., Missing $10 bill — instructor double-checking studio envelope"
-                  className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                  className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
                 />
               </label>
 
-              <p className="text-[11px] text-slatewarm">
+              <p className="text-[11px] text-softgray">
                 {state.language === 'es'
                   ? 'Confirmar bloqueará permanentemente estas entradas de efectivo en la demostración.'
                   : 'Confirming permanently locks all associated payment entries against ordinary editing.'}

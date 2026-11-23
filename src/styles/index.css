@@ -4,34 +4,33 @@
 
 @layer base {
   :root {
-    --color-porcelain: #F7F5EF;
-    --color-ivory: #F1EEE5;
+    --color-porcelain: #F7F5F0;
+    --color-charcoal: #292D29;
+    --color-sage: #879587;
+    --color-olive: #424D40;
+    --color-clay: #BD806B;
+    --color-mist: #E8EAE3;
     --color-white: #FFFFFF;
-    --color-navy: #17243B;
-    --color-navy-deep: #202E47;
-    --color-champagne: #B99A60;
-    --color-soft-gold: #D7C49A;
-    --color-sage: #82917B;
-    --color-terracotta: #B87968;
-    --color-slate: #727782;
-    --color-border: #E7E3DA;
+    --color-soft-gray: #858780;
+    --color-hairline: #DDDCD4;
   }
 
   html {
     scroll-behavior: smooth;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    color: #17243B;
-    background-color: #F7F5EF;
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #292D29;
+    background-color: #F7F5F0;
     overflow-x: hidden;
   }
 
   body {
     overflow-x: hidden;
     min-height: 100vh;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 
   *:focus-visible {
-    outline: 2px solid #B99A60;
+    outline: 2px solid #424D40;
     outline-offset: 2px;
   }
 }
@@ -44,30 +43,30 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Custom warm scrollbar */
+/* Atelier scrollbar */
 ::-webkit-scrollbar {
   width: 7px;
   height: 7px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #F1EEE5;
+  background: #F7F5F0;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #D7C49A;
+  background: #C9CEC4;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #B99A60;
+  background: #879587;
 }
 
-/* Refined restrained animations */
-@keyframes fadeIn {
+/* Restrained editorial motion */
+@keyframes atelierFadeUp {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -75,10 +74,10 @@
   }
 }
 
-@keyframes drawerIn {
+@keyframes atelierDrawerIn {
   from {
     opacity: 0;
-    transform: translateX(24px);
+    transform: translateX(22px);
   }
   to {
     opacity: 1;
@@ -86,10 +85,10 @@
   }
 }
 
-@keyframes modalIn {
+@keyframes atelierModalIn {
   from {
     opacity: 0;
-    transform: scale(0.97) translateY(6px);
+    transform: scale(0.98) translateY(6px);
   }
   to {
     opacity: 1;
@@ -97,10 +96,10 @@
   }
 }
 
-@keyframes toastIn {
+@keyframes atelierToastIn {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -108,7 +107,7 @@
   }
 }
 
-@keyframes progressLine {
+@keyframes atelierHairline {
   from {
     transform: scaleX(0);
   }
@@ -118,24 +117,24 @@
 }
 
 .animate-fade-in {
-  animation: fadeIn 200ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: atelierFadeUp 260ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .animate-drawer-in {
-  animation: drawerIn 240ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: atelierDrawerIn 240ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .animate-modal-in {
-  animation: modalIn 200ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: atelierModalIn 190ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .animate-toast-in {
-  animation: toastIn 220ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: atelierToastIn 200ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.animate-progress-line {
+.animate-hairline {
   transform-origin: left center;
-  animation: progressLine 1100ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: atelierHairline 950ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -146,21 +145,17 @@
   .animate-drawer-in,
   .animate-modal-in,
   .animate-toast-in,
-  .animate-progress-line {
+  .animate-hairline {
     animation: none !important;
     transition: none !important;
   }
 }
 
-/* Print stylesheet for receipts & reports */
 @media print {
   body {
     background: #ffffff !important;
   }
   .no-print {
     display: none !important;
-  }
-  .print-only {
-    display: block !important;
   }
 }

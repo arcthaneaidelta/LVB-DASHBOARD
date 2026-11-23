@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   BarChart,
@@ -457,8 +457,8 @@ export const AccountingPage: React.FC = () => {
               onClick={() => setDatePreset(val)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
                 datePreset === val
-                  ? 'bg-navy text-white border-navy'
-                  : 'bg-porcelain text-navy border-borderwarm'
+                  ? 'bg-olive text-white border-olive'
+                  : 'bg-porcelain text-charcoal border-hairline'
               }`}
             >
               {label}
@@ -466,14 +466,14 @@ export const AccountingPage: React.FC = () => {
           ))}
 
           {datePreset === 'custom' && (
-            <div className="flex items-center gap-1.5 bg-porcelain border border-borderwarm rounded-lg px-2.5 py-1">
+            <div className="flex items-center gap-1.5 bg-porcelain border border-hairline rounded-lg px-2.5 py-1">
               <input
                 type="date"
                 value={customStart}
                 onChange={(e) => setCustomStart(e.target.value)}
                 className="text-xs bg-transparent"
               />
-              <span className="text-xs text-slatewarm">–</span>
+              <span className="text-xs text-softgray">–</span>
               <input
                 type="date"
                 value={customEnd}
@@ -486,7 +486,7 @@ export const AccountingPage: React.FC = () => {
           <select
             value={classFilter}
             onChange={(e) => setClassFilter(e.target.value)}
-            className="h-8 px-2.5 text-xs rounded-lg border border-borderwarm bg-porcelain"
+            className="h-8 px-2.5 text-xs rounded-lg border border-hairline bg-porcelain"
           >
             <option value="all">{state.language === 'es' ? 'Todas las clases' : 'All classes'}</option>
             {state.classes.map((c) => (
@@ -499,7 +499,7 @@ export const AccountingPage: React.FC = () => {
           <select
             value={methodFilter}
             onChange={(e) => setMethodFilter(e.target.value)}
-            className="h-8 px-2.5 text-xs rounded-lg border border-borderwarm bg-porcelain"
+            className="h-8 px-2.5 text-xs rounded-lg border border-hairline bg-porcelain"
           >
             <option value="all">{state.language === 'es' ? 'Todos los métodos' : 'All payment types'}</option>
             {METHODS.map((m) => (
@@ -512,7 +512,7 @@ export const AccountingPage: React.FC = () => {
           <select
             value={collectorFilter}
             onChange={(e) => setCollectorFilter(e.target.value)}
-            className="h-8 px-2.5 text-xs rounded-lg border border-borderwarm bg-porcelain"
+            className="h-8 px-2.5 text-xs rounded-lg border border-hairline bg-porcelain"
           >
             <option value="all">{state.language === 'es' ? 'Todos los cobradores' : 'All collectors'}</option>
             {state.users
@@ -534,7 +534,7 @@ export const AccountingPage: React.FC = () => {
       </Card>
 
       {/* Module Tabs */}
-      <div className="flex items-center gap-1 bg-white border border-borderwarm rounded-xl p-1 overflow-x-auto">
+      <div className="flex items-center gap-1 bg-white border border-hairline rounded-xl p-1 overflow-x-auto">
         {(
           [
             ['collections', state.language === 'es' ? 'Desglose de Cobranza' : 'Collections Breakdown'],
@@ -548,7 +548,7 @@ export const AccountingPage: React.FC = () => {
             type="button"
             onClick={() => setTab(id)}
             className={`px-4 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
-              tab === id ? 'bg-navy text-white' : 'text-slatewarm hover:text-navy'
+              tab === id ? 'bg-olive text-white' : 'text-softgray hover:text-charcoal'
             }`}
           >
             {label}
@@ -562,18 +562,18 @@ export const AccountingPage: React.FC = () => {
           <Card className="p-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
               <div>
-                <h2 className="text-base font-semibold text-navy">
+                <h2 className="text-base font-semibold text-charcoal">
                   {state.language === 'es'
                     ? 'Agrupar Cobranza Interactivamente'
                     : 'Interactive Collections Breakdown'}
                 </h2>
-                <p className="text-xs text-slatewarm">
+                <p className="text-xs text-softgray">
                   {state.language === 'es'
                     ? 'Haz clic en una fila o barra para aplicar el filtro instantáneamente.'
                     : 'Click any bar or row to cross-filter matching payment records below.'}
                 </p>
               </div>
-              <div className="inline-flex rounded-lg border border-borderwarm bg-porcelain p-0.5">
+              <div className="inline-flex rounded-lg border border-hairline bg-porcelain p-0.5">
                 {(
                   [
                     ['method', state.language === 'es' ? 'Método' : 'Method'],
@@ -587,7 +587,7 @@ export const AccountingPage: React.FC = () => {
                     type="button"
                     onClick={() => setGroupBy(g)}
                     className={`px-2.5 py-1 text-xs font-medium rounded-md ${
-                      groupBy === g ? 'bg-navy text-white' : 'text-slatewarm'
+                      groupBy === g ? 'bg-olive text-white' : 'text-softgray'
                     }`}
                   >
                     {label}
@@ -599,16 +599,16 @@ export const AccountingPage: React.FC = () => {
             <div className="h-56 w-full mb-5">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={groupedBreakdown} margin={{ top: 6, right: 8, left: -12, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E7E3DA" vertical={false} />
-                  <XAxis dataKey="label" tick={{ fill: '#727782', fontSize: 11 }} axisLine={{ stroke: '#E7E3DA' }} tickLine={false} />
-                  <YAxis tick={{ fill: '#727782', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${v}`} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#DDDCD4" vertical={false} />
+                  <XAxis dataKey="label" tick={{ fill: '#858780', fontSize: 11 }} axisLine={{ stroke: '#DDDCD4' }} tickLine={false} />
+                  <YAxis tick={{ fill: '#858780', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${v}`} />
                   <Tooltip
                     formatter={(v: number) => formatCurrencyExact(v, state.language)}
-                    contentStyle={{ borderRadius: '10px', border: '1px solid #E7E3DA', fontSize: '12px' }}
+                    contentStyle={{ borderRadius: '10px', border: '1px solid #DDDCD4', fontSize: '12px' }}
                   />
                   <Bar
                     dataKey="total"
-                    fill="#17243B"
+                    fill="#424D40"
                     radius={[4, 4, 0, 0]}
                     cursor="pointer"
                     onClick={(data) => data?.key && handleSegmentFilter(String(data.key))}
@@ -620,7 +620,7 @@ export const AccountingPage: React.FC = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs sm:text-sm">
                 <thead>
-                  <tr className="bg-porcelain border-b border-borderwarm text-[11px] uppercase tracking-wider text-slatewarm">
+                  <tr className="bg-porcelain border-b border-hairline text-[11px] uppercase tracking-wider text-softgray">
                     <th className="py-2.5 px-3">{groupBy}</th>
                     <th className="py-2.5 px-3 text-right">Txns</th>
                     <th className="py-2.5 px-3 text-right">{t('method_cash')}</th>
@@ -630,20 +630,20 @@ export const AccountingPage: React.FC = () => {
                     <th className="py-2.5 px-3 text-right">{t('total')}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-borderwarm">
+                <tbody className="divide-y divide-hairline">
                   {groupedBreakdown.map((g) => (
                     <tr
                       key={g.key}
                       onClick={() => handleSegmentFilter(g.key)}
                       className="hover:bg-porcelain cursor-pointer"
                     >
-                      <td className="py-2.5 px-3 font-semibold text-navy">{g.label}</td>
-                      <td className="py-2.5 px-3 text-right tabular-nums text-slatewarm">{g.count}</td>
+                      <td className="py-2.5 px-3 font-semibold text-charcoal">{g.label}</td>
+                      <td className="py-2.5 px-3 text-right tabular-nums text-softgray">{g.count}</td>
                       <td className="py-2.5 px-3 text-right tabular-nums">{formatCurrencyExact(g.cash, state.language)}</td>
                       <td className="py-2.5 px-3 text-right tabular-nums">{formatCurrencyExact(g.digital, state.language)}</td>
                       <td className="py-2.5 px-3 text-right tabular-nums">{formatCurrencyExact(g.deposits, state.language)}</td>
                       <td className="py-2.5 px-3 text-right tabular-nums">{formatCurrencyExact(g.weekly, state.language)}</td>
-                      <td className="py-2.5 px-3 text-right font-semibold text-navy tabular-nums">
+                      <td className="py-2.5 px-3 text-right font-semibold text-charcoal tabular-nums">
                         {formatCurrencyExact(g.total, state.language)}
                       </td>
                     </tr>
@@ -658,8 +658,8 @@ export const AccountingPage: React.FC = () => {
       {/* TAB 2: Student Balances */}
       {tab === 'balances' && (
         <Card className="overflow-hidden">
-          <div className="p-4 border-b border-borderwarm flex items-center justify-between gap-2 flex-wrap">
-            <h2 className="text-base font-semibold text-navy">
+          <div className="p-4 border-b border-hairline flex items-center justify-between gap-2 flex-wrap">
+            <h2 className="text-base font-semibold text-charcoal">
               {state.language === 'es' ? 'Saldos y Atrasos de Alumnas' : 'Student Balances & Behind-Schedule Ledger'}
             </h2>
             <div className="flex items-center gap-2">
@@ -674,7 +674,7 @@ export const AccountingPage: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs sm:text-sm">
               <thead>
-                <tr className="bg-porcelain border-b border-borderwarm text-[11px] uppercase tracking-wider text-slatewarm">
+                <tr className="bg-porcelain border-b border-hairline text-[11px] uppercase tracking-wider text-softgray">
                   <th className="py-3 px-4">{state.language === 'es' ? 'Alumna' : 'Student'}</th>
                   <th className="py-3 px-4">{state.language === 'es' ? 'Clase' : 'Class'}</th>
                   <th className="py-3 px-4 text-right">{t('courseTotal')}</th>
@@ -685,19 +685,19 @@ export const AccountingPage: React.FC = () => {
                   <th className="py-3 px-4 text-center">{state.language === 'es' ? 'Faltas' : 'Missed'}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-borderwarm">
+              <tbody className="divide-y divide-hairline">
                 {studentBalances.map(({ stu, cls, fin, missedCount }) => (
                   <tr
                     key={stu.id}
                     onClick={() => navigate(`/app/students?studentId=${stu.id}`)}
                     className="hover:bg-porcelain/70 cursor-pointer"
                   >
-                    <td className="py-3 px-4 font-semibold text-navy">{stu.fullName}</td>
-                    <td className="py-3 px-4 text-xs text-slatewarm">{cls?.name}</td>
+                    <td className="py-3 px-4 font-semibold text-charcoal">{stu.fullName}</td>
+                    <td className="py-3 px-4 text-xs text-softgray">{cls?.name}</td>
                     <td className="py-3 px-4 text-right tabular-nums">{formatCurrencyExact(fin.courseTotal, state.language)}</td>
-                    <td className="py-3 px-4 text-right tabular-nums text-sage-dark font-medium">{formatCurrencyExact(fin.totalPaid, state.language)}</td>
-                    <td className="py-3 px-4 text-right tabular-nums font-semibold text-navy">{formatCurrencyExact(fin.remainingBalance, state.language)}</td>
-                    <td className="py-3 px-4 text-right tabular-nums text-slatewarm">{formatCurrencyExact(fin.dueToDate, state.language)}</td>
+                    <td className="py-3 px-4 text-right tabular-nums text-status-green font-medium">{formatCurrencyExact(fin.totalPaid, state.language)}</td>
+                    <td className="py-3 px-4 text-right tabular-nums font-semibold text-charcoal">{formatCurrencyExact(fin.remainingBalance, state.language)}</td>
+                    <td className="py-3 px-4 text-right tabular-nums text-softgray">{formatCurrencyExact(fin.dueToDate, state.language)}</td>
                     <td className="py-3 px-4 text-right tabular-nums">
                       {fin.behindSchedule > 0 ? (
                         <Badge tone="terracotta">
@@ -734,24 +734,24 @@ export const AccountingPage: React.FC = () => {
 
           <Card className="p-5 space-y-3">
             <div className="flex items-center justify-between">
-              <h2 className="text-base font-semibold text-navy">
+              <h2 className="text-base font-semibold text-charcoal">
                 {state.language === 'es' ? 'Entregas de Efectivo' : 'Cash Handoff Audit Trail'}
               </h2>
               <Button size="sm" variant="secondary" onClick={() => navigate('/app/cash-handoff')}>
                 {state.language === 'es' ? 'Gestionar Entregas' : 'Manage Handoffs'}
               </Button>
             </div>
-            <div className="divide-y divide-borderwarm">
+            <div className="divide-y divide-hairline">
               {state.cashHandoffs.map((h) => (
                 <div
                   key={h.id}
                   className="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
                 >
                   <div>
-                    <div className="font-semibold text-navy">
+                    <div className="font-semibold text-charcoal">
                       {h.collectorName} · {h.date}
                     </div>
-                    <div className="text-slatewarm">
+                    <div className="text-softgray">
                       Expected: {formatCurrencyExact(h.expectedCash, state.language)} · Received:{' '}
                       {h.receivedCash !== undefined
                         ? formatCurrencyExact(h.receivedCash, state.language)
@@ -839,8 +839,8 @@ export const AccountingPage: React.FC = () => {
           ].map((rep) => (
             <Card key={rep.title} className="p-5 flex flex-col justify-between gap-4">
               <div>
-                <h3 className="font-semibold text-navy text-sm">{rep.title}</h3>
-                <p className="text-xs text-slatewarm mt-1.5 leading-relaxed">{rep.desc}</p>
+                <h3 className="font-semibold text-charcoal text-sm">{rep.title}</h3>
+                <p className="text-xs text-softgray mt-1.5 leading-relaxed">{rep.desc}</p>
               </div>
               <div className="flex items-center gap-2">
                 {rep.openLink ? (

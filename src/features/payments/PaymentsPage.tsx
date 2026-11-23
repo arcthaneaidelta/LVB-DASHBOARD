@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import {
   CreditCard,
   Plus,
@@ -237,12 +237,12 @@ export const PaymentsPage: React.FC = () => {
 
       {/* Tabs & Search */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="inline-flex bg-white border border-borderwarm rounded-lg p-1 w-fit">
+        <div className="inline-flex bg-white border border-hairline rounded-lg p-1 w-fit">
           <button
             type="button"
             onClick={() => setTab('payments')}
             className={`px-3.5 py-1.5 rounded-md text-xs font-medium transition-colors ${
-              tab === 'payments' ? 'bg-navy text-white' : 'text-slatewarm hover:text-navy'
+              tab === 'payments' ? 'bg-olive text-white' : 'text-softgray hover:text-charcoal'
             }`}
           >
             {state.language === 'es' ? 'Pagos Confirmados' : 'Confirmed Payments'} (
@@ -252,12 +252,12 @@ export const PaymentsPage: React.FC = () => {
             type="button"
             onClick={() => setTab('deposits')}
             className={`px-3.5 py-1.5 rounded-md text-xs font-medium transition-colors inline-flex items-center gap-1.5 ${
-              tab === 'deposits' ? 'bg-navy text-white' : 'text-slatewarm hover:text-navy'
+              tab === 'deposits' ? 'bg-olive text-white' : 'text-softgray hover:text-charcoal'
             }`}
           >
             {state.language === 'es' ? 'Depósitos y Aprobación' : 'Deposits & Approval'}
             {pendingDeposits.length > 0 && (
-              <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-champagne text-white">
+              <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-clay text-white">
                 {pendingDeposits.length}
               </span>
             )}
@@ -267,7 +267,7 @@ export const PaymentsPage: React.FC = () => {
         {tab === 'payments' && (
           <div className="flex items-center gap-2 flex-1 sm:max-w-md">
             <div className="relative flex-1">
-              <Search className="w-4 h-4 text-slatewarm absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-softgray absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="search"
                 value={search}
@@ -277,13 +277,13 @@ export const PaymentsPage: React.FC = () => {
                     ? 'Buscar recibo LVB-000... o alumna'
                     : 'Search receipt LVB-000... or student'
                 }
-                className="w-full h-9 pl-9 pr-3 text-xs bg-white border border-borderwarm rounded-lg"
+                className="w-full h-9 pl-9 pr-3 text-xs bg-white border border-hairline rounded-lg"
               />
             </div>
             <select
               value={methodFilter}
               onChange={(e) => setMethodFilter(e.target.value)}
-              className="h-9 px-2.5 text-xs bg-white border border-borderwarm rounded-lg"
+              className="h-9 px-2.5 text-xs bg-white border border-hairline rounded-lg"
             >
               <option value="all">{t('all')}</option>
               {METHODS.map((m) => (
@@ -310,7 +310,7 @@ export const PaymentsPage: React.FC = () => {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-sm">
                   <thead>
-                    <tr className="bg-porcelain border-b border-borderwarm text-[11px] font-semibold uppercase tracking-wider text-slatewarm">
+                    <tr className="bg-porcelain border-b border-hairline text-[11px] font-semibold uppercase tracking-wider text-softgray">
                       <th className="py-3 px-4">{t('receiptNumber')}</th>
                       <th className="py-3 px-4">{t('date')}</th>
                       <th className="py-3 px-4">{state.language === 'es' ? 'Alumna' : 'Student'}</th>
@@ -321,32 +321,32 @@ export const PaymentsPage: React.FC = () => {
                       <th className="py-3 px-4 text-right">{t('actions')}</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-borderwarm">
+                  <tbody className="divide-y divide-hairline">
                     {visiblePayments.map((p) => {
                       const stu = state.students.find((s) => s.id === p.studentId);
                       const cls = state.classes.find((c) => c.id === p.classId);
                       return (
                         <tr key={p.id} className="hover:bg-porcelain/60">
-                          <td className="py-3 px-4 font-mono text-xs font-semibold text-navy">
+                          <td className="py-3 px-4 font-mono text-xs font-semibold text-charcoal">
                             <span className="inline-flex items-center gap-1.5">
                               {p.receiptNumber}
                               {p.locked && (
                                 <span title={t('locked')}>
-                                  <Lock className="w-3 h-3 text-champagne" />
+                                  <Lock className="w-3 h-3 text-clay-dark" />
                                 </span>
                               )}
                             </span>
                           </td>
-                          <td className="py-3 px-4 text-xs text-slatewarm tabular-nums">
+                          <td className="py-3 px-4 text-xs text-softgray tabular-nums">
                             {p.date}
                           </td>
                           <td className="py-3 px-4">
-                            <div className="font-medium text-navy text-xs">
+                            <div className="font-medium text-charcoal text-xs">
                               {stu?.fullName ?? p.studentId}
                             </div>
-                            <div className="text-[11px] text-slatewarm">{cls?.name}</div>
+                            <div className="text-[11px] text-softgray">{cls?.name}</div>
                           </td>
-                          <td className="py-3 px-4 text-xs text-navy">
+                          <td className="py-3 px-4 text-xs text-charcoal">
                             {p.category === 'deposit' ? t('deposit') : `Week ${p.week}`}
                           </td>
                           <td className="py-3 px-4">
@@ -354,8 +354,8 @@ export const PaymentsPage: React.FC = () => {
                               {t(`method_${p.method}` as TranslationKey)}
                             </Badge>
                           </td>
-                          <td className="py-3 px-4 text-xs text-slatewarm">{p.collectorName}</td>
-                          <td className="py-3 px-4 text-right font-semibold text-navy tabular-nums">
+                          <td className="py-3 px-4 text-xs text-softgray">{p.collectorName}</td>
+                          <td className="py-3 px-4 text-right font-semibold text-charcoal tabular-nums">
                             {formatCurrencyExact(p.amount, state.language)}
                           </td>
                           <td className="py-3 px-4 text-right">
@@ -377,7 +377,7 @@ export const PaymentsPage: React.FC = () => {
                                     notes: p.notes,
                                   })
                                 }
-                                className="p-1.5 rounded-md hover:bg-ivory text-navy"
+                                className="p-1.5 rounded-md hover:bg-mist text-charcoal"
                                 title="Preview Receipt"
                               >
                                 <Eye className="w-3.5 h-3.5" />
@@ -403,7 +403,7 @@ export const PaymentsPage: React.FC = () => {
                                       language: state.language,
                                     })
                                   }
-                                  className="p-1.5 rounded-md hover:bg-ivory text-navy"
+                                  className="p-1.5 rounded-md hover:bg-mist text-charcoal"
                                   title="Download PDF"
                                 >
                                   <Download className="w-3.5 h-3.5" />
@@ -426,16 +426,16 @@ export const PaymentsPage: React.FC = () => {
                 return (
                   <Card key={p.id} className="p-4 space-y-2">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="font-mono text-xs font-semibold text-navy inline-flex items-center gap-1">
+                      <span className="font-mono text-xs font-semibold text-charcoal inline-flex items-center gap-1">
                         {p.receiptNumber}
-                        {p.locked && <Lock className="w-3 h-3 text-champagne" />}
+                        {p.locked && <Lock className="w-3 h-3 text-clay-dark" />}
                       </span>
-                      <span className="font-semibold text-navy tabular-nums">
+                      <span className="font-semibold text-charcoal tabular-nums">
                         {formatCurrencyExact(p.amount, state.language)}
                       </span>
                     </div>
-                    <div className="text-sm font-medium text-navy">{stu?.fullName}</div>
-                    <div className="flex items-center justify-between text-xs text-slatewarm">
+                    <div className="text-sm font-medium text-charcoal">{stu?.fullName}</div>
+                    <div className="flex items-center justify-between text-xs text-softgray">
                       <span>
                         {p.date} · {t(`method_${p.method}` as TranslationKey)} · {p.collectorName}
                       </span>
@@ -456,7 +456,7 @@ export const PaymentsPage: React.FC = () => {
                             notes: p.notes,
                           })
                         }
-                        className="text-champagne font-medium"
+                        className="text-clay-dark font-medium"
                       >
                         {state.language === 'es' ? 'Recibo' : 'Receipt'}
                       </button>
@@ -479,12 +479,12 @@ export const PaymentsPage: React.FC = () => {
               <Card
                 key={dep.id}
                 className={`p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
-                  isPending ? 'border-amberwarm/50 bg-amberwarm-light/25' : ''
+                  isPending ? 'border-status-amber/50 bg-status-amberBg/25' : ''
                 }`}
               >
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-mono text-xs font-semibold text-navy">
+                    <span className="font-mono text-xs font-semibold text-charcoal">
                       {dep.receiptNumber}
                     </span>
                     <Badge tone={isPending ? 'amber' : 'sage'}>
@@ -500,13 +500,13 @@ export const PaymentsPage: React.FC = () => {
                     </Badge>
                     <Badge tone="slate">{t(`method_${dep.method}` as TranslationKey)}</Badge>
                   </div>
-                  <div className="text-sm font-semibold text-navy">
+                  <div className="text-sm font-semibold text-charcoal">
                     {stu?.fullName ?? dep.studentId} —{' '}
                     <span className="tabular-nums">
                       {formatCurrencyExact(dep.amount, state.language)}
                     </span>
                   </div>
-                  <div className="text-xs text-slatewarm">
+                  <div className="text-xs text-softgray">
                     {cls?.name} · {t('collector')}: {dep.collectorName} · {dep.date}
                     {dep.confirmedByName && (
                       <span>
@@ -515,7 +515,7 @@ export const PaymentsPage: React.FC = () => {
                       </span>
                     )}
                   </div>
-                  {dep.notes && <p className="text-xs text-slatewarm italic">{dep.notes}</p>}
+                  {dep.notes && <p className="text-xs text-softgray italic">{dep.notes}</p>}
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0 flex-wrap">
@@ -581,12 +581,12 @@ export const PaymentsPage: React.FC = () => {
       >
         <form onSubmit={handleRecordSubmit} className="space-y-4">
           {formError && (
-            <div className="p-3 rounded-lg bg-terracotta-light text-terracotta-dark text-xs">
+            <div className="p-3 rounded-lg bg-status-redBg text-status-red text-xs">
               {formError}
             </div>
           )}
           <label className="block text-sm">
-            <span className="text-xs font-medium text-navy">
+            <span className="text-xs font-medium text-charcoal">
               {state.language === 'es' ? 'Alumna *' : 'Student *'}
             </span>
             <select
@@ -608,7 +608,7 @@ export const PaymentsPage: React.FC = () => {
                   ),
                 }));
               }}
-              className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+              className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
             >
               {eligibleStudents.map((s) => (
                 <option key={s.id} value={s.id}>
@@ -619,7 +619,7 @@ export const PaymentsPage: React.FC = () => {
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             <label className="block">
-              <span className="text-xs font-medium text-navy">{t('amount')} ($) *</span>
+              <span className="text-xs font-medium text-charcoal">{t('amount')} ($) *</span>
               <input
                 type="number"
                 step="0.01"
@@ -627,17 +627,17 @@ export const PaymentsPage: React.FC = () => {
                 required
                 value={form.amount}
                 onChange={(e) => setForm((f) => ({ ...f, amount: e.target.value }))}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain tabular-nums font-semibold"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain tabular-nums font-semibold"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">{t('paymentMethod')}</span>
+              <span className="text-xs font-medium text-charcoal">{t('paymentMethod')}</span>
               <select
                 value={form.method}
                 onChange={(e) =>
                   setForm((f) => ({ ...f, method: e.target.value as PaymentMethod }))
                 }
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               >
                 {METHODS.map((m) => (
                   <option key={m} value={m}>
@@ -648,7 +648,7 @@ export const PaymentsPage: React.FC = () => {
             </label>
             {recordMode === 'payment' && (
               <label className="block">
-                <span className="text-xs font-medium text-navy">
+                <span className="text-xs font-medium text-charcoal">
                   {state.language === 'es' ? 'Semana' : 'Week'}
                 </span>
                 <input
@@ -657,28 +657,28 @@ export const PaymentsPage: React.FC = () => {
                   max={12}
                   value={form.week}
                   onChange={(e) => setForm((f) => ({ ...f, week: Number(e.target.value) }))}
-                  className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                  className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
                 />
               </label>
             )}
             <label className="block">
-              <span className="text-xs font-medium text-navy">{t('date')} *</span>
+              <span className="text-xs font-medium text-charcoal">{t('date')} *</span>
               <input
                 type="date"
                 required
                 value={form.date}
                 onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               />
             </label>
           </div>
           <label className="block text-sm">
-            <span className="text-xs font-medium text-navy">{t('notes')}</span>
+            <span className="text-xs font-medium text-charcoal">{t('notes')}</span>
             <input
               type="text"
               value={form.notes}
               onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
-              className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+              className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
             />
           </label>
           <div className="flex justify-end gap-2 pt-2">
@@ -700,33 +700,33 @@ export const PaymentsPage: React.FC = () => {
           const stu = state.students.find((s) => s.id === confirmDepTarget.studentId);
           return (
             <div className="space-y-4">
-              <p className="text-xs text-slatewarm">
+              <p className="text-xs text-softgray">
                 {state.language === 'es'
                   ? 'Confirmar este depósito lo agregará al libro contable confirmado, actualizará el saldo de la alumna y marcará "Depósito confirmado" en su lista de inscripción.'
                   : 'Confirming posts this deposit to the confirmed ledger, updates the student balance, and checks off "Deposit confirmed" on their enrollment checklist.'}
               </p>
-              <div className="p-4 rounded-xl bg-porcelain border border-borderwarm space-y-1.5 text-sm">
+              <div className="p-4 rounded-xl bg-porcelain border border-hairline space-y-1.5 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-slatewarm">{t('receiptNumber')}</span>
-                  <span className="font-mono font-semibold text-navy">
+                  <span className="text-softgray">{t('receiptNumber')}</span>
+                  <span className="font-mono font-semibold text-charcoal">
                     {confirmDepTarget.receiptNumber}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slatewarm">
+                  <span className="text-softgray">
                     {state.language === 'es' ? 'Alumna' : 'Student'}
                   </span>
-                  <span className="font-semibold text-navy">{stu?.fullName}</span>
+                  <span className="font-semibold text-charcoal">{stu?.fullName}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slatewarm">{t('amount')}</span>
-                  <span className="font-semibold text-navy tabular-nums">
+                  <span className="text-softgray">{t('amount')}</span>
+                  <span className="font-semibold text-charcoal tabular-nums">
                     {formatCurrencyExact(confirmDepTarget.amount, state.language)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slatewarm">{t('collector')}</span>
-                  <span className="text-navy">{confirmDepTarget.collectorName}</span>
+                  <span className="text-softgray">{t('collector')}</span>
+                  <span className="text-charcoal">{confirmDepTarget.collectorName}</span>
                 </div>
               </div>
               <div className="flex justify-end gap-2">
@@ -759,11 +759,11 @@ export const PaymentsPage: React.FC = () => {
           const cls = state.classes.find((c) => c.id === previewReceipt.classId);
           return (
             <div className="space-y-4">
-              <div className="rounded-xl border border-borderwarm overflow-hidden bg-white">
-                <div className="bg-navy text-white px-5 py-4 border-b-2 border-champagne flex items-center justify-between">
+              <div className="rounded-xl border border-hairline overflow-hidden bg-white">
+                <div className="bg-olive text-white px-5 py-4 border-b-2 border-clay flex items-center justify-between">
                   <div>
                     <div className="font-editorial text-xl leading-none">LVB Pulse</div>
-                    <div className="text-[10px] tracking-[0.16em] text-champagne-soft uppercase mt-1">
+                    <div className="text-[10px] tracking-[0.16em] text-mist uppercase mt-1">
                       La Voute Beauty Academy LLC
                     </div>
                   </div>
@@ -778,8 +778,8 @@ export const PaymentsPage: React.FC = () => {
                 <div
                   className={`px-5 py-2 text-xs font-semibold ${
                     previewReceipt.isConfirmed
-                      ? 'bg-sage-light text-sage-dark'
-                      : 'bg-amberwarm-light text-amberwarm-dark'
+                      ? 'bg-status-greenBg text-status-green'
+                      : 'bg-status-amberBg text-status-amber'
                   }`}
                 >
                   {previewReceipt.isConfirmed
@@ -794,39 +794,39 @@ export const PaymentsPage: React.FC = () => {
                 <div className="p-5 space-y-3 text-sm">
                   <div className="grid grid-cols-2 gap-3 text-xs">
                     <div>
-                      <div className="text-slatewarm">{state.language === 'es' ? 'Alumna' : 'Student'}</div>
-                      <div className="font-semibold text-navy mt-0.5">{stu?.fullName}</div>
+                      <div className="text-softgray">{state.language === 'es' ? 'Alumna' : 'Student'}</div>
+                      <div className="font-semibold text-charcoal mt-0.5">{stu?.fullName}</div>
                     </div>
                     <div>
-                      <div className="text-slatewarm">{state.language === 'es' ? 'Curso / Clase' : 'Course / Class'}</div>
-                      <div className="font-semibold text-navy mt-0.5">
+                      <div className="text-softgray">{state.language === 'es' ? 'Curso / Clase' : 'Course / Class'}</div>
+                      <div className="font-semibold text-charcoal mt-0.5">
                         {stu?.program} · {cls?.name}
                       </div>
                     </div>
                     <div>
-                      <div className="text-slatewarm">{t('paymentMethod')}</div>
-                      <div className="font-medium text-navy mt-0.5">
+                      <div className="text-softgray">{t('paymentMethod')}</div>
+                      <div className="font-medium text-charcoal mt-0.5">
                         {t(`method_${previewReceipt.method}` as TranslationKey)}
                       </div>
                     </div>
                     <div>
-                      <div className="text-slatewarm">{t('collector')}</div>
-                      <div className="font-medium text-navy mt-0.5">
+                      <div className="text-softgray">{t('collector')}</div>
+                      <div className="font-medium text-charcoal mt-0.5">
                         {previewReceipt.collectorName}
                       </div>
                     </div>
                   </div>
 
-                  <div className="mt-3 p-4 rounded-xl bg-porcelain border border-champagne/40 flex items-center justify-between">
+                  <div className="mt-3 p-4 rounded-xl bg-porcelain border border-clay/40 flex items-center justify-between">
                     <div>
-                      <div className="text-[11px] uppercase tracking-wider text-slatewarm">
+                      <div className="text-[11px] uppercase tracking-wider text-softgray">
                         {previewReceipt.categoryLabel}
                       </div>
-                      <div className="text-xs text-slatewarm mt-0.5">
+                      <div className="text-xs text-softgray mt-0.5">
                         {previewReceipt.notes || '—'}
                       </div>
                     </div>
-                    <div className="font-editorial text-2xl text-navy tabular-nums">
+                    <div className="font-editorial text-2xl text-charcoal tabular-nums">
                       {formatCurrencyExact(previewReceipt.amount, state.language)}
                     </div>
                   </div>

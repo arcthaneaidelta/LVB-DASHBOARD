@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+﻿import React, { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   Users,
@@ -314,7 +314,7 @@ export const StudentsPage: React.FC = () => {
 
       {/* Policy Notice for Telemarketing */}
       {currentUser?.role === 'telemarketing' && !state.policy.telemarketingCanSeeBalances && (
-        <div className="px-4 py-3 rounded-xl bg-champagne-light/60 border border-champagne/40 text-xs text-navy flex items-center justify-between gap-3">
+        <div className="px-4 py-3 rounded-xl bg-mist/60 border border-clay/40 text-xs text-charcoal flex items-center justify-between gap-3">
           <span>
             {state.language === 'es'
               ? 'Política activa: los saldos detallados están ocultos para Telemercadeo (configurable por propietarios en Equipo y Accesos).'
@@ -354,7 +354,7 @@ export const StudentsPage: React.FC = () => {
       <Card className="p-4 space-y-3">
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
-            <Search className="w-4 h-4 text-slatewarm absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-softgray absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="search"
               value={search}
@@ -364,14 +364,14 @@ export const StudentsPage: React.FC = () => {
                   ? 'Buscar por nombre, teléfono o correo...'
                   : 'Search by name, phone, or email...'
               }
-              className="w-full h-10 pl-9 pr-3 text-sm bg-porcelain border border-borderwarm rounded-lg focus:bg-white focus:border-champagne"
+              className="w-full h-10 pl-9 pr-3 text-sm bg-porcelain border border-hairline rounded-lg focus:bg-white focus:border-clay"
             />
           </div>
           <select
             value={classFilter}
             onChange={(e) => setClassFilter(e.target.value)}
             aria-label="Filter by class"
-            className="h-10 px-3 text-sm bg-porcelain border border-borderwarm rounded-lg text-navy"
+            className="h-10 px-3 text-sm bg-porcelain border border-hairline rounded-lg text-charcoal"
           >
             <option value="all">
               {state.language === 'es' ? 'Todas las clases' : 'All classes'}
@@ -401,8 +401,8 @@ export const StudentsPage: React.FC = () => {
               onClick={() => setFilter(val)}
               className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                 filter === val
-                  ? 'bg-navy text-white border-navy'
-                  : 'bg-porcelain text-slatewarm border-borderwarm hover:text-navy'
+                  ? 'bg-olive text-white border-olive'
+                  : 'bg-porcelain text-softgray border-hairline hover:text-charcoal'
               }`}
             >
               {label}
@@ -438,7 +438,7 @@ export const StudentsPage: React.FC = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-porcelain/80 border-b border-borderwarm text-[11px] font-semibold uppercase tracking-wider text-slatewarm">
+                  <tr className="bg-porcelain/80 border-b border-hairline text-[11px] font-semibold uppercase tracking-wider text-softgray">
                     <th className="py-3 px-4">{state.language === 'es' ? 'Alumna' : 'Student'}</th>
                     <th className="py-3 px-4">{state.language === 'es' ? 'Clase' : 'Class'}</th>
                     <th className="py-3 px-4">{t('status')}</th>
@@ -455,7 +455,7 @@ export const StudentsPage: React.FC = () => {
                     )}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-borderwarm text-sm">
+                <tbody className="divide-y divide-hairline text-sm">
                   {filteredStudents.map((stu) => {
                     const cls = state.classes.find((c) => c.id === stu.classId);
                     const fin = getStudentFinancialSummary(
@@ -475,12 +475,12 @@ export const StudentsPage: React.FC = () => {
                         className="hover:bg-porcelain/70 cursor-pointer transition-colors"
                       >
                         <td className="py-3.5 px-4">
-                          <div className="font-semibold text-navy">{stu.fullName}</div>
-                          <div className="text-xs text-slatewarm">{stu.phone}</div>
+                          <div className="font-semibold text-charcoal">{stu.fullName}</div>
+                          <div className="text-xs text-softgray">{stu.phone}</div>
                         </td>
                         <td className="py-3.5 px-4">
-                          <div className="text-xs font-medium text-navy">{cls?.name}</div>
-                          <div className="text-[11px] text-slatewarm">{stu.program}</div>
+                          <div className="text-xs font-medium text-charcoal">{cls?.name}</div>
+                          <div className="text-[11px] text-softgray">{stu.program}</div>
                         </td>
                         <td className="py-3.5 px-4">
                           <Badge tone={statusTone(stu.enrollmentStatus)}>
@@ -489,26 +489,26 @@ export const StudentsPage: React.FC = () => {
                         </td>
                         <td className="py-3.5 px-4">
                           <div className="flex items-center gap-2">
-                            <div className="w-14 h-1.5 rounded-full bg-ivory overflow-hidden">
+                            <div className="w-14 h-1.5 rounded-full bg-mist overflow-hidden">
                               <div
-                                className="h-full bg-champagne rounded-full"
+                                className="h-full bg-clay rounded-full"
                                 style={{ width: `${(checks / 4) * 100}%` }}
                               />
                             </div>
-                            <span className="text-xs text-slatewarm tabular-nums">
+                            <span className="text-xs text-softgray tabular-nums">
                               {checks}/4
                             </span>
                           </div>
                         </td>
                         {canSeeMoney && (
                           <>
-                            <td className="py-3.5 px-4 text-right tabular-nums text-navy">
+                            <td className="py-3.5 px-4 text-right tabular-nums text-charcoal">
                               {formatCurrency(fin.courseTotal, state.language)}
                             </td>
-                            <td className="py-3.5 px-4 text-right tabular-nums text-sage-dark font-medium">
+                            <td className="py-3.5 px-4 text-right tabular-nums text-status-green font-medium">
                               {formatCurrency(fin.totalPaid, state.language)}
                             </td>
-                            <td className="py-3.5 px-4 text-right tabular-nums font-semibold text-navy">
+                            <td className="py-3.5 px-4 text-right tabular-nums font-semibold text-charcoal">
                               {formatCurrency(fin.remainingBalance, state.language)}
                             </td>
                           </>
@@ -520,7 +520,7 @@ export const StudentsPage: React.FC = () => {
                                 {formatCurrency(fin.behindSchedule, state.language)}
                               </Badge>
                             ) : (
-                              <span className="text-xs text-sage-dark">—</span>
+                              <span className="text-xs text-status-green">—</span>
                             )}
                           </td>
                         )}
@@ -554,39 +554,39 @@ export const StudentsPage: React.FC = () => {
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
-                      <div className="font-semibold text-navy text-sm truncate">
+                      <div className="font-semibold text-charcoal text-sm truncate">
                         {stu.fullName}
                       </div>
-                      <div className="text-xs text-slatewarm">{stu.phone}</div>
+                      <div className="text-xs text-softgray">{stu.phone}</div>
                     </div>
                     <Badge tone={statusTone(stu.enrollmentStatus)}>
                       {t(`status_${stu.enrollmentStatus}` as TranslationKey)}
                     </Badge>
                   </div>
-                  <div className="text-xs text-slatewarm flex items-center justify-between">
+                  <div className="text-xs text-softgray flex items-center justify-between">
                     <span>{cls?.name}</span>
                     <span>Checklist {checks}/4</span>
                   </div>
                   {canSeeMoney && (
-                    <div className="pt-2 border-t border-borderwarm grid grid-cols-3 gap-2 text-xs">
+                    <div className="pt-2 border-t border-hairline grid grid-cols-3 gap-2 text-xs">
                       <div>
-                        <div className="text-slatewarm">{t('totalPaid')}</div>
-                        <div className="font-semibold text-sage-dark tabular-nums">
+                        <div className="text-softgray">{t('totalPaid')}</div>
+                        <div className="font-semibold text-status-green tabular-nums">
                           {formatCurrency(fin.totalPaid, state.language)}
                         </div>
                       </div>
                       <div>
-                        <div className="text-slatewarm">{t('remainingBalance')}</div>
-                        <div className="font-semibold text-navy tabular-nums">
+                        <div className="text-softgray">{t('remainingBalance')}</div>
+                        <div className="font-semibold text-charcoal tabular-nums">
                           {formatCurrency(fin.remainingBalance, state.language)}
                         </div>
                       </div>
                       {canSeeBehind && (
                         <div className="text-right">
-                          <div className="text-slatewarm">{t('behindSchedule')}</div>
+                          <div className="text-softgray">{t('behindSchedule')}</div>
                           <div
                             className={`font-semibold tabular-nums ${
-                              fin.behindSchedule > 0 ? 'text-terracotta-dark' : 'text-sage-dark'
+                              fin.behindSchedule > 0 ? 'text-status-red' : 'text-status-green'
                             }`}
                           >
                             {fin.behindSchedule > 0
@@ -714,32 +714,32 @@ export const StudentsPage: React.FC = () => {
 
               {/* Editable Profile Section */}
               {editMode && canEdit ? (
-                <Card className="p-4 space-y-3 border-champagne/60">
+                <Card className="p-4 space-y-3 border-clay/60">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                     <label className="block">
-                      <span className="text-xs text-slatewarm">Phone</span>
+                      <span className="text-xs text-softgray">Phone</span>
                       <input
                         type="text"
                         value={editDraft.phone ?? ''}
                         onChange={(e) => setEditDraft((d) => ({ ...d, phone: e.target.value }))}
-                        className="mt-1 w-full h-9 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                        className="mt-1 w-full h-9 px-3 rounded-lg border border-hairline bg-porcelain"
                       />
                     </label>
                     <label className="block">
-                      <span className="text-xs text-slatewarm">Email</span>
+                      <span className="text-xs text-softgray">Email</span>
                       <input
                         type="email"
                         value={editDraft.email ?? ''}
                         onChange={(e) => setEditDraft((d) => ({ ...d, email: e.target.value }))}
-                        className="mt-1 w-full h-9 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                        className="mt-1 w-full h-9 px-3 rounded-lg border border-hairline bg-porcelain"
                       />
                     </label>
                     <label className="block">
-                      <span className="text-xs text-slatewarm">Class</span>
+                      <span className="text-xs text-softgray">Class</span>
                       <select
                         value={editDraft.classId ?? selectedStudent.classId}
                         onChange={(e) => setEditDraft((d) => ({ ...d, classId: e.target.value }))}
-                        className="mt-1 w-full h-9 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                        className="mt-1 w-full h-9 px-3 rounded-lg border border-hairline bg-porcelain"
                       >
                         {state.classes.map((c) => (
                           <option key={c.id} value={c.id}>
@@ -749,31 +749,31 @@ export const StudentsPage: React.FC = () => {
                       </select>
                     </label>
                     <label className="block">
-                      <span className="text-xs text-slatewarm">Source</span>
+                      <span className="text-xs text-softgray">Source</span>
                       <input
                         type="text"
                         value={editDraft.source ?? ''}
                         onChange={(e) => setEditDraft((d) => ({ ...d, source: e.target.value }))}
-                        className="mt-1 w-full h-9 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                        className="mt-1 w-full h-9 px-3 rounded-lg border border-hairline bg-porcelain"
                       />
                     </label>
                   </div>
                   <label className="block text-sm">
-                    <span className="text-xs text-slatewarm">Accommodations</span>
+                    <span className="text-xs text-softgray">Accommodations</span>
                     <input
                       type="text"
                       value={editDraft.accommodations ?? ''}
                       onChange={(e) => setEditDraft((d) => ({ ...d, accommodations: e.target.value }))}
-                      className="mt-1 w-full h-9 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                      className="mt-1 w-full h-9 px-3 rounded-lg border border-hairline bg-porcelain"
                     />
                   </label>
                   <label className="block text-sm">
-                    <span className="text-xs text-slatewarm">{t('notes')}</span>
+                    <span className="text-xs text-softgray">{t('notes')}</span>
                     <textarea
                       rows={2}
                       value={editDraft.notes ?? ''}
                       onChange={(e) => setEditDraft((d) => ({ ...d, notes: e.target.value }))}
-                      className="mt-1 w-full p-2.5 rounded-lg border border-borderwarm bg-porcelain"
+                      className="mt-1 w-full p-2.5 rounded-lg border border-hairline bg-porcelain"
                     />
                   </label>
                   <div className="flex items-center gap-4 text-xs">
@@ -817,33 +817,33 @@ export const StudentsPage: React.FC = () => {
                 /* Overview Card */
                 <Card className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   <div>
-                    <div className="text-slatewarm">{state.language === 'es' ? 'Teléfono' : 'Phone'}</div>
-                    <div className="font-medium text-navy mt-0.5">{selectedStudent.phone}</div>
+                    <div className="text-softgray">{state.language === 'es' ? 'Teléfono' : 'Phone'}</div>
+                    <div className="font-medium text-charcoal mt-0.5">{selectedStudent.phone}</div>
                   </div>
                   <div>
-                    <div className="text-slatewarm">{state.language === 'es' ? 'Correo' : 'Email'}</div>
-                    <div className="font-medium text-navy mt-0.5">{selectedStudent.email}</div>
+                    <div className="text-softgray">{state.language === 'es' ? 'Correo' : 'Email'}</div>
+                    <div className="font-medium text-charcoal mt-0.5">{selectedStudent.email}</div>
                   </div>
                   <div>
-                    <div className="text-slatewarm">{state.language === 'es' ? 'Fuente / Inscrita por' : 'Source / Enrolled By'}</div>
-                    <div className="font-medium text-navy mt-0.5">
+                    <div className="text-softgray">{state.language === 'es' ? 'Fuente / Inscrita por' : 'Source / Enrolled By'}</div>
+                    <div className="font-medium text-charcoal mt-0.5">
                       {selectedStudent.source} · {selectedStudent.enrolledByName}
                     </div>
                   </div>
                   <div>
-                    <div className="text-slatewarm">{state.language === 'es' ? 'Fecha de inscripción' : 'Enrollment Date'}</div>
-                    <div className="font-medium text-navy mt-0.5">{selectedStudent.enrollmentDate}</div>
+                    <div className="text-softgray">{state.language === 'es' ? 'Fecha de inscripción' : 'Enrollment Date'}</div>
+                    <div className="font-medium text-charcoal mt-0.5">{selectedStudent.enrollmentDate}</div>
                   </div>
                   {selectedStudent.accommodations && (
-                    <div className="sm:col-span-2 pt-2 border-t border-borderwarm">
-                      <div className="text-slatewarm">{state.language === 'es' ? 'Acomodaciones' : 'Accommodations'}</div>
-                      <div className="text-navy mt-0.5">{selectedStudent.accommodations}</div>
+                    <div className="sm:col-span-2 pt-2 border-t border-hairline">
+                      <div className="text-softgray">{state.language === 'es' ? 'Acomodaciones' : 'Accommodations'}</div>
+                      <div className="text-charcoal mt-0.5">{selectedStudent.accommodations}</div>
                     </div>
                   )}
                   {selectedStudent.notes && (
                     <div className="sm:col-span-2">
-                      <div className="text-slatewarm">{t('notes')}</div>
-                      <div className="text-navy mt-0.5">{selectedStudent.notes}</div>
+                      <div className="text-softgray">{t('notes')}</div>
+                      <div className="text-charcoal mt-0.5">{selectedStudent.notes}</div>
                     </div>
                   )}
                 </Card>
@@ -852,7 +852,7 @@ export const StudentsPage: React.FC = () => {
               {/* Enrollment 4-Step Checklist */}
               <Card className="p-4">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-sm font-semibold text-navy">
+                  <h3 className="text-sm font-semibold text-charcoal">
                     {state.language === 'es'
                       ? 'Lista de Verificación de Inscripción (4 pasos)'
                       : 'Enrollment Checklist (4 Required Checks)'}
@@ -880,16 +880,16 @@ export const StudentsPage: React.FC = () => {
                         type="button"
                         disabled={disabled}
                         onClick={() => toggleChecklistItem(selectedStudent.id, key)}
-                        className="w-full flex items-center gap-3 p-2.5 rounded-lg border border-borderwarm bg-porcelain/50 hover:bg-porcelain text-left transition-colors disabled:opacity-70 disabled:cursor-default"
+                        className="w-full flex items-center gap-3 p-2.5 rounded-lg border border-hairline bg-porcelain/50 hover:bg-porcelain text-left transition-colors disabled:opacity-70 disabled:cursor-default"
                       >
                         {checked ? (
-                          <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                          <CheckCircle2 className="w-4 h-4 text-status-green shrink-0" />
                         ) : (
-                          <Circle className="w-4 h-4 text-slatewarm shrink-0" />
+                          <Circle className="w-4 h-4 text-softgray shrink-0" />
                         )}
                         <span
                           className={`text-xs font-medium ${
-                            checked ? 'text-navy' : 'text-slatewarm'
+                            checked ? 'text-charcoal' : 'text-softgray'
                           }`}
                         >
                           {t(`check_${key}` as TranslationKey)}
@@ -904,7 +904,7 @@ export const StudentsPage: React.FC = () => {
               {canSeeMoney ? (
                 <Card className="p-4 space-y-3">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-semibold text-navy">
+                    <h3 className="text-sm font-semibold text-charcoal">
                       {state.language === 'es' ? 'Resumen Financiero' : 'Financial Overview'}
                     </h3>
                     {selectedStudent.fixedWeeklyAmount ? (
@@ -920,46 +920,46 @@ export const StudentsPage: React.FC = () => {
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
                     <div className="p-3 rounded-lg bg-porcelain">
-                      <div className="text-slatewarm">{t('courseTotal')}</div>
-                      <div className="text-base font-semibold text-navy tabular-nums mt-0.5">
+                      <div className="text-softgray">{t('courseTotal')}</div>
+                      <div className="text-base font-semibold text-charcoal tabular-nums mt-0.5">
                         {formatCurrencyExact(fin.courseTotal, state.language)}
                       </div>
                     </div>
                     <div className="p-3 rounded-lg bg-porcelain">
-                      <div className="text-slatewarm">{t('totalPaid')}</div>
-                      <div className="text-base font-semibold text-sage-dark tabular-nums mt-0.5">
+                      <div className="text-softgray">{t('totalPaid')}</div>
+                      <div className="text-base font-semibold text-status-green tabular-nums mt-0.5">
                         {formatCurrencyExact(fin.totalPaid, state.language)}
                       </div>
                     </div>
                     <div className="p-3 rounded-lg bg-porcelain">
-                      <div className="text-slatewarm">{t('remainingBalance')}</div>
-                      <div className="text-base font-semibold text-navy tabular-nums mt-0.5">
+                      <div className="text-softgray">{t('remainingBalance')}</div>
+                      <div className="text-base font-semibold text-charcoal tabular-nums mt-0.5">
                         {formatCurrencyExact(fin.remainingBalance, state.language)}
                       </div>
                     </div>
                     <div className="p-3 rounded-lg bg-porcelain">
-                      <div className="text-slatewarm">{t('deposit')}</div>
-                      <div className="text-sm font-semibold text-navy tabular-nums mt-0.5">
+                      <div className="text-softgray">{t('deposit')}</div>
+                      <div className="text-sm font-semibold text-charcoal tabular-nums mt-0.5">
                         {formatCurrencyExact(fin.confirmedDeposit, state.language)}
                         {fin.pendingDeposit > 0 && (
-                          <span className="text-amberwarm-dark block text-[11px]">
+                          <span className="text-status-amber block text-[11px]">
                             +{formatCurrency(fin.pendingDeposit, state.language)} pending
                           </span>
                         )}
                       </div>
                     </div>
                     <div className="p-3 rounded-lg bg-porcelain">
-                      <div className="text-slatewarm">{t('dueThisWeek')}</div>
-                      <div className="text-sm font-semibold text-navy tabular-nums mt-0.5">
+                      <div className="text-softgray">{t('dueThisWeek')}</div>
+                      <div className="text-sm font-semibold text-charcoal tabular-nums mt-0.5">
                         {formatCurrencyExact(fin.dueThisWeek, state.language)}
                       </div>
                     </div>
                     {canSeeBehind && (
                       <div className="p-3 rounded-lg bg-porcelain">
-                        <div className="text-slatewarm">{t('behindSchedule')}</div>
+                        <div className="text-softgray">{t('behindSchedule')}</div>
                         <div
                           className={`text-sm font-semibold tabular-nums mt-0.5 ${
-                            fin.behindSchedule > 0 ? 'text-terracotta-dark' : 'text-sage-dark'
+                            fin.behindSchedule > 0 ? 'text-status-red' : 'text-status-green'
                           }`}
                         >
                           {formatCurrencyExact(fin.behindSchedule, state.language)}
@@ -969,7 +969,7 @@ export const StudentsPage: React.FC = () => {
                   </div>
                 </Card>
               ) : (
-                <Card className="p-4 text-xs text-slatewarm">
+                <Card className="p-4 text-xs text-softgray">
                   {state.language === 'es'
                     ? 'Los detalles de saldos financieros están restringidos para este rol.'
                     : 'Detailed financial balances are restricted for this role.'}
@@ -979,8 +979,8 @@ export const StudentsPage: React.FC = () => {
               {/* Payment History & Receipts */}
               {canSeeMoney && (
                 <Card className="p-4">
-                  <h3 className="text-sm font-semibold text-navy mb-3 flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-champagne" />
+                  <h3 className="text-sm font-semibold text-charcoal mb-3 flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-clay-dark" />
                     {state.language === 'es'
                       ? 'Historial de Pagos y Recibos'
                       : 'Payment History & Receipts'}
@@ -993,10 +993,10 @@ export const StudentsPage: React.FC = () => {
                         .map((dep) => (
                           <div
                             key={dep.id}
-                            className="p-2.5 rounded-lg bg-amberwarm-light/60 border border-amberwarm/30 flex items-center justify-between gap-2 text-xs"
+                            className="p-2.5 rounded-lg bg-status-amberBg/60 border border-status-amber/30 flex items-center justify-between gap-2 text-xs"
                           >
                             <div>
-                              <span className="font-mono font-semibold text-navy">
+                              <span className="font-mono font-semibold text-charcoal">
                                 {dep.receiptNumber}
                               </span>{' '}
                               · {formatCurrencyExact(dep.amount, state.language)} ({t('pendingConfirmation')})
@@ -1029,13 +1029,13 @@ export const StudentsPage: React.FC = () => {
                   )}
 
                   {studentPayments.length === 0 ? (
-                    <p className="text-xs text-slatewarm">
+                    <p className="text-xs text-softgray">
                       {state.language === 'es'
                         ? 'Aún no hay pagos confirmados.'
                         : 'No confirmed payments recorded yet.'}
                     </p>
                   ) : (
-                    <div className="divide-y divide-borderwarm">
+                    <div className="divide-y divide-hairline">
                       {studentPayments.map((p) => (
                         <div
                           key={p.id}
@@ -1043,19 +1043,19 @@ export const StudentsPage: React.FC = () => {
                         >
                           <div className="min-w-0">
                             <div className="flex items-center gap-2">
-                              <span className="font-mono font-semibold text-navy">
+                              <span className="font-mono font-semibold text-charcoal">
                                 {p.receiptNumber}
                               </span>
-                              <span className="text-slatewarm">
+                              <span className="text-softgray">
                                 {p.week === 0 ? t('deposit') : `Week ${p.week}`} · {p.date}
                               </span>
                             </div>
-                            <div className="text-slatewarm mt-0.5">
+                            <div className="text-softgray mt-0.5">
                               {t(`method_${p.method}` as TranslationKey)} · {p.collectorName}
                             </div>
                           </div>
                           <div className="flex items-center gap-2 shrink-0">
-                            <span className="font-semibold text-navy tabular-nums">
+                            <span className="font-semibold text-charcoal tabular-nums">
                               {formatCurrencyExact(p.amount, state.language)}
                             </span>
                             <button
@@ -1078,7 +1078,7 @@ export const StudentsPage: React.FC = () => {
                                   language: state.language,
                                 })
                               }
-                              className="p-1.5 rounded-md border border-borderwarm hover:bg-ivory text-navy"
+                              className="p-1.5 rounded-md border border-hairline hover:bg-mist text-charcoal"
                               title="Download Receipt PDF"
                             >
                               <Download className="w-3.5 h-3.5" />
@@ -1093,11 +1093,11 @@ export const StudentsPage: React.FC = () => {
 
               {/* Attendance History */}
               <Card className="p-4">
-                <h3 className="text-sm font-semibold text-navy mb-3">
+                <h3 className="text-sm font-semibold text-charcoal mb-3">
                   {state.language === 'es' ? 'Historial de Asistencia' : 'Attendance History'}
                 </h3>
                 {studentAttendance.length === 0 ? (
-                  <p className="text-xs text-slatewarm">
+                  <p className="text-xs text-softgray">
                     {state.language === 'es'
                       ? 'Sin registros de asistencia aún.'
                       : 'No attendance sessions recorded yet.'}
@@ -1107,10 +1107,10 @@ export const StudentsPage: React.FC = () => {
                     {studentAttendance.map((att) => (
                       <div
                         key={att.id}
-                        className="p-2.5 rounded-lg border border-borderwarm bg-porcelain/60 text-xs"
+                        className="p-2.5 rounded-lg border border-hairline bg-porcelain/60 text-xs"
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-semibold text-navy">Week {att.week}</span>
+                          <span className="font-semibold text-charcoal">Week {att.week}</span>
                           <Badge
                             tone={
                               att.status === 'P'
@@ -1125,7 +1125,7 @@ export const StudentsPage: React.FC = () => {
                             {t(`att_${att.status}` as TranslationKey)}
                           </Badge>
                         </div>
-                        <div className="text-[11px] text-slatewarm mt-1">{att.date}</div>
+                        <div className="text-[11px] text-softgray mt-1">{att.date}</div>
                       </div>
                     ))}
                   </div>
@@ -1150,13 +1150,13 @@ export const StudentsPage: React.FC = () => {
       >
         <form onSubmit={handleCreateSubmit} className="space-y-4">
           {formError && (
-            <div className="p-3 rounded-lg bg-terracotta-light text-terracotta-dark text-xs">
+            <div className="p-3 rounded-lg bg-status-redBg text-status-red text-xs">
               {formError}
             </div>
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             <label className="block sm:col-span-2">
-              <span className="text-xs font-medium text-navy">
+              <span className="text-xs font-medium text-charcoal">
                 {state.language === 'es' ? 'Nombre Completo *' : 'Full Name *'}
               </span>
               <input
@@ -1164,11 +1164,11 @@ export const StudentsPage: React.FC = () => {
                 required
                 value={newForm.fullName}
                 onChange={(e) => setNewForm((f) => ({ ...f, fullName: e.target.value }))}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain focus:bg-white"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain focus:bg-white"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">
+              <span className="text-xs font-medium text-charcoal">
                 {state.language === 'es' ? 'Teléfono *' : 'Phone *'}
               </span>
               <input
@@ -1177,11 +1177,11 @@ export const StudentsPage: React.FC = () => {
                 value={newForm.phone}
                 onChange={(e) => setNewForm((f) => ({ ...f, phone: e.target.value }))}
                 placeholder="(323) 555-0199"
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain focus:bg-white"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain focus:bg-white"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">
+              <span className="text-xs font-medium text-charcoal">
                 {state.language === 'es' ? 'Correo Electrónico *' : 'Email *'}
               </span>
               <input
@@ -1189,17 +1189,17 @@ export const StudentsPage: React.FC = () => {
                 required
                 value={newForm.email}
                 onChange={(e) => setNewForm((f) => ({ ...f, email: e.target.value }))}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain focus:bg-white"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain focus:bg-white"
               />
             </label>
             <label className="block sm:col-span-2">
-              <span className="text-xs font-medium text-navy">
+              <span className="text-xs font-medium text-charcoal">
                 {state.language === 'es' ? 'Clase Asignada *' : 'Assigned Class *'}
               </span>
               <select
                 value={newForm.classId}
                 onChange={(e) => handleClassChangeInCreate(e.target.value)}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               >
                 {state.classes.map((c) => (
                   <option key={c.id} value={c.id}>
@@ -1209,7 +1209,7 @@ export const StudentsPage: React.FC = () => {
               </select>
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">{t('courseTotal')} ($)</span>
+              <span className="text-xs font-medium text-charcoal">{t('courseTotal')} ($)</span>
               <input
                 type="number"
                 min={1}
@@ -1219,11 +1219,11 @@ export const StudentsPage: React.FC = () => {
                 onChange={(e) =>
                   setNewForm((f) => ({ ...f, courseTotal: Number(e.target.value) }))
                 }
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain tabular-nums"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain tabular-nums"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">{t('deposit')} ($)</span>
+              <span className="text-xs font-medium text-charcoal">{t('deposit')} ($)</span>
               <input
                 type="number"
                 min={0}
@@ -1232,11 +1232,11 @@ export const StudentsPage: React.FC = () => {
                 onChange={(e) =>
                   setNewForm((f) => ({ ...f, depositExpected: Number(e.target.value) }))
                 }
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain tabular-nums"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain tabular-nums"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">{t('firstClassPayment')} ($)</span>
+              <span className="text-xs font-medium text-charcoal">{t('firstClassPayment')} ($)</span>
               <input
                 type="number"
                 min={0}
@@ -1245,11 +1245,11 @@ export const StudentsPage: React.FC = () => {
                 onChange={(e) =>
                   setNewForm((f) => ({ ...f, firstClassPayment: Number(e.target.value) }))
                 }
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain tabular-nums"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain tabular-nums"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">
+              <span className="text-xs font-medium text-charcoal">
                 {state.language === 'es' ? 'Cuota Fija Opcional ($)' : 'Optional Fixed Weekly ($)'}
               </span>
               <input
@@ -1261,17 +1261,17 @@ export const StudentsPage: React.FC = () => {
                 onChange={(e) =>
                   setNewForm((f) => ({ ...f, fixedWeeklyAmount: e.target.value }))
                 }
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain tabular-nums"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain tabular-nums"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">
+              <span className="text-xs font-medium text-charcoal">
                 {state.language === 'es' ? 'Fuente' : 'Enrollment Source'}
               </span>
               <select
                 value={newForm.source}
                 onChange={(e) => setNewForm((f) => ({ ...f, source: e.target.value }))}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               >
                 <option value="Studio Tour">Studio Tour</option>
                 <option value="Instagram DM">Instagram DM</option>
@@ -1282,7 +1282,7 @@ export const StudentsPage: React.FC = () => {
               </select>
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">
+              <span className="text-xs font-medium text-charcoal">
                 {state.language === 'es' ? 'Acomodaciones' : 'Accommodations'}
               </span>
               <input
@@ -1291,7 +1291,7 @@ export const StudentsPage: React.FC = () => {
                 onChange={(e) =>
                   setNewForm((f) => ({ ...f, accommodations: e.target.value }))
                 }
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               />
             </label>
           </div>
@@ -1321,13 +1321,13 @@ export const StudentsPage: React.FC = () => {
       >
         <form onSubmit={handlePaySubmit} className="space-y-4">
           {payError && (
-            <div className="p-3 rounded-lg bg-terracotta-light text-terracotta-dark text-xs">
+            <div className="p-3 rounded-lg bg-status-redBg text-status-red text-xs">
               {payError}
             </div>
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             <label className="block">
-              <span className="text-xs font-medium text-navy">{t('amount')} ($)</span>
+              <span className="text-xs font-medium text-charcoal">{t('amount')} ($)</span>
               <input
                 type="number"
                 step="0.01"
@@ -1335,17 +1335,17 @@ export const StudentsPage: React.FC = () => {
                 required
                 value={payForm.amount}
                 onChange={(e) => setPayForm((f) => ({ ...f, amount: e.target.value }))}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain tabular-nums"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain tabular-nums"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">{t('paymentMethod')}</span>
+              <span className="text-xs font-medium text-charcoal">{t('paymentMethod')}</span>
               <select
                 value={payForm.method}
                 onChange={(e) =>
                   setPayForm((f) => ({ ...f, method: e.target.value as PaymentMethod }))
                 }
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               >
                 {METHODS.map((m) => (
                   <option key={m} value={m}>
@@ -1356,7 +1356,7 @@ export const StudentsPage: React.FC = () => {
             </label>
             {payModalMode === 'payment' && (
               <label className="block">
-                <span className="text-xs font-medium text-navy">
+                <span className="text-xs font-medium text-charcoal">
                   {state.language === 'es' ? 'Semana' : 'Week'}
                 </span>
                 <input
@@ -1367,28 +1367,28 @@ export const StudentsPage: React.FC = () => {
                   onChange={(e) =>
                     setPayForm((f) => ({ ...f, week: Number(e.target.value) }))
                   }
-                  className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                  className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
                 />
               </label>
             )}
             <label className="block">
-              <span className="text-xs font-medium text-navy">{t('date')}</span>
+              <span className="text-xs font-medium text-charcoal">{t('date')}</span>
               <input
                 type="date"
                 required
                 value={payForm.date}
                 onChange={(e) => setPayForm((f) => ({ ...f, date: e.target.value }))}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               />
             </label>
           </div>
           <label className="block text-sm">
-            <span className="text-xs font-medium text-navy">{t('notes')}</span>
+            <span className="text-xs font-medium text-charcoal">{t('notes')}</span>
             <input
               type="text"
               value={payForm.notes}
               onChange={(e) => setPayForm((f) => ({ ...f, notes: e.target.value }))}
-              className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+              className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
             />
           </label>
           <div className="flex justify-end gap-2 pt-2">

@@ -15,8 +15,10 @@ export type AppModule =
   | 'students'
   | 'class-log'
   | 'missed-classes'
+  | 'deposits'
   | 'payments'
   | 'cash-handoff'
+  | 'reports'
   | 'daily-cash-report'
   | 'weekly-reports'
   | 'documents'
@@ -27,63 +29,73 @@ export type AppModule =
   | 'projects'
   | 'accounting'
   | 'classes'
-  | 'team';
+  | 'team'
+  | 'settings';
 
 const ROLE_MODULES: Record<DemoUser['role'], AppModule[]> = {
   owner: [
     'dashboard',
     'studio-tours',
     'students',
+    'classes',
     'class-log',
-    'missed-classes',
+    'accounting',
+    'deposits',
     'payments',
     'cash-handoff',
+    'reports',
     'daily-cash-report',
-    'weekly-reports',
     'documents',
-    'calendar',
+    'missed-classes',
     'tasks',
-    'inventory',
-    'suggestions',
     'projects',
-    'accounting',
-    'classes',
+    'inventory',
+    'calendar',
+    'suggestions',
+    'weekly-reports',
     'team',
+    'settings',
   ],
   instructor: [
-    'studio-tours',
     'students',
     'class-log',
-    'missed-classes',
+    'studio-tours',
+    'deposits',
     'payments',
     'cash-handoff',
+    'reports',
     'daily-cash-report',
-    'weekly-reports',
     'documents',
-    'calendar',
+    'missed-classes',
     'tasks',
     'inventory',
+    'calendar',
     'suggestions',
+    'weekly-reports',
+    'settings',
   ],
   telemarketing: [
-    'studio-tours',
     'students',
-    'missed-classes',
+    'studio-tours',
+    'deposits',
     'payments',
-    'weekly-reports',
     'documents',
-    'calendar',
+    'missed-classes',
     'tasks',
+    'calendar',
     'suggestions',
+    'weekly-reports',
+    'settings',
   ],
   staff: [
-    'studio-tours',
     'students',
-    'weekly-reports',
-    'calendar',
+    'studio-tours',
     'tasks',
     'inventory',
+    'calendar',
     'suggestions',
+    'weekly-reports',
+    'settings',
   ],
 };
 
@@ -135,13 +147,12 @@ export function canViewStudentFinancials(
   policy: PolicySettings
 ): boolean {
   if (user.role === 'owner') return true;
-  if (user.role === 'instructor') return true; // assigned students' balances/weekly due (never behind-schedule)
+  if (user.role === 'instructor') return true;
   if (user.role === 'telemarketing') return policy.telemarketingCanSeeBalances;
-  return false; // staff cannot see balances
+  return false;
 }
 
 export function canViewBehindSchedule(user: DemoUser): boolean {
-  // PRD 11.5: Never display behind-schedule figures to instructors or staff. Only owners can see detailed behind-schedule calculations.
   return user.role === 'owner';
 }
 

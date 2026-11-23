@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import {
   ChevronLeft,
   ChevronRight,
@@ -141,10 +141,10 @@ export const CalendarPage: React.FC = () => {
   }, [events, currentMonth]);
 
   const layerStyle = (layer: CalendarEvent['layer']) => {
-    if (layer === 'class') return 'bg-navy text-white border-navy';
-    if (layer === 'tour') return 'bg-champagne-light text-navy border-champagne/60';
-    if (layer === 'owner_meeting') return 'bg-terracotta-light text-terracotta-dark border-terracotta/40';
-    return 'bg-sage-light text-sage-dark border-sage/40';
+    if (layer === 'class') return 'bg-olive text-white border-olive';
+    if (layer === 'tour') return 'bg-mist text-charcoal border-clay/60';
+    if (layer === 'owner_meeting') return 'bg-status-redBg text-status-red border-status-red/40';
+    return 'bg-status-greenBg text-status-green border-sage/40';
   };
 
   const layerIcon = (layer: CalendarEvent['layer']) => {
@@ -192,7 +192,7 @@ export const CalendarPage: React.FC = () => {
           >
             <ChevronLeft className="w-4 h-4" />
           </Button>
-          <h2 className="font-editorial text-xl text-navy min-w-[170px] text-center">
+          <h2 className="font-editorial text-xl text-charcoal min-w-[170px] text-center">
             {format(currentMonth, 'MMMM yyyy')}
           </h2>
           <Button
@@ -232,14 +232,14 @@ export const CalendarPage: React.FC = () => {
 
       {/* Desktop Month Grid */}
       <Card className="hidden md:block overflow-hidden">
-        <div className="grid grid-cols-7 bg-porcelain border-b border-borderwarm text-center text-[11px] font-semibold uppercase tracking-wider text-slatewarm">
+        <div className="grid grid-cols-7 bg-porcelain border-b border-hairline text-center text-[11px] font-semibold uppercase tracking-wider text-softgray">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
             <div key={d} className="py-2.5">
               {d}
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-7 divide-x divide-y divide-borderwarm">
+        <div className="grid grid-cols-7 divide-x divide-y divide-hairline">
           {calendarDays.map((day) => {
             const iso = format(day, 'yyyy-MM-dd');
             const dayEvents = events.filter((e) => e.date === iso);
@@ -250,13 +250,13 @@ export const CalendarPage: React.FC = () => {
               <div
                 key={iso}
                 className={`min-h-[110px] p-2 ${
-                  inMonth ? 'bg-white' : 'bg-porcelain/50 text-slatewarm/60'
+                  inMonth ? 'bg-white' : 'bg-porcelain/50 text-softgray/60'
                 }`}
               >
                 <div className="flex items-center justify-between mb-1.5">
                   <span
                     className={`text-xs font-semibold w-6 h-6 rounded-full flex items-center justify-center tabular-nums ${
-                      isToday ? 'bg-champagne text-white' : 'text-navy'
+                      isToday ? 'bg-clay text-white' : 'text-charcoal'
                     }`}
                   >
                     {format(day, 'd')}
@@ -292,10 +292,10 @@ export const CalendarPage: React.FC = () => {
             className="p-3.5 flex items-center justify-between gap-3"
           >
             <div className="min-w-0">
-              <div className="text-xs text-slatewarm tabular-nums">
+              <div className="text-xs text-softgray tabular-nums">
                 {ev.date} · {ev.time}
               </div>
-              <div className="text-sm font-semibold text-navy truncate mt-0.5">
+              <div className="text-sm font-semibold text-charcoal truncate mt-0.5">
                 {ev.title}
               </div>
             </div>
@@ -337,16 +337,16 @@ export const CalendarPage: React.FC = () => {
             <Card className="p-4 space-y-2 text-xs">
               {selectedEvent.location && (
                 <div>
-                  <span className="text-slatewarm">Location: </span>
-                  <span className="font-medium text-navy">{selectedEvent.location}</span>
+                  <span className="text-softgray">Location: </span>
+                  <span className="font-medium text-charcoal">{selectedEvent.location}</span>
                 </div>
               )}
               {selectedEvent.description && (
-                <p className="text-navy leading-relaxed pt-1">{selectedEvent.description}</p>
+                <p className="text-charcoal leading-relaxed pt-1">{selectedEvent.description}</p>
               )}
               {selectedEvent.attendees && selectedEvent.attendees.length > 0 && (
-                <div className="pt-2 border-t border-borderwarm">
-                  <span className="text-slatewarm block mb-1">Attendees:</span>
+                <div className="pt-2 border-t border-hairline">
+                  <span className="text-softgray block mb-1">Attendees:</span>
                   <div className="flex flex-wrap gap-1.5">
                     {selectedEvent.attendees.map((a) => (
                       <Badge key={a} tone="slate">
@@ -392,57 +392,57 @@ export const CalendarPage: React.FC = () => {
           className="space-y-4"
         >
           <label className="block text-sm">
-            <span className="text-xs font-medium text-navy">Title *</span>
+            <span className="text-xs font-medium text-charcoal">Title *</span>
             <input
               type="text"
               required
               value={form.title}
               onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-              className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+              className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
             />
           </label>
           <div className="grid grid-cols-3 gap-2.5 text-sm">
             <label className="block">
-              <span className="text-xs font-medium text-navy">{t('date')} *</span>
+              <span className="text-xs font-medium text-charcoal">{t('date')} *</span>
               <input
                 type="date"
                 required
                 value={form.date}
                 onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))}
-                className="mt-1 w-full h-10 px-2 rounded-lg border border-borderwarm bg-porcelain text-xs"
+                className="mt-1 w-full h-10 px-2 rounded-lg border border-hairline bg-porcelain text-xs"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">Start</span>
+              <span className="text-xs font-medium text-charcoal">Start</span>
               <input
                 type="time"
                 value={form.startTime}
                 onChange={(e) => setForm((f) => ({ ...f, startTime: e.target.value }))}
-                className="mt-1 w-full h-10 px-2 rounded-lg border border-borderwarm bg-porcelain text-xs"
+                className="mt-1 w-full h-10 px-2 rounded-lg border border-hairline bg-porcelain text-xs"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">End</span>
+              <span className="text-xs font-medium text-charcoal">End</span>
               <input
                 type="time"
                 value={form.endTime}
                 onChange={(e) => setForm((f) => ({ ...f, endTime: e.target.value }))}
-                className="mt-1 w-full h-10 px-2 rounded-lg border border-borderwarm bg-porcelain text-xs"
+                className="mt-1 w-full h-10 px-2 rounded-lg border border-hairline bg-porcelain text-xs"
               />
             </label>
           </div>
           <label className="block text-sm">
-            <span className="text-xs font-medium text-navy">Location or Link</span>
+            <span className="text-xs font-medium text-charcoal">Location or Link</span>
             <input
               type="text"
               value={form.location}
               onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
-              className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+              className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
             />
           </label>
           {currentUser?.role === 'owner' && (
             <label className="block text-sm">
-              <span className="text-xs font-medium text-navy">Visibility</span>
+              <span className="text-xs font-medium text-charcoal">Visibility</span>
               <select
                 value={form.visibility}
                 onChange={(e) =>
@@ -451,7 +451,7 @@ export const CalendarPage: React.FC = () => {
                     visibility: e.target.value as 'invited' | 'owner_only',
                   }))
                 }
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               >
                 <option value="invited">Invited Attendees</option>
                 <option value="owner_only">Owners Only (Hidden from staff)</option>
@@ -459,7 +459,7 @@ export const CalendarPage: React.FC = () => {
             </label>
           )}
           <div>
-            <span className="text-xs font-medium text-navy block mb-1.5">Attendees</span>
+            <span className="text-xs font-medium text-charcoal block mb-1.5">Attendees</span>
             <div className="flex flex-wrap gap-1.5">
               {state.users.map((u) => {
                 const active = form.attendeeIds.includes(u.id);
@@ -470,8 +470,8 @@ export const CalendarPage: React.FC = () => {
                     onClick={() => toggleAttendee(u.id)}
                     className={`px-2.5 py-1 rounded-lg text-xs border ${
                       active
-                        ? 'bg-navy text-white border-navy'
-                        : 'bg-porcelain text-navy border-borderwarm'
+                        ? 'bg-olive text-white border-olive'
+                        : 'bg-porcelain text-charcoal border-hairline'
                     }`}
                   >
                     {u.name}
@@ -481,12 +481,12 @@ export const CalendarPage: React.FC = () => {
             </div>
           </div>
           <label className="block text-sm">
-            <span className="text-xs font-medium text-navy">Description</span>
+            <span className="text-xs font-medium text-charcoal">Description</span>
             <textarea
               rows={2}
               value={form.description}
               onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-              className="mt-1 w-full p-2.5 rounded-lg border border-borderwarm bg-porcelain"
+              className="mt-1 w-full p-2.5 rounded-lg border border-hairline bg-porcelain"
             />
           </label>
           <div className="flex justify-end gap-2">

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import { CalendarX2, CheckCircle2, Calendar, ShieldCheck } from 'lucide-react';
 import { useApp } from '../../services/store';
 import { canClearMissedClass, canScheduleMakeup } from '../../permissions/permissions';
@@ -76,8 +76,8 @@ export const MissedClassesPage: React.FC = () => {
             onClick={() => setStatusFilter(st)}
             className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
               statusFilter === st
-                ? 'bg-navy text-white border-navy'
-                : 'bg-white text-slatewarm border-borderwarm hover:text-navy'
+                ? 'bg-olive text-white border-olive'
+                : 'bg-white text-softgray border-hairline hover:text-charcoal'
             }`}
           >
             {st === 'all' ? t('all') : statusLabel(st)}
@@ -102,7 +102,7 @@ export const MissedClassesPage: React.FC = () => {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-semibold text-navy text-sm">
+                      <span className="font-semibold text-charcoal text-sm">
                         {stu?.fullName ?? rec.studentId}
                       </span>
                       <Badge tone={rec.attendanceStatus === 'A' ? 'terracotta' : 'amber'}>
@@ -112,21 +112,21 @@ export const MissedClassesPage: React.FC = () => {
                         {statusLabel(rec.makeupStatus)}
                       </Badge>
                     </div>
-                    <div className="text-xs text-slatewarm">
+                    <div className="text-xs text-softgray">
                       {cls?.name} · Week {rec.originalWeek} ({rec.originalDate})
                       {rec.scheduledMakeupDate && (
                         <span>
                           {' '}
                           ·{' '}
-                          <strong className="text-navy">
+                          <strong className="text-charcoal">
                             Makeup: {rec.scheduledMakeupDate}
                           </strong>
                         </span>
                       )}
                     </div>
-                    {rec.notes && <p className="text-xs text-slatewarm">{rec.notes}</p>}
+                    {rec.notes && <p className="text-xs text-softgray">{rec.notes}</p>}
                     {rec.clearedByName && (
-                      <div className="text-xs text-sage-dark inline-flex items-center gap-1">
+                      <div className="text-xs text-status-green inline-flex items-center gap-1">
                         <ShieldCheck className="w-3.5 h-3.5" />
                         Cleared by {rec.clearedByName} ({rec.clearedAt?.slice(0, 10)})
                       </div>
@@ -196,7 +196,7 @@ export const MissedClassesPage: React.FC = () => {
           className="space-y-4"
         >
           <label className="block text-sm">
-            <span className="text-xs font-medium text-navy">
+            <span className="text-xs font-medium text-charcoal">
               {state.language === 'es' ? 'Fecha de Reposición' : 'Makeup Date'}
             </span>
             <input
@@ -204,16 +204,16 @@ export const MissedClassesPage: React.FC = () => {
               required
               value={makeupDate}
               onChange={(e) => setMakeupDate(e.target.value)}
-              className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+              className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
             />
           </label>
           <label className="block text-sm">
-            <span className="text-xs font-medium text-navy">{t('notes')}</span>
+            <span className="text-xs font-medium text-charcoal">{t('notes')}</span>
             <textarea
               rows={2}
               value={makeupNotes}
               onChange={(e) => setMakeupNotes(e.target.value)}
-              className="mt-1 w-full p-2.5 rounded-lg border border-borderwarm bg-porcelain"
+              className="mt-1 w-full p-2.5 rounded-lg border border-hairline bg-porcelain"
             />
           </label>
           <div className="flex justify-end gap-2">

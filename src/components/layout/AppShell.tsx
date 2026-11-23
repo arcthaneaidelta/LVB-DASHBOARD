@@ -8,9 +8,8 @@ import {
   CalendarX2,
   CreditCard,
   Banknote,
-  FileSpreadsheet,
   MessageSquareWarning,
-  FileText,
+  FileBarChart2,
   CalendarDays,
   CheckSquare,
   Package,
@@ -19,6 +18,8 @@ import {
   Landmark,
   GraduationCap,
   ShieldCheck,
+  Settings,
+  Receipt,
   Search,
   Bell,
   ChevronLeft,
@@ -26,7 +27,6 @@ import {
   Menu,
   X,
   RotateCcw,
-  Globe,
   ExternalLink,
   RefreshCw,
 } from 'lucide-react';
@@ -45,31 +45,47 @@ interface NavItemDef {
   path: string;
   labelKey: TranslationKey;
   icon: React.FC<{ className?: string }>;
-  group: 'front_desk' | 'owners';
+  group: 'overview' | 'academy' | 'finance' | 'operations' | 'admin';
 }
 
+// V2.0 Section 7.2 5-Group Navigation Architecture
 const NAV_ITEMS: NavItemDef[] = [
-  // Front Desk & Studio (order per PRD Section 6.2)
-  { module: 'studio-tours', path: '/app/studio-tours', labelKey: 'nav_tours', icon: MapPin, group: 'front_desk' },
-  { module: 'students', path: '/app/students', labelKey: 'nav_students', icon: Users, group: 'front_desk' },
-  { module: 'class-log', path: '/app/class-log', labelKey: 'nav_classLog', icon: ClipboardCheck, group: 'front_desk' },
-  { module: 'missed-classes', path: '/app/missed-classes', labelKey: 'nav_missedClasses', icon: CalendarX2, group: 'front_desk' },
-  { module: 'payments', path: '/app/payments', labelKey: 'nav_payments', icon: CreditCard, group: 'front_desk' },
-  { module: 'cash-handoff', path: '/app/cash-handoff', labelKey: 'nav_cashHandoff', icon: Banknote, group: 'front_desk' },
-  { module: 'daily-cash-report', path: '/app/daily-cash-report', labelKey: 'nav_dailyCash', icon: FileSpreadsheet, group: 'front_desk' },
-  { module: 'weekly-reports', path: '/app/weekly-reports', labelKey: 'nav_weeklyReports', icon: MessageSquareWarning, group: 'front_desk' },
-  { module: 'documents', path: '/app/documents', labelKey: 'nav_documents', icon: FileText, group: 'front_desk' },
-  { module: 'calendar', path: '/app/calendar', labelKey: 'nav_calendar', icon: CalendarDays, group: 'front_desk' },
-  { module: 'tasks', path: '/app/tasks', labelKey: 'nav_tasks', icon: CheckSquare, group: 'front_desk' },
-  { module: 'inventory', path: '/app/inventory', labelKey: 'nav_inventory', icon: Package, group: 'front_desk' },
-  { module: 'suggestions', path: '/app/suggestions', labelKey: 'nav_suggestions', icon: Lightbulb, group: 'front_desk' },
+  // Overview
+  { module: 'dashboard', path: '/app/dashboard', labelKey: 'nav_dashboard', icon: LayoutDashboard, group: 'overview' },
 
-  // Owners Only (order per PRD Section 6.2)
-  { module: 'dashboard', path: '/app/dashboard', labelKey: 'nav_dashboard', icon: LayoutDashboard, group: 'owners' },
-  { module: 'projects', path: '/app/projects', labelKey: 'nav_projects', icon: FolderKanban, group: 'owners' },
-  { module: 'accounting', path: '/app/accounting', labelKey: 'nav_accounting', icon: Landmark, group: 'owners' },
-  { module: 'classes', path: '/app/classes', labelKey: 'nav_classes', icon: GraduationCap, group: 'owners' },
-  { module: 'team', path: '/app/team', labelKey: 'nav_team', icon: ShieldCheck, group: 'owners' },
+  // Academy
+  { module: 'students', path: '/app/students', labelKey: 'nav_students', icon: Users, group: 'academy' },
+  { module: 'classes', path: '/app/classes', labelKey: 'nav_classes', icon: GraduationCap, group: 'academy' },
+  { module: 'class-log', path: '/app/class-log', labelKey: 'nav_classLog', icon: ClipboardCheck, group: 'academy' },
+  { module: 'studio-tours', path: '/app/studio-tours', labelKey: 'nav_tours', icon: MapPin, group: 'academy' },
+
+  // Finance
+  { module: 'accounting', path: '/app/accounting', labelKey: 'nav_accounting', icon: Landmark, group: 'finance' },
+  { module: 'deposits', path: '/app/deposits', labelKey: 'nav_deposits', icon: Receipt, group: 'finance' },
+  { module: 'payments', path: '/app/payments', labelKey: 'nav_payments', icon: CreditCard, group: 'finance' },
+  { module: 'cash-handoff', path: '/app/cash-handoff', labelKey: 'nav_cashHandoff', icon: Banknote, group: 'finance' },
+  { module: 'reports', path: '/app/reports', labelKey: 'nav_reports', icon: FileBarChart2, group: 'finance' },
+
+  // Operations
+  { module: 'missed-classes', path: '/app/missed-classes', labelKey: 'nav_missedClasses', icon: CalendarX2, group: 'operations' },
+  { module: 'tasks', path: '/app/tasks', labelKey: 'nav_tasks', icon: CheckSquare, group: 'operations' },
+  { module: 'projects', path: '/app/projects', labelKey: 'nav_projects', icon: FolderKanban, group: 'operations' },
+  { module: 'inventory', path: '/app/inventory', labelKey: 'nav_inventory', icon: Package, group: 'operations' },
+  { module: 'calendar', path: '/app/calendar', labelKey: 'nav_calendar', icon: CalendarDays, group: 'operations' },
+  { module: 'suggestions', path: '/app/suggestions', labelKey: 'nav_suggestions', icon: Lightbulb, group: 'operations' },
+  { module: 'weekly-reports', path: '/app/weekly-reports', labelKey: 'nav_weeklyReports', icon: MessageSquareWarning, group: 'operations' },
+
+  // Administration
+  { module: 'team', path: '/app/team', labelKey: 'nav_team', icon: ShieldCheck, group: 'admin' },
+  { module: 'settings', path: '/app/settings', labelKey: 'nav_settings', icon: Settings, group: 'admin' },
+];
+
+const GROUP_META: { id: NavItemDef['group']; labelKey: TranslationKey }[] = [
+  { id: 'overview', labelKey: 'navGroupOverview' },
+  { id: 'academy', labelKey: 'navGroupAcademy' },
+  { id: 'finance', labelKey: 'navGroupFinance' },
+  { id: 'operations', labelKey: 'navGroupOperations' },
+  { id: 'admin', labelKey: 'navGroupAdmin' },
 ];
 
 export const AppShell: React.FC = () => {
@@ -90,16 +106,6 @@ export const AppShell: React.FC = () => {
     [currentUser]
   );
 
-  const frontDeskNav = useMemo(
-    () => authorizedNav.filter((i) => i.group === 'front_desk'),
-    [authorizedNav]
-  );
-  const ownersNav = useMemo(
-    () => authorizedNav.filter((i) => i.group === 'owners'),
-    [authorizedNav]
-  );
-
-  // Dynamic nav badge counts
   const badgeCounts = useMemo(() => {
     const pendingDeposits = state.deposits.filter((d) => d.status === 'pending').length;
     const pendingHandoffs = state.cashHandoffs.filter((h) => h.status === 'pending').length;
@@ -110,7 +116,7 @@ export const AppShell: React.FC = () => {
     const lowStock = state.inventory.filter((i) => i.quantity <= 5).length;
 
     return {
-      payments: currentUser?.role === 'owner' ? pendingDeposits : 0,
+      deposits: currentUser?.role === 'owner' ? pendingDeposits : 0,
       'cash-handoff': currentUser?.role === 'owner' ? pendingHandoffs : 0,
       'missed-classes': openMissed,
       'weekly-reports': currentUser?.role === 'owner' ? urgentReports : 0,
@@ -118,10 +124,9 @@ export const AppShell: React.FC = () => {
     } as Partial<Record<AppModule, number>>;
   }, [state.deposits, state.cashHandoffs, state.missedClasses, state.reports, state.inventory, currentUser]);
 
-  // Actionable notifications for Notification Center
   const notifications = useMemo(() => {
     if (!currentUser) return [];
-    const items: { id: string; title: string; detail: string; route: string; tone: 'amber' | 'terracotta' | 'champagne' }[] = [];
+    const items: { id: string; title: string; detail: string; route: string; tone: 'amber' | 'red' | 'clay' }[] = [];
 
     if (currentUser.role === 'owner') {
       state.deposits
@@ -130,9 +135,9 @@ export const AppShell: React.FC = () => {
           const stu = state.students.find((s) => s.id === d.studentId);
           items.push({
             id: `not-dep-${d.id}`,
-            title: state.language === 'es' ? 'Depósito pendiente de confirmar' : 'Deposit awaiting confirmation',
+            title: state.language === 'es' ? 'Depósito por confirmar' : 'Deposit awaiting confirmation',
             detail: `${stu?.fullName ?? ''} · $${d.amount} (${d.collectorName})`,
-            route: '/app/payments',
+            route: '/app/deposits',
             tone: 'amber',
           });
         });
@@ -145,7 +150,7 @@ export const AppShell: React.FC = () => {
             title: state.language === 'es' ? 'Entrega de efectivo pendiente' : 'Cash handoff awaiting confirmation',
             detail: `${h.collectorName} · $${h.expectedCash.toFixed(2)} (${h.date})`,
             route: '/app/cash-handoff',
-            tone: 'champagne',
+            tone: 'clay',
           });
         });
 
@@ -157,12 +162,11 @@ export const AppShell: React.FC = () => {
             title: state.language === 'es' ? 'Reporte urgente' : 'Urgent report',
             detail: `${r.subject} (${r.submittedByName})`,
             route: '/app/weekly-reports',
-            tone: 'terracotta',
+            tone: 'red',
           });
         });
     }
 
-    // Overdue tasks assigned to current user (or all for owner)
     const today = '2026-11-24';
     state.tasks
       .filter(
@@ -177,11 +181,10 @@ export const AppShell: React.FC = () => {
           title: state.language === 'es' ? 'Tarea vencida' : 'Overdue task',
           detail: `${tk.title} (${tk.dueDate})`,
           route: '/app/tasks',
-          tone: 'terracotta',
+          tone: 'red',
         });
       });
 
-    // Today's tours
     state.tours
       .filter((tr) => tr.date === today && tr.outcome === 'pending')
       .forEach((tr) => {
@@ -190,14 +193,13 @@ export const AppShell: React.FC = () => {
           title: state.language === 'es' ? 'Visita programada hoy' : 'Studio tour today',
           detail: `${tr.visitorName} · ${tr.time}`,
           route: '/app/studio-tours',
-          tone: 'champagne',
+          tone: 'clay',
         });
       });
 
     return items.slice(0, 8);
   }, [currentUser, state]);
 
-  // Global local search across authorized records
   const searchResults = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     if (!q || !currentUser) return [];
@@ -288,16 +290,15 @@ export const AppShell: React.FC = () => {
     [location.pathname]
   );
 
-  // Mobile primary bottom bar (4 role-relevant shortcuts + Menu)
   const mobilePrimaryItems = useMemo(() => {
     if (!currentUser) return [];
     const preferred: AppModule[] =
       currentUser.role === 'owner'
         ? ['dashboard', 'students', 'class-log', 'accounting']
         : currentUser.role === 'instructor'
-          ? ['class-log', 'students', 'cash-handoff', 'daily-cash-report']
+          ? ['class-log', 'students', 'cash-handoff', 'reports']
           : currentUser.role === 'telemarketing'
-            ? ['students', 'studio-tours', 'payments', 'tasks']
+            ? ['students', 'studio-tours', 'deposits', 'tasks']
             : ['studio-tours', 'students', 'inventory', 'tasks'];
     return preferred
       .map((m) => NAV_ITEMS.find((i) => i.module === m))
@@ -309,7 +310,6 @@ export const AppShell: React.FC = () => {
     selectUser(userId);
     setIdentityMenuOpen(false);
     if (nextUser) {
-      // If current module is unauthorized for the new role, send them to their default workspace
       if (!currentNavDef || !canAccessModule(nextUser, currentNavDef.module)) {
         navigate(getDefaultRouteForUser(nextUser));
       }
@@ -328,31 +328,31 @@ export const AppShell: React.FC = () => {
         onClick={() => isMobile && setMobileNavOpen(false)}
         title={collapsed && !isMobile ? t(item.labelKey) : undefined}
         className={({ isActive }) =>
-          `group relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13.5px] font-medium transition-colors duration-150 ${
+          `group flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-150 ${
             isActive
-              ? 'bg-navy-deep text-white'
-              : 'text-white/70 hover:text-white hover:bg-white/[0.06]'
+              ? 'bg-olive text-white shadow-subtle'
+              : 'text-charcoal/75 hover:text-charcoal hover:bg-white/75'
           }`
         }
       >
         {({ isActive }) => (
           <>
-            {isActive && (
-              <span
-                className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r-full bg-champagne"
-                aria-hidden="true"
-              />
-            )}
             <Icon
-              className={`w-[18px] h-[18px] shrink-0 ${
-                isActive ? 'text-champagne-soft' : 'text-white/60 group-hover:text-white/90'
+              className={`w-[17px] h-[17px] shrink-0 ${
+                isActive ? 'text-porcelain' : 'text-olive/70 group-hover:text-olive'
               }`}
             />
             {(!collapsed || isMobile) && (
               <span className="truncate flex-1">{t(item.labelKey)}</span>
             )}
             {(!collapsed || isMobile) && count > 0 && (
-              <span className="px-1.5 py-0.5 text-[10px] font-semibold rounded-full bg-champagne/20 text-champagne-soft tabular-nums">
+              <span
+                className={`px-1.5 py-0.5 text-[10px] font-semibold rounded-full tabular-nums ${
+                  isActive
+                    ? 'bg-white/20 text-white'
+                    : 'bg-clay-light text-clay-dark'
+                }`}
+              >
                 {count}
               </span>
             )}
@@ -362,26 +362,27 @@ export const AppShell: React.FC = () => {
     );
   };
 
+  // Light Modern Beauty Atelier Architectural Sidebar (Mist #E8EAE3 + Deep Olive #424D40 active states)
   const sidebarContent = (isMobile = false) => (
-    <div className="flex flex-col h-full bg-navy text-white select-none">
+    <div className="flex flex-col h-full bg-mist/65 text-charcoal select-none">
       {/* Brand header */}
-      <div className="h-16 px-4 flex items-center justify-between border-b border-white/10 shrink-0">
+      <div className="h-16 px-4 flex items-center justify-between border-b border-hairline shrink-0">
         <button
           type="button"
           onClick={() => {
             navigate(getDefaultRouteForUser(currentUser));
             if (isMobile) setMobileNavOpen(false);
           }}
-          className="flex items-center gap-3 min-w-0 text-left"
+          className="flex items-center gap-2.5 min-w-0 text-left"
         >
-          <LVBMonogram size="sm" />
+          <LVBMonogram size="sm" tone="olive" />
           {(!collapsed || isMobile) && (
             <div className="min-w-0">
-              <div className="font-editorial text-lg leading-none text-white tracking-wide">
+              <div className="font-editorial text-[19px] leading-none text-charcoal tracking-tight">
                 LVB Pulse
               </div>
-              <div className="text-[9.5px] tracking-[0.16em] text-champagne-soft uppercase mt-1 truncate">
-                La Voute Beauty Academy
+              <div className="text-[9.5px] tracking-[0.14em] text-softgray uppercase mt-0.5 truncate">
+                La Voute Atelier
               </div>
             </div>
           )}
@@ -390,7 +391,7 @@ export const AppShell: React.FC = () => {
           <button
             type="button"
             onClick={() => setMobileNavOpen(false)}
-            className="p-2 text-white/70 hover:text-white rounded-lg"
+            className="p-2 text-softgray hover:text-charcoal rounded-lg"
             aria-label="Close navigation"
           >
             <X className="w-5 h-5" />
@@ -399,7 +400,7 @@ export const AppShell: React.FC = () => {
           <button
             type="button"
             onClick={() => setCollapsed((c) => !c)}
-            className="p-1.5 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+            className="p-1.5 text-softgray hover:text-charcoal hover:bg-white/70 rounded-lg transition-colors"
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {collapsed ? (
@@ -411,51 +412,59 @@ export const AppShell: React.FC = () => {
         )}
       </div>
 
-      {/* Scrollable Navigation */}
+      {/* 5-Section Role-Filtered Navigation */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5" aria-label="Primary Navigation">
-        {ownersNav.length > 0 && (
-          <div>
-            {(!collapsed || isMobile) && (
-              <div className="px-3 mb-2 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-champagne-soft/80">
-                {t('navGroupOwners')}
+        {GROUP_META.map((group) => {
+          const items = authorizedNav.filter((i) => i.group === group.id);
+          if (items.length === 0) return null;
+          return (
+            <div key={group.id}>
+              {(!collapsed || isMobile) && (
+                <div className="px-3 mb-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-softgray">
+                  {t(group.labelKey)}
+                </div>
+              )}
+              <div className="space-y-0.5">
+                {items.map((item) => renderNavLink(item, isMobile))}
               </div>
-            )}
-            <div className="space-y-0.5">
-              {ownersNav.map((item) => renderNavLink(item, isMobile))}
+            </div>
+          );
+        })}
+      </nav>
+
+      {/* Bottom Profile & Demo Controls */}
+      <div className="p-3 border-t border-hairline shrink-0 space-y-1 bg-porcelain/70">
+        {(!collapsed || isMobile) && (
+          <div className="px-2.5 py-2 flex items-center gap-2.5">
+            <span className="w-8 h-8 rounded-full bg-olive text-porcelain text-xs font-semibold flex items-center justify-center shrink-0">
+              {currentUser.avatarInitials}
+            </span>
+            <div className="min-w-0">
+              <div className="text-xs font-semibold text-charcoal truncate">
+                {currentUser.name}
+              </div>
+              <div className="text-[11px] text-softgray truncate">
+                {t(`role_${currentUser.role}` as TranslationKey)}
+              </div>
             </div>
           </div>
         )}
-
-        <div>
-          {(!collapsed || isMobile) && (
-            <div className="px-3 mb-2 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-white/45">
-              {t('navGroupFrontDesk')}
-            </div>
-          )}
-          <div className="space-y-0.5">
-            {frontDeskNav.map((item) => renderNavLink(item, isMobile))}
-          </div>
-        </div>
-      </nav>
-
-      {/* Bottom demo footer */}
-      <div className="p-3 border-t border-white/10 shrink-0 space-y-1.5">
         <button
           type="button"
           onClick={() => {
             navigate('/');
             if (isMobile) setMobileNavOpen(false);
           }}
-          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+          className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs text-softgray hover:text-charcoal hover:bg-white transition-colors"
         >
-          <ExternalLink className="w-3.5 h-3.5 shrink-0 text-champagne-soft" />
+          <ExternalLink className="w-3.5 h-3.5 shrink-0 text-olive" />
           {(!collapsed || isMobile) && <span>{t('backToLanding')}</span>}
         </button>
         {(!collapsed || isMobile) && (
           <button
             type="button"
             onClick={() => setResetModalOpen(true)}
-            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs text-white/55 hover:text-white hover:bg-white/10 transition-colors"
+            className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs text-softgray hover:text-status-red hover:bg-white transition-colors"
           >
             <RotateCcw className="w-3.5 h-3.5 shrink-0" />
             <span>{t('resetDemoData')}</span>
@@ -466,24 +475,24 @@ export const AppShell: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen flex bg-porcelain text-navy">
+    <div className="min-h-screen flex bg-porcelain text-charcoal">
       {/* Desktop Sidebar */}
       <aside
-        className={`hidden lg:block shrink-0 transition-[width] duration-200 border-r border-navy-deep no-print ${
-          collapsed ? 'w-[76px]' : 'w-[252px]'
+        className={`hidden lg:block shrink-0 transition-[width] duration-200 border-r border-hairline no-print ${
+          collapsed ? 'w-[74px]' : 'w-[248px]'
         }`}
       >
         <div className="sticky top-0 h-screen">{sidebarContent(false)}</div>
       </aside>
 
-      {/* Mobile Navigation Drawer */}
+      {/* Mobile Drawer */}
       {mobileNavOpen && (
         <div
-          className="fixed inset-0 z-50 lg:hidden flex bg-navy/50 no-print"
+          className="fixed inset-0 z-50 lg:hidden flex bg-charcoal/45 no-print"
           onClick={() => setMobileNavOpen(false)}
         >
           <div
-            className="w-[276px] max-w-[85vw] h-full shadow-elevated"
+            className="w-[278px] max-w-[86vw] h-full shadow-elevated bg-porcelain"
             onClick={(e) => e.stopPropagation()}
           >
             {sidebarContent(true)}
@@ -493,32 +502,36 @@ export const AppShell: React.FC = () => {
 
       {/* Main Column */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Top Utility Bar */}
-        <header className="sticky top-0 z-30 h-16 bg-white/95 backdrop-blur-sm border-b border-borderwarm px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4 no-print">
-          {/* Left: Mobile Menu + Breadcrumb */}
+        {/* Top Utility Command Bar */}
+        <header className="sticky top-0 z-30 h-16 bg-porcelain/95 backdrop-blur-sm border-b border-hairline px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4 no-print">
           <div className="flex items-center gap-2.5 min-w-0">
             <button
               type="button"
               onClick={() => setMobileNavOpen(true)}
-              className="lg:hidden p-2 -ml-1 rounded-lg text-navy hover:bg-ivory"
+              className="lg:hidden p-2 -ml-1 rounded-lg text-charcoal hover:bg-mist"
               aria-label="Open menu"
             >
               <Menu className="w-5 h-5" />
             </button>
             <div className="min-w-0 flex items-center gap-2">
-              <span className="hidden sm:inline text-xs font-medium uppercase tracking-[0.12em] text-slatewarm">
-                LVB Pulse
+              <span className="hidden sm:inline text-[11px] font-semibold uppercase tracking-[0.14em] text-softgray">
+                {currentNavDef
+                  ? t(
+                      GROUP_META.find((g) => g.id === currentNavDef.group)?.labelKey ??
+                        'navGroupOverview'
+                    )
+                  : 'LVB Pulse'}
               </span>
-              <span className="hidden sm:inline text-borderwarm">/</span>
-              <span className="text-sm font-semibold text-navy truncate">
+              <span className="hidden sm:inline text-hairline">/</span>
+              <span className="text-sm font-semibold text-charcoal truncate">
                 {currentNavDef ? t(currentNavDef.labelKey) : t('brandName')}
               </span>
             </div>
           </div>
 
-          {/* Center: Global Search */}
+          {/* Search */}
           <div className="relative flex-1 max-w-md hidden md:block">
-            <Search className="w-4 h-4 text-slatewarm absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Search className="w-4 h-4 text-softgray absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="search"
               value={searchQuery}
@@ -530,16 +543,16 @@ export const AppShell: React.FC = () => {
                   ? 'Buscar alumnas, recibos, visitas o inventario...'
                   : 'Search students, receipts, tours, or inventory...'
               }
-              className="w-full h-9 pl-9 pr-3 text-sm bg-porcelain border border-borderwarm rounded-lg text-navy placeholder:text-slatewarm/80 focus:bg-white focus:border-champagne transition-colors"
+              className="w-full h-9 pl-9 pr-3 text-xs sm:text-sm bg-white border border-hairline rounded-lg text-charcoal placeholder:text-softgray focus:border-olive transition-colors"
             />
             {searchFocused && searchQuery.trim().length > 0 && (
-              <div className="absolute left-0 right-0 top-11 bg-white border border-borderwarm rounded-xl shadow-elevated overflow-hidden z-40">
+              <div className="absolute left-0 right-0 top-11 bg-white border border-hairline rounded-atelier shadow-elevated overflow-hidden z-40">
                 {searchResults.length === 0 ? (
-                  <div className="px-4 py-4 text-xs text-slatewarm text-center">
+                  <div className="px-4 py-4 text-xs text-softgray text-center">
                     {t('noResults')}
                   </div>
                 ) : (
-                  <ul className="divide-y divide-borderwarm max-h-80 overflow-y-auto">
+                  <ul className="divide-y divide-hairline max-h-80 overflow-y-auto">
                     {searchResults.map((res) => (
                       <li key={res.id}>
                         <button
@@ -551,14 +564,14 @@ export const AppShell: React.FC = () => {
                           className="w-full px-4 py-2.5 text-left hover:bg-porcelain flex items-center justify-between gap-3 transition-colors"
                         >
                           <div className="min-w-0">
-                            <div className="text-sm font-medium text-navy truncate">
+                            <div className="text-sm font-medium text-charcoal truncate">
                               {res.title}
                             </div>
-                            <div className="text-xs text-slatewarm truncate">
+                            <div className="text-xs text-softgray truncate">
                               {res.subtitle}
                             </div>
                           </div>
-                          <Badge tone="slate">{res.type}</Badge>
+                          <Badge tone="gray">{res.type}</Badge>
                         </button>
                       </li>
                     ))}
@@ -568,21 +581,20 @@ export const AppShell: React.FC = () => {
             )}
           </div>
 
-          {/* Right Controls: Language, Notifications, Demo Identity Switcher */}
+          {/* Right Controls: Language, Notifications, Role Switcher */}
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-            {/* Language Switcher */}
             <div
-              className="inline-flex items-center rounded-lg border border-borderwarm bg-porcelain p-0.5"
+              className="inline-flex items-center rounded-lg border border-hairline bg-white p-0.5"
               role="group"
               aria-label={t('languageLabel')}
             >
               <button
                 type="button"
                 onClick={() => setLanguage('en')}
-                className={`px-2 py-1 text-xs font-medium rounded-md transition-colors ${
+                className={`px-2 py-1 text-xs font-semibold rounded-md transition-colors ${
                   state.language === 'en'
-                    ? 'bg-navy text-white'
-                    : 'text-slatewarm hover:text-navy'
+                    ? 'bg-olive text-white'
+                    : 'text-softgray hover:text-charcoal'
                 }`}
               >
                 EN
@@ -590,17 +602,17 @@ export const AppShell: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setLanguage('es')}
-                className={`px-2 py-1 text-xs font-medium rounded-md transition-colors ${
+                className={`px-2 py-1 text-xs font-semibold rounded-md transition-colors ${
                   state.language === 'es'
-                    ? 'bg-navy text-white'
-                    : 'text-slatewarm hover:text-navy'
+                    ? 'bg-olive text-white'
+                    : 'text-softgray hover:text-charcoal'
                 }`}
               >
                 ES
               </button>
             </div>
 
-            {/* Notification Center */}
+            {/* Notifications */}
             <div className="relative">
               <button
                 type="button"
@@ -608,28 +620,28 @@ export const AppShell: React.FC = () => {
                   setNotifOpen((o) => !o);
                   setIdentityMenuOpen(false);
                 }}
-                className="relative p-2 rounded-lg text-navy hover:bg-ivory transition-colors"
+                className="relative p-2 rounded-lg text-charcoal hover:bg-mist transition-colors"
                 aria-label="Notifications"
               >
                 <Bell className="w-[18px] h-[18px]" />
                 {notifications.length > 0 && (
-                  <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-terracotta ring-2 ring-white" />
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-clay ring-2 ring-porcelain" />
                 )}
               </button>
               {notifOpen && (
-                <div className="absolute right-0 top-11 w-80 max-w-[90vw] bg-white border border-borderwarm rounded-xl shadow-elevated z-40 overflow-hidden">
-                  <div className="px-4 py-3 border-b border-borderwarm flex items-center justify-between">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-navy">
+                <div className="absolute right-0 top-11 w-80 max-w-[90vw] bg-white border border-hairline rounded-atelier shadow-elevated z-40 overflow-hidden">
+                  <div className="px-4 py-3 border-b border-hairline flex items-center justify-between bg-porcelain/70">
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-charcoal">
                       {state.language === 'es' ? 'Notificaciones' : 'Notifications'}
                     </span>
-                    <Badge tone="champagne">{notifications.length}</Badge>
+                    <Badge tone="clay">{notifications.length}</Badge>
                   </div>
                   {notifications.length === 0 ? (
-                    <div className="p-5 text-xs text-slatewarm text-center">
+                    <div className="p-5 text-xs text-softgray text-center">
                       {t('allCaughtUp')}
                     </div>
                   ) : (
-                    <ul className="divide-y divide-borderwarm max-h-80 overflow-y-auto">
+                    <ul className="divide-y divide-hairline max-h-80 overflow-y-auto">
                       {notifications.map((n) => (
                         <li key={n.id}>
                           <button
@@ -643,18 +655,18 @@ export const AppShell: React.FC = () => {
                             <div className="flex items-center gap-2">
                               <span
                                 className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                                  n.tone === 'terracotta'
-                                    ? 'bg-terracotta'
+                                  n.tone === 'red'
+                                    ? 'bg-status-red'
                                     : n.tone === 'amber'
-                                      ? 'bg-amberwarm'
-                                      : 'bg-champagne'
+                                      ? 'bg-status-amber'
+                                      : 'bg-clay'
                                 }`}
                               />
-                              <span className="text-xs font-semibold text-navy">
+                              <span className="text-xs font-semibold text-charcoal">
                                 {n.title}
                               </span>
                             </div>
-                            <p className="text-xs text-slatewarm mt-1 pl-3.5">
+                            <p className="text-xs text-softgray mt-1 pl-3.5">
                               {n.detail}
                             </p>
                           </button>
@@ -666,7 +678,7 @@ export const AppShell: React.FC = () => {
               )}
             </div>
 
-            {/* Demo Identity Selector & Profile */}
+            {/* Obvious & Refined Demo Role Switcher */}
             <div className="relative">
               <button
                 type="button"
@@ -674,33 +686,33 @@ export const AppShell: React.FC = () => {
                   setIdentityMenuOpen((o) => !o);
                   setNotifOpen(false);
                 }}
-                className="flex items-center gap-2 pl-1.5 pr-2.5 py-1 rounded-lg border border-borderwarm bg-porcelain hover:bg-ivory transition-colors"
+                className="flex items-center gap-2 pl-1.5 pr-2.5 py-1 rounded-lg border border-hairline bg-white hover:border-olive/50 transition-colors"
               >
-                <span className="w-7 h-7 rounded-full bg-navy text-champagne-soft text-xs font-semibold flex items-center justify-center shrink-0">
+                <span className="w-7 h-7 rounded-full bg-olive text-porcelain text-xs font-semibold flex items-center justify-center shrink-0">
                   {currentUser.avatarInitials}
                 </span>
                 <div className="hidden sm:block text-left leading-tight">
-                  <div className="text-xs font-semibold text-navy max-w-[115px] truncate">
+                  <div className="text-xs font-semibold text-charcoal max-w-[115px] truncate">
                     {currentUser.name}
                   </div>
-                  <div className="text-[10.5px] text-slatewarm flex items-center gap-1">
+                  <div className="text-[10.5px] text-softgray flex items-center gap-1">
                     <span>{t(`role_${currentUser.role}` as TranslationKey)}</span>
-                    <span className="text-champagne">· Demo</span>
+                    <span className="text-clay font-medium">· Demo</span>
                   </div>
                 </div>
-                <RefreshCw className="w-3.5 h-3.5 text-slatewarm hidden sm:block" />
+                <RefreshCw className="w-3.5 h-3.5 text-softgray hidden sm:block" />
               </button>
 
               {identityMenuOpen && (
-                <div className="absolute right-0 top-12 w-72 max-w-[92vw] bg-white border border-borderwarm rounded-xl shadow-elevated z-40 overflow-hidden">
-                  <div className="px-4 py-2.5 bg-porcelain border-b border-borderwarm">
-                    <div className="text-[10.5px] font-semibold uppercase tracking-wider text-champagne">
+                <div className="absolute right-0 top-12 w-72 max-w-[92vw] bg-white border border-hairline rounded-atelier shadow-elevated z-40 overflow-hidden">
+                  <div className="px-4 py-2.5 bg-mist/60 border-b border-hairline">
+                    <div className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-olive">
                       {t('switchIdentity')}
                     </div>
-                    <p className="text-[11px] text-slatewarm mt-0.5">
+                    <p className="text-[11px] text-softgray mt-0.5">
                       {state.language === 'es'
-                        ? 'Simulación de rol para demostración'
-                        : 'Demo role simulation · updates full app context'}
+                        ? 'Cambia de rol al instante sin reiniciar'
+                        : 'Switch active workspace role instantaneously'}
                     </p>
                   </div>
                   <div className="p-1.5 space-y-0.5">
@@ -713,15 +725,15 @@ export const AppShell: React.FC = () => {
                           onClick={() => handleSwitchIdentity(u.id)}
                           className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left transition-colors ${
                             active
-                              ? 'bg-navy text-white'
-                              : 'hover:bg-porcelain text-navy'
+                              ? 'bg-olive text-white'
+                              : 'hover:bg-porcelain text-charcoal'
                           }`}
                         >
                           <span
                             className={`w-7 h-7 rounded-full text-xs font-semibold flex items-center justify-center shrink-0 ${
                               active
-                                ? 'bg-champagne text-white'
-                                : 'bg-ivory text-navy'
+                                ? 'bg-white/20 text-white'
+                                : 'bg-mist text-olive'
                             }`}
                           >
                             {u.avatarInitials}
@@ -732,7 +744,7 @@ export const AppShell: React.FC = () => {
                             </div>
                             <div
                               className={`text-[11px] truncate ${
-                                active ? 'text-champagne-soft' : 'text-slatewarm'
+                                active ? 'text-white/80' : 'text-softgray'
                               }`}
                             >
                               {t(`role_${u.role}` as TranslationKey)}
@@ -742,14 +754,14 @@ export const AppShell: React.FC = () => {
                       );
                     })}
                   </div>
-                  <div className="border-t border-borderwarm p-2 flex items-center justify-between gap-2 bg-porcelain/60">
+                  <div className="border-t border-hairline p-2 flex items-center justify-between gap-2 bg-porcelain/60">
                     <button
                       type="button"
                       onClick={() => {
                         setIdentityMenuOpen(false);
                         setResetModalOpen(true);
                       }}
-                      className="text-xs text-slatewarm hover:text-navy flex items-center gap-1.5 px-2 py-1"
+                      className="text-xs text-softgray hover:text-status-red flex items-center gap-1.5 px-2 py-1"
                     >
                       <RotateCcw className="w-3.5 h-3.5" />
                       {t('resetDemoData')}
@@ -758,12 +770,11 @@ export const AppShell: React.FC = () => {
                       type="button"
                       onClick={() => {
                         setIdentityMenuOpen(false);
-                        navigate('/');
+                        navigate('/app/settings');
                       }}
-                      className="text-xs text-champagne hover:underline flex items-center gap-1 px-2 py-1"
+                      className="text-xs text-olive font-medium hover:underline px-2 py-1"
                     >
-                      <Globe className="w-3.5 h-3.5" />
-                      {t('backToLanding')}
+                      {t('nav_settings')}
                     </button>
                   </div>
                 </div>
@@ -772,15 +783,15 @@ export const AppShell: React.FC = () => {
           </div>
         </header>
 
-        {/* Main Content Canvas */}
-        <main className="flex-1 px-4 py-5 sm:px-7 sm:py-7 lg:px-9 lg:py-8 pb-24 lg:pb-10 max-w-[1440px] w-full mx-auto animate-fade-in">
+        {/* Main Workspace Canvas */}
+        <main className="flex-1 px-4 py-5 sm:px-7 sm:py-7 lg:px-10 lg:py-8 pb-24 lg:pb-12 max-w-[1440px] w-full mx-auto animate-fade-in">
           <Outlet />
         </main>
       </div>
 
       {/* Mobile Bottom Navigation */}
       <nav
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-borderwarm px-1 py-1.5 flex items-center justify-around no-print"
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-sm border-t border-hairline px-1 py-1.5 flex items-center justify-around no-print"
         aria-label="Mobile Navigation"
       >
         {mobilePrimaryItems.map((item) => {
@@ -790,8 +801,8 @@ export const AppShell: React.FC = () => {
               key={item.module}
               to={item.path}
               className={({ isActive }) =>
-                `flex flex-col items-center justify-center gap-0.5 px-2 py-1 rounded-lg min-w-[60px] text-[10.5px] font-medium transition-colors ${
-                  isActive ? 'text-navy bg-champagne-light/60' : 'text-slatewarm'
+                `flex flex-col items-center justify-center gap-0.5 px-2 py-1.5 rounded-lg min-w-[60px] text-[10.5px] font-medium transition-colors ${
+                  isActive ? 'text-olive bg-mist' : 'text-softgray'
                 }`
               }
             >
@@ -803,20 +814,20 @@ export const AppShell: React.FC = () => {
         <button
           type="button"
           onClick={() => setMobileNavOpen(true)}
-          className="flex flex-col items-center justify-center gap-0.5 px-2 py-1 rounded-lg min-w-[56px] text-[10.5px] font-medium text-slatewarm"
+          className="flex flex-col items-center justify-center gap-0.5 px-2 py-1.5 rounded-lg min-w-[56px] text-[10.5px] font-medium text-softgray"
         >
           <Menu className="w-4 h-4" />
-          <span>{state.language === 'es' ? 'Más' : 'More'}</span>
+          <span>{state.language === 'es' ? 'Menú' : 'Menu'}</span>
         </button>
       </nav>
 
-      {/* Reset Demo Data Confirmation Modal */}
+      {/* Reset Demo Data Modal */}
       <Modal
         open={resetModalOpen}
         onClose={() => setResetModalOpen(false)}
         title={t('resetDemoData')}
       >
-        <p className="text-sm text-slatewarm leading-relaxed">
+        <p className="text-sm text-softgray leading-relaxed">
           {t('resetDemoConfirm')}
         </p>
         <div className="mt-6 flex items-center justify-end gap-2">

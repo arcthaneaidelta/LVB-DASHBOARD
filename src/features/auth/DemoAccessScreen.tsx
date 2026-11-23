@@ -28,61 +28,102 @@ export const DemoAccessScreen: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-porcelain flex flex-col">
-      {/* Top Bar */}
-      <header className="px-4 sm:px-8 h-16 flex items-center justify-between border-b border-borderwarm bg-white/80 backdrop-blur-sm">
-        <button
-          type="button"
-          onClick={() => navigate('/')}
-          className="inline-flex items-center gap-2 text-xs font-medium text-slatewarm hover:text-navy transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          {t('backToLanding')}
-        </button>
-
-        <div className="flex items-center gap-2.5">
-          <LVBMonogram size="sm" />
-          <span className="font-editorial text-lg text-navy">LVB Pulse</span>
-        </div>
-
-        <div className="inline-flex items-center rounded-lg border border-borderwarm bg-porcelain p-0.5">
+    <div className="min-h-screen bg-porcelain grid grid-cols-1 lg:grid-cols-12">
+      {/* Left Editorial Atelier Column (Deep Olive #424D40) */}
+      <aside className="lg:col-span-5 bg-olive text-porcelain p-6 sm:p-10 lg:p-14 flex flex-col justify-between relative overflow-hidden">
+        <div className="flex items-center justify-between gap-4">
           <button
             type="button"
-            onClick={() => setLanguage('en')}
-            className={`px-2 py-1 text-xs font-medium rounded-md ${
-              state.language === 'en' ? 'bg-navy text-white' : 'text-slatewarm'
-            }`}
+            onClick={() => navigate('/')}
+            className="inline-flex items-center gap-2 text-xs font-medium text-porcelain/75 hover:text-white transition-colors"
           >
-            EN
+            <ArrowLeft className="w-4 h-4" />
+            {t('backToLanding')}
           </button>
-          <button
-            type="button"
-            onClick={() => setLanguage('es')}
-            className={`px-2 py-1 text-xs font-medium rounded-md ${
-              state.language === 'es' ? 'bg-navy text-white' : 'text-slatewarm'
-            }`}
-          >
-            ES
-          </button>
-        </div>
-      </header>
 
-      {/* Main Selector */}
-      <main className="flex-1 flex items-center justify-center px-4 py-10">
-        <div className="w-full max-w-4xl">
-          <div className="text-center max-w-2xl mx-auto mb-8">
-            <Badge tone="champagne" className="mb-3 uppercase tracking-wider text-[11px]">
-              {t('demoNotice')}
-            </Badge>
-            <h1 className="font-editorial text-3xl sm:text-4xl text-navy">
-              {t('demoAccessTitle')}
-            </h1>
-            <p className="text-sm text-slatewarm mt-2.5 leading-relaxed">
-              {t('demoAccessSub')}
-            </p>
+          <div className="inline-flex items-center rounded-lg border border-white/15 bg-olive-dark p-0.5">
+            <button
+              type="button"
+              onClick={() => setLanguage('en')}
+              className={`px-2 py-1 text-xs font-semibold rounded-md ${
+                state.language === 'en' ? 'bg-porcelain text-charcoal' : 'text-porcelain/70'
+              }`}
+            >
+              EN
+            </button>
+            <button
+              type="button"
+              onClick={() => setLanguage('es')}
+              className={`px-2 py-1 text-xs font-semibold rounded-md ${
+                state.language === 'es' ? 'bg-porcelain text-charcoal' : 'text-porcelain/70'
+              }`}
+            >
+              ES
+            </button>
+          </div>
+        </div>
+
+        <div className="my-10 lg:my-0 space-y-5">
+          <div className="flex items-center gap-3">
+            <LVBMonogram size="md" tone="porcelain" />
+            <div>
+              <div className="font-editorial text-2xl leading-none text-white">LVB Pulse</div>
+              <div className="text-[10px] uppercase tracking-[0.18em] text-mist/80 mt-1">
+                La Voute Beauty Academy LLC
+              </div>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          <h1 className="font-editorial text-3xl sm:text-4xl lg:text-[42px] leading-[1.1] text-white">
+            {t('demoAccessTitle')}
+          </h1>
+
+          <p className="text-sm text-mist/85 leading-relaxed max-w-md">
+            {t('demoAccessSub')}
+          </p>
+
+          <div className="pt-4 border-t border-white/15 grid grid-cols-3 gap-4 text-xs">
+            <div>
+              <div className="font-editorial text-2xl text-white">14</div>
+              <div className="text-mist/75 mt-0.5">
+                {state.language === 'es' ? 'Alumnas' : 'Students'}
+              </div>
+            </div>
+            <div>
+              <div className="font-editorial text-2xl text-white">101</div>
+              <div className="text-mist/75 mt-0.5">
+                {state.language === 'es' ? 'Productos' : 'Inventory'}
+              </div>
+            </div>
+            <div>
+              <div className="font-editorial text-2xl text-white">4</div>
+              <div className="text-mist/75 mt-0.5">
+                {state.language === 'es' ? 'Roles' : 'Roles'}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-start gap-2.5 text-[11.5px] text-mist/75 pt-6 border-t border-white/15">
+          <Shield className="w-4 h-4 text-clay shrink-0 mt-0.5" />
+          <span>
+            {state.language === 'es'
+              ? 'Demostración interactiva: los roles son simulados en el navegador. La versión de producción incluye inicio de sesión individual y seguridad en servidor.'
+              : 'Interactive showcase: roles are simulated client-side. Production deployment enforces individual login and server-side database policies.'}
+          </span>
+        </div>
+      </aside>
+
+      {/* Right Workspace Selector Column (Porcelain #F7F5F0) */}
+      <main className="lg:col-span-7 p-6 sm:p-10 lg:p-14 flex flex-col justify-center">
+        <div className="max-w-2xl w-full mx-auto">
+          <div className="flex items-center justify-between gap-2 mb-5">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sage-dark">
+              {t('demoNotice')}
+            </span>
+          </div>
+
+          <div className="bg-white border border-hairline rounded-atelier divide-y divide-hairline overflow-hidden">
             {state.users.map((user) => {
               const isSelected = user.id === selectedId;
               const assignedClasses = state.classes.filter((c) =>
@@ -98,82 +139,69 @@ export const DemoAccessScreen: React.FC = () => {
                     selectUser(user.id);
                     navigate(getDefaultRouteForUser(user));
                   }}
-                  className={`text-left p-5 rounded-card border transition-all duration-150 relative flex flex-col justify-between ${
+                  className={`w-full text-left px-5 py-4 flex items-center justify-between gap-4 transition-colors ${
                     isSelected
-                      ? 'bg-white border-navy ring-2 ring-champagne/40 shadow-card'
-                      : 'bg-white/80 border-borderwarm hover:bg-white hover:border-champagne/60'
+                      ? 'bg-mist/70'
+                      : 'bg-white hover:bg-porcelain/70'
                   }`}
                 >
-                  <div>
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`w-11 h-11 rounded-full flex items-center justify-center font-semibold text-sm shrink-0 ${
-                            isSelected
-                              ? 'bg-navy text-champagne-soft'
-                              : 'bg-ivory text-navy'
-                          }`}
+                  <div className="flex items-center gap-3.5 min-w-0">
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 transition-colors ${
+                        isSelected
+                          ? 'bg-olive text-white'
+                          : 'bg-mist text-olive'
+                      }`}
+                    >
+                      {user.avatarInitials}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-semibold text-sm text-charcoal">
+                          {user.name}
+                        </span>
+                        <Badge
+                          tone={
+                            user.role === 'owner'
+                              ? 'olive'
+                              : user.role === 'instructor'
+                                ? 'clay'
+                                : user.role === 'telemarketing'
+                                  ? 'green'
+                                  : 'gray'
+                          }
                         >
-                          {user.avatarInitials}
-                        </div>
-                        <div>
-                          <div className="font-semibold text-navy text-sm">
-                            {user.name}
-                          </div>
-                          <div className="text-xs text-slatewarm mt-0.5">
-                            {state.language === 'es' ? user.titleEs : user.titleEn}
-                          </div>
-                        </div>
+                          {t(`role_${user.role}` as TranslationKey)}
+                        </Badge>
                       </div>
-                      {isSelected && (
-                        <span className="w-5 h-5 rounded-full bg-champagne text-white flex items-center justify-center shrink-0">
-                          <Check className="w-3.5 h-3.5" />
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="mt-4 flex items-center gap-2 flex-wrap">
-                      <Badge
-                        tone={
-                          user.role === 'owner'
-                            ? 'navy'
-                            : user.role === 'instructor'
-                              ? 'champagne'
-                              : user.role === 'telemarketing'
-                                ? 'sage'
-                                : 'slate'
-                        }
-                      >
-                        {t(`role_${user.role}` as TranslationKey)}
-                      </Badge>
+                      <div className="text-xs text-softgray mt-0.5 truncate">
+                        {state.language === 'es' ? user.titleEs : user.titleEn} ·{' '}
+                        {assignedClasses.length > 0
+                          ? assignedClasses.map((c) => c.name).join(', ')
+                          : getRoleScope(user.role)}
+                      </div>
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-borderwarm/70 text-xs text-slatewarm">
-                    {assignedClasses.length > 0 ? (
-                      <div>
-                        <span className="font-medium text-navy">
-                          {t('assignedClasses')}:{' '}
-                        </span>
-                        {assignedClasses.map((c) => c.name).join(', ')}
-                      </div>
-                    ) : (
-                      <span>{getRoleScope(user.role)}</span>
-                    )}
-                  </div>
+                  <span
+                    className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 border transition-colors ${
+                      isSelected
+                        ? 'bg-olive border-olive text-white'
+                        : 'border-hairline bg-white'
+                    }`}
+                  >
+                    {isSelected && <Check className="w-3.5 h-3.5" />}
+                  </span>
                 </button>
               );
             })}
           </div>
 
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white border border-borderwarm rounded-card px-5 py-4">
-            <div className="flex items-start gap-2.5 text-xs text-slatewarm">
-              <Shield className="w-4 h-4 text-champagne shrink-0 mt-0.5" />
-              <span>
-                {state.language === 'es'
-                  ? 'Entorno de demostración interactivo: los roles son simulados en el navegador. La versión de producción aplica autenticación y permisos en servidor.'
-                  : 'Interactive frontend demonstration: roles are simulated client-side. Production deployment enforces server-side auth and database row-level security.'}
-              </span>
+          <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="text-xs text-softgray">
+              {state.language === 'es'
+                ? 'Podrás cambiar entre cualquier rol desde la barra superior en cualquier momento.'
+                : 'Switch seamlessly between all 4 roles from the top bar at any time.'}
             </div>
             <Button size="lg" onClick={handleContinue} className="w-full sm:w-auto shrink-0">
               <span>

@@ -4,10 +4,13 @@ import type { Language, Payment, Student, AcademyClass, Deposit } from '../types
 import { formatCurrencyExact, summarizePaymentsByMethod } from '../calculations/paymentEngine';
 import { translate } from '../translations/dictionary';
 
-const NAVY: [number, number, number] = [23, 36, 59];
-const CHAMPAGNE: [number, number, number] = [185, 154, 96];
-const IVORY: [number, number, number] = [247, 245, 239];
-const SLATE: [number, number, number] = [114, 119, 130];
+// Modern Beauty Atelier PDF Palette (Deep Olive, Muted Sage, Warm Clay, Porcelain, Charcoal)
+const OLIVE: [number, number, number] = [66, 77, 64]; // #424D40
+const SAGE: [number, number, number] = [135, 149, 135]; // #879587
+const PORCELAIN: [number, number, number] = [247, 245, 240]; // #F7F5F0
+const CHARCOAL: [number, number, number] = [41, 45, 41]; // #292D29
+const SOFT_GRAY: [number, number, number] = [133, 135, 128]; // #858780
+const CLAY: [number, number, number] = [189, 128, 107]; // #BD806B
 
 function drawBrandHeader(
   doc: jsPDF,
@@ -16,10 +19,10 @@ function drawBrandHeader(
   metaRight: string[]
 ) {
   const pageWidth = doc.internal.pageSize.getWidth();
-  doc.setFillColor(...NAVY);
+  doc.setFillColor(...OLIVE);
   doc.rect(0, 0, pageWidth, 34, 'F');
-  doc.setFillColor(...CHAMPAGNE);
-  doc.rect(0, 34, pageWidth, 1.5, 'F');
+  doc.setFillColor(...CLAY);
+  doc.rect(0, 34, pageWidth, 1.4, 'F');
 
   doc.setTextColor(255, 255, 255);
   doc.setFont('times', 'bold');
@@ -28,7 +31,7 @@ function drawBrandHeader(
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8.5);
-  doc.setTextColor(215, 196, 154);
+  doc.setTextColor(232, 234, 227);
   doc.text('LA VOUTE BEAUTY ACADEMY LLC · CITY TERRACE, LOS ANGELES', 14, 22);
 
   doc.setFont('helvetica', 'bold');
@@ -38,13 +41,13 @@ function drawBrandHeader(
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8);
-  doc.setTextColor(235, 232, 224);
+  doc.setTextColor(232, 234, 227);
   metaRight.forEach((line, idx) => {
     doc.text(line, pageWidth - 14, 12 + idx * 5.2, { align: 'right' });
   });
 
   if (subtitle) {
-    doc.setTextColor(...SLATE);
+    doc.setTextColor(...SOFT_GRAY);
     doc.setFontSize(9);
     doc.text(subtitle, 14, 42);
   }
@@ -57,14 +60,14 @@ function drawFooter(doc: jsPDF, language: Language) {
   const footerText =
     language === 'es'
       ? 'La Voute Beauty Academy LLC · LVB Pulse (Edición de Demostración)'
-      : 'La Voute Beauty Academy LLC · LVB Pulse (Client Demonstration Edition)';
+      : 'La Voute Beauty Academy LLC · LVB Pulse (Interactive Showcase Edition)';
 
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
-    doc.setDrawColor(231, 227, 218);
+    doc.setDrawColor(221, 220, 212);
     doc.line(14, pageHeight - 14, pageWidth - 14, pageHeight - 14);
     doc.setFontSize(8);
-    doc.setTextColor(...SLATE);
+    doc.setTextColor(...SOFT_GRAY);
     doc.text(footerText, 14, pageHeight - 9);
     doc.text(`${i} / ${pageCount}`, pageWidth - 14, pageHeight - 9, {
       align: 'right',
@@ -115,19 +118,18 @@ export function generateReceiptPdf(params: {
     `${translate(language, 'status')}: ${statusText}`,
   ]);
 
-  // Status banner (clearly distinguishing unconfirmed deposits!)
-  doc.setFillColor(...(isConfirmed ? [238, 242, 236] as [number, number, number] : [251, 243, 228] as [number, number, number]));
+  doc.setFillColor(...(isConfirmed ? ([234, 243, 238] as [number, number, number]) : ([251, 242, 227] as [number, number, number])));
   doc.roundedRect(14, 42, 182, 12, 2, 2, 'F');
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9.5);
-  doc.setTextColor(...(isConfirmed ? [82, 99, 76] as [number, number, number] : [138, 95, 29] as [number, number, number]));
+  doc.setTextColor(...(isConfirmed ? ([47, 111, 78] as [number, number, number]) : ([154, 99, 27] as [number, number, number])));
   const bannerLabel = isConfirmed
     ? language === 'es'
       ? 'PAGO CONFIRMADO — REGISTRADO EN EL LIBRO DE LA ACADEMIA'
       : 'CONFIRMED PAYMENT — RECORDED IN ACADEMY LEDGER'
     : language === 'es'
-      ? 'DEPÓSITO PENDIENTE DE CONFIRMACIÓN POR PROPIETARIO (NO ES UN RECIBO DEFINITIVO)'
-      : 'PENDING OWNER CONFIRMATION — NOT YET A CONFIRMED PAYMENT';
+      ? 'DEPÓSITO PENDIENTE DE CONFIRMACIÓN POR PROPIETARIO'
+      : 'AWAITING OWNER CONFIRMATION — NOT YET A CONFIRMED PAYMENT';
   doc.text(bannerLabel, 19, 49.5);
 
   autoTable(doc, {
@@ -136,10 +138,10 @@ export function generateReceiptPdf(params: {
     styles: {
       fontSize: 10,
       cellPadding: 4,
-      textColor: NAVY,
+      textColor: CHARCOAL,
     },
     columnStyles: {
-      0: { fontStyle: 'bold', cellWidth: 55, textColor: SLATE },
+      0: { fontStyle: 'bold', cellWidth: 55, textColor: SOFT_GRAY },
       1: { cellWidth: 127 },
     },
     body: [
@@ -156,13 +158,12 @@ export function generateReceiptPdf(params: {
 
   const finalY = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 8;
 
-  // Amount Summary Box
-  doc.setFillColor(...IVORY);
-  doc.setDrawColor(...CHAMPAGNE);
+  doc.setFillColor(...PORCELAIN);
+  doc.setDrawColor(...SAGE);
   doc.roundedRect(14, finalY, 182, 24, 2, 2, 'FD');
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9.5);
-  doc.setTextColor(...SLATE);
+  doc.setTextColor(...SOFT_GRAY);
   doc.text(
     language === 'es' ? 'MONTO DEL RECIBO' : 'RECEIPT AMOUNT',
     20,
@@ -170,12 +171,12 @@ export function generateReceiptPdf(params: {
   );
   doc.setFont('times', 'bold');
   doc.setFontSize(20);
-  doc.setTextColor(...NAVY);
+  doc.setTextColor(...CHARCOAL);
   doc.text(formatCurrencyExact(amount, language), 20, finalY + 19);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8.5);
-  doc.setTextColor(...SLATE);
+  doc.setTextColor(...SOFT_GRAY);
   doc.text(
     `${translate(language, 'status')}: ${statusText}`,
     190,
@@ -226,9 +227,9 @@ export function generateDailyCashReportPdf(params: {
 
   autoTable(doc, {
     startY: 48,
-    headStyles: { fillColor: NAVY, textColor: [255, 255, 255], fontSize: 8.5 },
-    alternateRowStyles: { fillColor: IVORY },
-    styles: { fontSize: 8.5, cellPadding: 3 },
+    headStyles: { fillColor: OLIVE, textColor: [255, 255, 255], fontSize: 8.5 },
+    alternateRowStyles: { fillColor: PORCELAIN },
+    styles: { fontSize: 8.5, cellPadding: 3, textColor: CHARCOAL },
     head: [[
       translate(language, 'receiptNumber'),
       language === 'es' ? 'Alumna' : 'Student',
@@ -242,14 +243,13 @@ export function generateDailyCashReportPdf(params: {
 
   const afterTableY = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 8;
 
-  // Totals breakdown box
-  doc.setFillColor(...IVORY);
-  doc.setDrawColor(231, 227, 218);
+  doc.setFillColor(...PORCELAIN);
+  doc.setDrawColor(221, 220, 212);
   doc.roundedRect(14, afterTableY, 182, 34, 2, 2, 'FD');
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9.5);
-  doc.setTextColor(...NAVY);
+  doc.setTextColor(...CHARCOAL);
   doc.text(
     language === 'es' ? 'Resumen por Método de Pago' : 'Totals by Payment Method',
     20,
@@ -264,7 +264,7 @@ export function generateDailyCashReportPdf(params: {
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
-  doc.setTextColor(...NAVY);
+  doc.setTextColor(...OLIVE);
   doc.text(
     `${language === 'es' ? 'EFECTIVO A ENTREGAR' : 'TOTAL CASH TO HAND IN'}: ${formatCurrencyExact(summary.cashTotal, language)}`,
     190,
@@ -273,7 +273,7 @@ export function generateDailyCashReportPdf(params: {
   );
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9.5);
-  doc.setTextColor(...SLATE);
+  doc.setTextColor(...SOFT_GRAY);
   doc.text(
     `${language === 'es' ? 'Total General Recaudado' : 'Overall Collected'}: ${formatCurrencyExact(summary.overallTotal, language)}`,
     190,
@@ -281,15 +281,14 @@ export function generateDailyCashReportPdf(params: {
     { align: 'right' }
   );
 
-  // Signature lines
   const sigY = afterTableY + 52;
-  doc.setDrawColor(...NAVY);
+  doc.setDrawColor(...CHARCOAL);
   doc.line(14, sigY, 72, sigY);
   doc.line(82, sigY, 140, sigY);
   doc.line(150, sigY, 196, sigY);
 
   doc.setFontSize(8.5);
-  doc.setTextColor(...SLATE);
+  doc.setTextColor(...SOFT_GRAY);
   doc.text(language === 'es' ? 'Preparado por' : 'Prepared by', 14, sigY + 5);
   doc.text(language === 'es' ? 'Recibido por (Propietario)' : 'Received by (Owner)', 82, sigY + 5);
   doc.text(translate(language, 'date'), 150, sigY + 5);
@@ -332,9 +331,9 @@ export function generateTableReportPdf(params: {
 
   autoTable(doc, {
     startY: 48,
-    headStyles: { fillColor: NAVY, textColor: [255, 255, 255], fontSize: 8.5 },
-    alternateRowStyles: { fillColor: IVORY },
-    styles: { fontSize: 8.2, cellPadding: 2.8, textColor: NAVY },
+    headStyles: { fillColor: OLIVE, textColor: [255, 255, 255], fontSize: 8.5 },
+    alternateRowStyles: { fillColor: PORCELAIN },
+    styles: { fontSize: 8.2, cellPadding: 2.8, textColor: CHARCOAL },
     head: [headers],
     body: rows.length > 0 ? rows : [[language === 'es' ? 'Sin datos para los filtros seleccionados' : 'No data for selected filters']],
   });
@@ -343,7 +342,7 @@ export function generateTableReportPdf(params: {
     const afterY = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 8;
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(9.5);
-    doc.setTextColor(...NAVY);
+    doc.setTextColor(...CHARCOAL);
     doc.text(totalsLine, 14, afterY);
   }
 

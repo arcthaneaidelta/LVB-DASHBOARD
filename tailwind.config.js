@@ -4,47 +4,53 @@ export default {
   theme: {
     extend: {
       colors: {
-        porcelain: '#F7F5EF',
-        ivory: '#F1EEE5',
-        navy: {
-          DEFAULT: '#17243B',
-          deep: '#202E47',
-          muted: '#2C3D5C',
+        porcelain: '#F7F5F0',
+        mist: '#E8EAE3',
+        charcoal: {
+          DEFAULT: '#292D29',
+          deep: '#1F231F',
+          soft: '#3A3F3A',
         },
-        champagne: {
-          DEFAULT: '#B99A60',
-          soft: '#D7C49A',
-          light: '#F4EFE4',
+        olive: {
+          DEFAULT: '#424D40',
+          dark: '#333C31',
+          light: '#EDF0EB',
         },
         sage: {
-          DEFAULT: '#82917B',
-          light: '#EEF2EC',
-          dark: '#52634C',
+          DEFAULT: '#879587',
+          light: '#EFF2EE',
+          dark: '#4F5E4F',
         },
-        terracotta: {
-          DEFAULT: '#B87968',
-          light: '#F7ECE8',
-          dark: '#8C4E3D',
+        clay: {
+          DEFAULT: '#BD806B',
+          light: '#F7ECE7',
+          dark: '#8E5643',
         },
-        amberwarm: {
-          DEFAULT: '#C28E42',
-          light: '#FBF3E4',
-          dark: '#8A5F1D',
+        softgray: '#858780',
+        hairline: '#DDDCD4',
+        // Semantic status palette (calm, clear, recognizable)
+        status: {
+          green: '#2F6F4E',
+          greenBg: '#EAF3EE',
+          amber: '#9A631B',
+          amberBg: '#FBF2E3',
+          red: '#A33E35',
+          redBg: '#F9EAE8',
+          gray: '#666963',
+          grayBg: '#EFEFE9',
         },
-        slatewarm: '#727782',
-        borderwarm: '#E7E3DA',
       },
       fontFamily: {
         serif: ['"DM Serif Display"', 'Georgia', 'serif'],
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        sans: ['Manrope', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
       },
       borderRadius: {
-        card: '12px',
+        atelier: '10px',
       },
       boxShadow: {
-        subtle: '0 1px 2px rgba(23, 36, 59, 0.04)',
-        card: '0 2px 8px rgba(23, 36, 59, 0.04)',
-        elevated: '0 10px 30px rgba(23, 36, 59, 0.08)',
+        subtle: '0 1px 2px rgba(41, 45, 41, 0.04)',
+        atelier: '0 4px 18px rgba(41, 45, 41, 0.06)',
+        elevated: '0 14px 36px rgba(41, 45, 41, 0.10)',
       },
     },
   },

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Plus, Search, Calendar, UserCheck, Link2 } from 'lucide-react';
 import { useApp } from '../../services/store';
@@ -22,6 +22,7 @@ export const StudioToursPage: React.FC = () => {
 
   const canManage = currentUser ? canManageTours(currentUser) : false;
 
+  const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
   const [search, setSearch] = useState('');
   const [outcomeFilter, setOutcomeFilter] = useState<'all' | TourOutcome>('all');
   const [programFilter, setProgramFilter] = useState('all');
@@ -166,12 +167,34 @@ export const StudioToursPage: React.FC = () => {
             : 'Studio tour appointments, show rate tracking, and conversion to enrollment.'
         }
         actions={
-          canManage && (
-            <Button onClick={openCreate}>
-              <Plus className="w-4 h-4" />
-              {state.language === 'es' ? 'Agendar Visita' : 'Book Tour'}
-            </Button>
-          )
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="inline-flex rounded-lg border border-hairline bg-white p-0.5">
+              <button
+                type="button"
+                onClick={() => setViewMode('list')}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium ${
+                  viewMode === 'list' ? 'bg-olive text-white' : 'text-softgray'
+                }`}
+              >
+                {state.language === 'es' ? 'Lista' : 'List'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode('calendar')}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium ${
+                  viewMode === 'calendar' ? 'bg-olive text-white' : 'text-softgray'
+                }`}
+              >
+                {state.language === 'es' ? 'Calendario' : 'Calendar'}
+              </button>
+            </div>
+            {canManage && (
+              <Button onClick={openCreate}>
+                <Plus className="w-4 h-4" />
+                {state.language === 'es' ? 'Agendar Visita' : 'Book Tour'}
+              </Button>
+            )}
+          </div>
         }
       />
 
@@ -188,19 +211,19 @@ export const StudioToursPage: React.FC = () => {
       {/* Filters */}
       <Card className="p-4 flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-slatewarm absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-softgray absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={state.language === 'es' ? 'Buscar visitante o programa...' : 'Search visitor or program...'}
-            className="w-full h-10 pl-9 pr-3 text-sm bg-porcelain border border-borderwarm rounded-lg"
+            className="w-full h-10 pl-9 pr-3 text-sm bg-porcelain border border-hairline rounded-lg"
           />
         </div>
         <select
           value={outcomeFilter}
           onChange={(e) => setOutcomeFilter(e.target.value as 'all' | TourOutcome)}
-          className="h-10 px-3 text-sm bg-porcelain border border-borderwarm rounded-lg"
+          className="h-10 px-3 text-sm bg-porcelain border border-hairline rounded-lg"
         >
           <option value="all">{t('all')}</option>
           <option value="pending">{outcomeLabel('pending')}</option>
@@ -211,7 +234,7 @@ export const StudioToursPage: React.FC = () => {
         <select
           value={programFilter}
           onChange={(e) => setProgramFilter(e.target.value)}
-          className="h-10 px-3 text-sm bg-porcelain border border-borderwarm rounded-lg"
+          className="h-10 px-3 text-sm bg-porcelain border border-hairline rounded-lg"
         >
           <option value="all">{state.language === 'es' ? 'Todos los programas' : 'All programs'}</option>
           <option value="Nail Technician Foundations">Nail Technician Foundations</option>
@@ -219,13 +242,61 @@ export const StudioToursPage: React.FC = () => {
         </select>
       </Card>
 
-      {/* Tours Listing */}
+      {/* Tours Listing or Calendar Schedule View */}
       {filteredTours.length === 0 ? (
         <EmptyState
           icon={<MapPin className="w-5 h-5" />}
           title={t('noResults')}
           description={t('noResultsHint')}
         />
+      ) : viewMode === 'calendar' ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from(new Set(filteredTours.map((tr) => tr.date)))
+            .sort()
+            .map((dateStr) => {
+              const dayTours = filteredTours.filter((tr) => tr.date === dateStr);
+              return (
+                <Card key={dateStr} className="overflow-hidden">
+                  <div className="px-4 py-3 bg-mist/60 border-b border-hairline flex items-center justify-between">
+                    <span className="font-semibold text-sm text-charcoal tabular-nums">
+                      {dateStr}
+                    </span>
+                    <Badge tone={dateStr === TODAY ? 'olive' : 'gray'}>
+                      {dateStr === TODAY
+                        ? state.language === 'es'
+                          ? 'Hoy'
+                          : 'Today'
+                        : `${dayTours.length} tour${dayTours.length > 1 ? 's' : ''}`}
+                    </Badge>
+                  </div>
+                  <div className="divide-y divide-hairline">
+                    {dayTours.map((tr) => (
+                      <div key={tr.id} className="p-4 space-y-1.5">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-semibold text-sm text-charcoal">
+                            {tr.time} · {tr.visitorName}
+                          </span>
+                          <Badge tone={outcomeTone(tr.outcome)}>
+                            {outcomeLabel(tr.outcome)}
+                          </Badge>
+                        </div>
+                        <div className="text-xs text-softgray">
+                          {tr.programInterest} · {tr.assignedStaffName}
+                        </div>
+                        {canManage && (
+                          <div className="pt-1 flex justify-end">
+                            <Button size="sm" variant="ghost" onClick={() => openEdit(tr)}>
+                              {t('edit')}
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+              );
+            })}
+        </div>
       ) : (
         <div className="space-y-3">
           {filteredTours.map((tour) => {
@@ -237,12 +308,12 @@ export const StudioToursPage: React.FC = () => {
             return (
               <Card
                 key={tour.id}
-                className={`p-4 sm:p-5 ${isPastPending ? 'border-amberwarm/60 bg-amberwarm-light/20' : ''}`}
+                className={`p-4 sm:p-5 ${isPastPending ? 'border-status-amber/60 bg-status-amberBg/20' : ''}`}
               >
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-semibold text-navy text-sm">
+                      <span className="font-semibold text-charcoal text-sm">
                         {tour.visitorName}
                       </span>
                       <Badge tone={outcomeTone(tour.outcome)}>
@@ -257,9 +328,9 @@ export const StudioToursPage: React.FC = () => {
                         </Badge>
                       )}
                     </div>
-                    <div className="text-xs text-slatewarm flex items-center gap-3 flex-wrap">
-                      <span className="inline-flex items-center gap-1 font-medium text-navy">
-                        <Calendar className="w-3.5 h-3.5 text-champagne" />
+                    <div className="text-xs text-softgray flex items-center gap-3 flex-wrap">
+                      <span className="inline-flex items-center gap-1 font-medium text-charcoal">
+                        <Calendar className="w-3.5 h-3.5 text-clay-dark" />
                         {tour.date} · {tour.time}
                       </span>
                       <span>{tour.programInterest}</span>
@@ -269,12 +340,12 @@ export const StudioToursPage: React.FC = () => {
                         {tour.assignedStaffName}
                       </span>
                     </div>
-                    {tour.notes && <p className="text-xs text-slatewarm">{tour.notes}</p>}
+                    {tour.notes && <p className="text-xs text-softgray">{tour.notes}</p>}
                     {linkedStu && (
                       <button
                         type="button"
                         onClick={() => navigate(`/app/students?studentId=${linkedStu.id}`)}
-                        className="text-xs text-champagne hover:underline inline-flex items-center gap-1 mt-1"
+                        className="text-xs text-clay-dark hover:underline inline-flex items-center gap-1 mt-1"
                       >
                         <Link2 className="w-3.5 h-3.5" />
                         Linked student: {linkedStu.fullName}
@@ -290,7 +361,7 @@ export const StudioToursPage: React.FC = () => {
                         onChange={(e) =>
                           updateTour(tour.id, { outcome: e.target.value as TourOutcome })
                         }
-                        className="h-9 px-2.5 text-xs rounded-lg border border-borderwarm bg-porcelain text-navy font-medium"
+                        className="h-9 px-2.5 text-xs rounded-lg border border-hairline bg-porcelain text-charcoal font-medium"
                       >
                         <option value="pending">{outcomeLabel('pending')}</option>
                         <option value="arrived">{outcomeLabel('arrived')}</option>
@@ -326,7 +397,7 @@ export const StudioToursPage: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             <label className="block sm:col-span-2">
-              <span className="text-xs font-medium text-navy">
+              <span className="text-xs font-medium text-charcoal">
                 {state.language === 'es' ? 'Nombre del Visitante *' : 'Visitor Name *'}
               </span>
               <input
@@ -334,65 +405,65 @@ export const StudioToursPage: React.FC = () => {
                 required
                 value={form.visitorName}
                 onChange={(e) => setForm((f) => ({ ...f, visitorName: e.target.value }))}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">Phone *</span>
+              <span className="text-xs font-medium text-charcoal">Phone *</span>
               <input
                 type="tel"
                 required
                 value={form.phone}
                 onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">Email</span>
+              <span className="text-xs font-medium text-charcoal">Email</span>
               <input
                 type="email"
                 value={form.email}
                 onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">{t('date')} *</span>
+              <span className="text-xs font-medium text-charcoal">{t('date')} *</span>
               <input
                 type="date"
                 required
                 value={form.date}
                 onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">Time *</span>
+              <span className="text-xs font-medium text-charcoal">Time *</span>
               <input
                 type="time"
                 required
                 value={form.time}
                 onChange={(e) => setForm((f) => ({ ...f, time: e.target.value }))}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">Program Interest</span>
+              <span className="text-xs font-medium text-charcoal">Program Interest</span>
               <select
                 value={form.programInterest}
                 onChange={(e) => setForm((f) => ({ ...f, programInterest: e.target.value }))}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               >
                 <option value="Nail Technician Foundations">Nail Technician Foundations</option>
                 <option value="Acrylic & Gel Artistry">Acrylic & Gel Artistry</option>
               </select>
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">Assigned Staff</span>
+              <span className="text-xs font-medium text-charcoal">Assigned Staff</span>
               <select
                 value={form.assignedStaffId}
                 onChange={(e) => setForm((f) => ({ ...f, assignedStaffId: e.target.value }))}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               >
                 {state.users.map((u) => (
                   <option key={u.id} value={u.id}>
@@ -403,13 +474,13 @@ export const StudioToursPage: React.FC = () => {
             </label>
             {editingTour && (
               <label className="block sm:col-span-2">
-                <span className="text-xs font-medium text-navy">
+                <span className="text-xs font-medium text-charcoal">
                   Link to Enrolled Student (Optional)
                 </span>
                 <select
                   value={form.linkedStudentId}
                   onChange={(e) => setForm((f) => ({ ...f, linkedStudentId: e.target.value }))}
-                  className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                  className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
                 >
                   <option value="">None</option>
                   {state.students.map((s) => (
@@ -422,12 +493,12 @@ export const StudioToursPage: React.FC = () => {
             )}
           </div>
           <label className="block text-sm">
-            <span className="text-xs font-medium text-navy">{t('notes')}</span>
+            <span className="text-xs font-medium text-charcoal">{t('notes')}</span>
             <textarea
               rows={2}
               value={form.notes}
               onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
-              className="mt-1 w-full p-2.5 rounded-lg border border-borderwarm bg-porcelain"
+              className="mt-1 w-full p-2.5 rounded-lg border border-hairline bg-porcelain"
             />
           </label>
           <div className="flex justify-end gap-2 pt-2">

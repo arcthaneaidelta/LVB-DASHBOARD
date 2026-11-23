@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import { FileText, Download, Search, Printer } from 'lucide-react';
 import { useApp } from '../../services/store';
 import { canViewPayment } from '../../permissions/permissions';
@@ -166,7 +166,7 @@ export const DocumentsPage: React.FC = () => {
 
       <Card className="p-4 flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-slatewarm absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-softgray absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="search"
             value={search}
@@ -176,13 +176,13 @@ export const DocumentsPage: React.FC = () => {
                 ? 'Buscar recibo, alumna o reporte...'
                 : 'Search receipt number, student, or report...'
             }
-            className="w-full h-10 pl-9 pr-3 text-sm bg-porcelain border border-borderwarm rounded-lg"
+            className="w-full h-10 pl-9 pr-3 text-sm bg-porcelain border border-hairline rounded-lg"
           />
         </div>
         <select
           value={typeFilter}
           onChange={(e) => setTypeFilter(e.target.value as 'all' | DocItem['type'])}
-          className="h-10 px-3 text-sm bg-porcelain border border-borderwarm rounded-lg"
+          className="h-10 px-3 text-sm bg-porcelain border border-hairline rounded-lg"
         >
           <option value="all">{t('all')}</option>
           <option value="receipt">Confirmed Receipts</option>
@@ -198,7 +198,7 @@ export const DocumentsPage: React.FC = () => {
           description={t('noResultsHint')}
         />
       ) : (
-        <Card className="divide-y divide-borderwarm">
+        <Card className="divide-y divide-hairline">
           {filtered.map((doc) => (
             <div
               key={doc.id}
@@ -221,13 +221,13 @@ export const DocumentsPage: React.FC = () => {
                         ? 'Pending Deposit'
                         : 'Daily Cash'}
                   </Badge>
-                  <span className="text-xs text-slatewarm tabular-nums">{doc.date}</span>
+                  <span className="text-xs text-softgray tabular-nums">{doc.date}</span>
                 </div>
-                <div className="text-sm font-semibold text-navy mt-1">{doc.title}</div>
-                <div className="text-xs text-slatewarm">{doc.subtitle}</div>
+                <div className="text-sm font-semibold text-charcoal mt-1">{doc.title}</div>
+                <div className="text-xs text-softgray">{doc.subtitle}</div>
               </div>
               <div className="flex items-center gap-3 shrink-0">
-                <span className="text-sm font-semibold text-navy tabular-nums">
+                <span className="text-sm font-semibold text-charcoal tabular-nums">
                   {formatCurrencyExact(doc.amount, state.language)}
                 </span>
                 <Button size="sm" variant="secondary" onClick={doc.onDownload}>

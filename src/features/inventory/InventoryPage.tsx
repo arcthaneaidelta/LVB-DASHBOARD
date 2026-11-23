@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import {
   Package,
   Search,
@@ -219,15 +219,15 @@ export const InventoryPage: React.FC = () => {
               onClick={() =>
                 setCategoryFilter((prev) => (prev === c.category ? 'all' : c.category))
               }
-              className={`p-3.5 rounded-card border text-left transition-colors ${
+              className={`p-3.5 rounded-atelier border text-left transition-colors ${
                 categoryFilter === c.category
-                  ? 'bg-navy text-white border-navy'
-                  : 'bg-white border-borderwarm hover:border-champagne'
+                  ? 'bg-olive text-white border-olive'
+                  : 'bg-white border-hairline hover:border-clay'
               }`}
             >
               <div
                 className={`text-[11px] font-medium truncate ${
-                  categoryFilter === c.category ? 'text-champagne-soft' : 'text-slatewarm'
+                  categoryFilter === c.category ? 'text-mist' : 'text-softgray'
                 }`}
               >
                 {c.category}
@@ -237,7 +237,7 @@ export const InventoryPage: React.FC = () => {
               </div>
               <div
                 className={`text-[11px] mt-0.5 ${
-                  categoryFilter === c.category ? 'text-white/70' : 'text-slatewarm'
+                  categoryFilter === c.category ? 'text-white/70' : 'text-softgray'
                 }`}
               >
                 {c.count} items · {c.orderNow} Order Now
@@ -251,7 +251,7 @@ export const InventoryPage: React.FC = () => {
       <Card className="p-4 space-y-3">
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
-            <Search className="w-4 h-4 text-slatewarm absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-softgray absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="search"
               value={search}
@@ -261,13 +261,13 @@ export const InventoryPage: React.FC = () => {
                   ? 'Buscar producto, SKU o proveedor...'
                   : 'Search product, SKU, or supplier...'
               }
-              className="w-full h-10 pl-9 pr-3 text-sm bg-porcelain border border-borderwarm rounded-lg"
+              className="w-full h-10 pl-9 pr-3 text-sm bg-porcelain border border-hairline rounded-lg"
             />
           </div>
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value as 'all' | InventoryCategory)}
-            className="h-10 px-3 text-sm bg-porcelain border border-borderwarm rounded-lg"
+            className="h-10 px-3 text-sm bg-porcelain border border-hairline rounded-lg"
           >
             <option value="all">{state.language === 'es' ? 'Todas las secciones (5)' : 'All 5 sections'}</option>
             {CATEGORIES.map((cat) => (
@@ -294,8 +294,8 @@ export const InventoryPage: React.FC = () => {
               onClick={() => setStockFilter(val)}
               className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                 stockFilter === val
-                  ? 'bg-navy text-white border-navy'
-                  : 'bg-porcelain text-slatewarm border-borderwarm hover:text-navy'
+                  ? 'bg-olive text-white border-olive'
+                  : 'bg-porcelain text-softgray border-hairline hover:text-charcoal'
               }`}
             >
               {label}
@@ -316,7 +316,7 @@ export const InventoryPage: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs sm:text-sm">
               <thead>
-                <tr className="bg-porcelain border-b border-borderwarm text-[11px] uppercase tracking-wider text-slatewarm">
+                <tr className="bg-porcelain border-b border-hairline text-[11px] uppercase tracking-wider text-softgray">
                   <th className="py-3 px-4">{state.language === 'es' ? 'Producto' : 'Product'}</th>
                   <th className="py-3 px-4 hidden md:table-cell">{state.language === 'es' ? 'Sección' : 'Section'}</th>
                   <th className="py-3 px-4">{t('status')}</th>
@@ -329,7 +329,7 @@ export const InventoryPage: React.FC = () => {
                   )}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-borderwarm">
+              <tbody className="divide-y divide-hairline">
                 {filtered.map((item) => {
                   const st = getStockStatus(item.quantity);
                   return (
@@ -339,8 +339,8 @@ export const InventoryPage: React.FC = () => {
                       className="hover:bg-porcelain/60 cursor-pointer"
                     >
                       <td className="py-3 px-4">
-                        <div className="font-semibold text-navy">{item.name}</div>
-                        <div className="text-[11px] text-slatewarm flex items-center gap-2 flex-wrap mt-0.5">
+                        <div className="font-semibold text-charcoal">{item.name}</div>
+                        <div className="text-[11px] text-softgray flex items-center gap-2 flex-wrap mt-0.5">
                           <span className="font-mono">{item.sku}</span>
                           <span>· {item.supplier}</span>
                           {item.leadTimeFlag === 'china' && (
@@ -355,7 +355,7 @@ export const InventoryPage: React.FC = () => {
                           )}
                         </div>
                       </td>
-                      <td className="py-3 px-4 hidden md:table-cell text-xs text-slatewarm">
+                      <td className="py-3 px-4 hidden md:table-cell text-xs text-softgray">
                         {item.category}
                       </td>
                       <td className="py-3 px-4">
@@ -388,12 +388,12 @@ export const InventoryPage: React.FC = () => {
                                 Math.max(0, item.quantity - 1)
                               )
                             }
-                            className="w-7 h-7 rounded-md border border-borderwarm bg-white hover:bg-ivory flex items-center justify-center text-navy"
+                            className="w-7 h-7 rounded-md border border-hairline bg-white hover:bg-mist flex items-center justify-center text-charcoal"
                             aria-label={`Decrease ${item.name}`}
                           >
                             <Minus className="w-3.5 h-3.5" />
                           </button>
-                          <span className="w-9 text-center font-semibold text-navy tabular-nums">
+                          <span className="w-9 text-center font-semibold text-charcoal tabular-nums">
                             {item.quantity}
                           </span>
                           <button
@@ -401,7 +401,7 @@ export const InventoryPage: React.FC = () => {
                             onClick={() =>
                               updateInventoryQuantity(item.id, item.quantity + 1)
                             }
-                            className="w-7 h-7 rounded-md border border-borderwarm bg-white hover:bg-ivory flex items-center justify-center text-navy"
+                            className="w-7 h-7 rounded-md border border-hairline bg-white hover:bg-mist flex items-center justify-center text-charcoal"
                             aria-label={`Increase ${item.name}`}
                           >
                             <Plus className="w-3.5 h-3.5" />
@@ -410,10 +410,10 @@ export const InventoryPage: React.FC = () => {
                       </td>
                       {canSeeCosts && (
                         <>
-                          <td className="py-3 px-4 text-right tabular-nums text-slatewarm hidden sm:table-cell">
+                          <td className="py-3 px-4 text-right tabular-nums text-softgray hidden sm:table-cell">
                             {formatCurrencyExact(item.unitCost, state.language)}
                           </td>
-                          <td className="py-3 px-4 text-right font-semibold text-navy tabular-nums">
+                          <td className="py-3 px-4 text-right font-semibold text-charcoal tabular-nums">
                             {formatCurrencyExact(
                               item.quantity * item.unitCost,
                               state.language
@@ -467,24 +467,24 @@ export const InventoryPage: React.FC = () => {
 
               <Card className="p-4 space-y-2 text-xs">
                 <div className="flex justify-between">
-                  <span className="text-slatewarm">Supplier</span>
-                  <span className="font-medium text-navy">{selectedProduct.supplier}</span>
+                  <span className="text-softgray">Supplier</span>
+                  <span className="font-medium text-charcoal">{selectedProduct.supplier}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slatewarm">Last Updated</span>
-                  <span className="font-medium text-navy">{selectedProduct.lastUpdated}</span>
+                  <span className="text-softgray">Last Updated</span>
+                  <span className="font-medium text-charcoal">{selectedProduct.lastUpdated}</span>
                 </div>
                 {canSeeCosts && (
                   <>
                     <div className="flex justify-between">
-                      <span className="text-slatewarm">Unit Cost</span>
-                      <span className="font-semibold text-navy tabular-nums">
+                      <span className="text-softgray">Unit Cost</span>
+                      <span className="font-semibold text-charcoal tabular-nums">
                         {formatCurrencyExact(selectedProduct.unitCost, state.language)}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slatewarm">Total Line Valuation</span>
-                      <span className="font-semibold text-navy tabular-nums">
+                      <span className="text-softgray">Total Line Valuation</span>
+                      <span className="font-semibold text-charcoal tabular-nums">
                         {formatCurrencyExact(
                           selectedProduct.quantity * selectedProduct.unitCost,
                           state.language
@@ -508,7 +508,7 @@ export const InventoryPage: React.FC = () => {
                 className="space-y-3"
               >
                 <label className="block text-sm">
-                  <span className="text-xs font-medium text-navy">
+                  <span className="text-xs font-medium text-charcoal">
                     {state.language === 'es' ? 'Ajustar Cantidad' : 'Set Quantity on Hand'}
                   </span>
                   <input
@@ -517,16 +517,16 @@ export const InventoryPage: React.FC = () => {
                     required
                     value={drawerQty}
                     onChange={(e) => setDrawerQty(e.target.value)}
-                    className="mt-1 w-full h-11 px-3 rounded-lg border border-borderwarm bg-white text-base font-semibold tabular-nums"
+                    className="mt-1 w-full h-11 px-3 rounded-lg border border-hairline bg-white text-base font-semibold tabular-nums"
                   />
                 </label>
                 <label className="block text-sm">
-                  <span className="text-xs font-medium text-navy">{t('notes')}</span>
+                  <span className="text-xs font-medium text-charcoal">{t('notes')}</span>
                   <textarea
                     rows={3}
                     value={drawerNotes}
                     onChange={(e) => setDrawerNotes(e.target.value)}
-                    className="mt-1 w-full p-2.5 rounded-lg border border-borderwarm bg-white"
+                    className="mt-1 w-full p-2.5 rounded-lg border border-hairline bg-white"
                   />
                 </label>
                 <Button type="submit" className="w-full">

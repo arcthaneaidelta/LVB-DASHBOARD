@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { ShieldCheck, Check, X, Server, Sliders } from 'lucide-react';
 import { useApp } from '../../services/store';
 import { Badge, Card, PageHeader } from '../../components/ui/Primitives';
@@ -24,10 +24,10 @@ export const TeamAccessPage: React.FC = () => {
 
   const renderCell = (val: boolean | string) => {
     if (val === true)
-      return <Check className="w-4 h-4 text-sage-dark mx-auto" aria-label="Yes" />;
+      return <Check className="w-4 h-4 text-status-green mx-auto" aria-label="Yes" />;
     if (val === false)
-      return <X className="w-4 h-4 text-slatewarm/40 mx-auto" aria-label="No" />;
-    return <span className="text-xs font-medium text-navy">{val}</span>;
+      return <X className="w-4 h-4 text-softgray/40 mx-auto" aria-label="No" />;
+    return <span className="text-xs font-medium text-charcoal">{val}</span>;
   };
 
   return (
@@ -51,19 +51,19 @@ export const TeamAccessPage: React.FC = () => {
           return (
             <Card key={user.id} className="p-5 space-y-3">
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-full bg-navy text-champagne-soft flex items-center justify-center font-semibold text-sm">
+                <div className="w-11 h-11 rounded-full bg-olive text-mist flex items-center justify-center font-semibold text-sm">
                   {user.avatarInitials}
                 </div>
                 <div className="min-w-0">
-                  <div className="font-semibold text-navy text-sm truncate">
+                  <div className="font-semibold text-charcoal text-sm truncate">
                     {user.name}
                   </div>
-                  <div className="text-xs text-slatewarm truncate">
+                  <div className="text-xs text-softgray truncate">
                     {state.language === 'es' ? user.titleEs : user.titleEn}
                   </div>
                 </div>
               </div>
-              <div className="flex items-center justify-between pt-2 border-t border-borderwarm text-xs">
+              <div className="flex items-center justify-between pt-2 border-t border-hairline text-xs">
                 <Badge
                   tone={
                     user.role === 'owner'
@@ -77,7 +77,7 @@ export const TeamAccessPage: React.FC = () => {
                 >
                   {t(`role_${user.role}` as TranslationKey)}
                 </Badge>
-                <span className="text-slatewarm truncate max-w-[160px]">
+                <span className="text-softgray truncate max-w-[160px]">
                   {assigned.length > 0
                     ? assigned.map((c) => c.name).join(', ')
                     : user.email}
@@ -89,19 +89,19 @@ export const TeamAccessPage: React.FC = () => {
       </div>
 
       {/* Configurable Policy Decision (PRD Section 7.3) */}
-      <Card className="p-5 border-champagne/60">
+      <Card className="p-5 border-clay/60">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <Sliders className="w-4 h-4 text-champagne" />
-              <h2 className="text-base font-semibold text-navy">
+              <Sliders className="w-4 h-4 text-clay-dark" />
+              <h2 className="text-base font-semibold text-charcoal">
                 {state.language === 'es'
                   ? 'Decisión de Política Configurable — Visibilidad de Saldos para Telemercadeo'
                   : 'Configurable Policy Decision — Telemarketing Balance Visibility'}
               </h2>
               <Badge tone="amber">Open Client Policy</Badge>
             </div>
-            <p className="text-xs text-slatewarm max-w-2xl leading-relaxed">
+            <p className="text-xs text-softgray max-w-2xl leading-relaxed">
               {state.language === 'es'
                 ? 'Determina si Telemercadeo (Jessica) puede ver los saldos financieros detallados de las alumnas al dar seguimiento. Por defecto permanece desactivado.'
                 : 'Controls whether Telemarketing (Jessica) can inspect detailed student payment balances when following up, or only basic enrollment status. Defaults to hidden until confirmed by Rudy.'}
@@ -122,7 +122,7 @@ export const TeamAccessPage: React.FC = () => {
               }}
               className="w-5 h-5 accent-navy rounded"
             />
-            <span className="text-xs font-semibold text-navy">
+            <span className="text-xs font-semibold text-charcoal">
               {state.policy.telemarketingCanSeeBalances
                 ? 'Balances Visible'
                 : 'Balances Hidden (Default)'}
@@ -133,9 +133,9 @@ export const TeamAccessPage: React.FC = () => {
 
       {/* Permission Matrix */}
       <Card className="overflow-hidden">
-        <div className="px-5 py-4 border-b border-borderwarm flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-champagne" />
-          <h2 className="text-base font-semibold text-navy">
+        <div className="px-5 py-4 border-b border-hairline flex items-center gap-2">
+          <ShieldCheck className="w-4 h-4 text-clay-dark" />
+          <h2 className="text-base font-semibold text-charcoal">
             {state.language === 'es'
               ? 'Matriz de Permisos por Rol'
               : 'Role-Based Access Matrix'}
@@ -144,7 +144,7 @@ export const TeamAccessPage: React.FC = () => {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs sm:text-sm">
             <thead>
-              <tr className="bg-porcelain border-b border-borderwarm text-[11px] uppercase tracking-wider text-slatewarm">
+              <tr className="bg-porcelain border-b border-hairline text-[11px] uppercase tracking-wider text-softgray">
                 <th className="py-3 px-4">Operation</th>
                 <th className="py-3 px-4 text-center">{t('role_owner')}</th>
                 <th className="py-3 px-4 text-center">{t('role_instructor')}</th>
@@ -152,10 +152,10 @@ export const TeamAccessPage: React.FC = () => {
                 <th className="py-3 px-4 text-center">{t('role_staff')}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-borderwarm">
+            <tbody className="divide-y divide-hairline">
               {PERMISSION_ROWS.map((row) => (
                 <tr key={row.label} className="hover:bg-porcelain/50">
-                  <td className="py-2.5 px-4 font-medium text-navy">{row.label}</td>
+                  <td className="py-2.5 px-4 font-medium text-charcoal">{row.label}</td>
                   <td className="py-2.5 px-4 text-center">{renderCell(row.owner)}</td>
                   <td className="py-2.5 px-4 text-center">{renderCell(row.instructor)}</td>
                   <td className="py-2.5 px-4 text-center">{renderCell(row.telemarketing)}</td>
@@ -168,9 +168,9 @@ export const TeamAccessPage: React.FC = () => {
       </Card>
 
       {/* Production Architecture Note (PRD Section 30.7) */}
-      <Card className="p-5 bg-navy text-white border-navy">
+      <Card className="p-5 bg-olive text-white border-olive">
         <div className="flex items-start gap-3">
-          <Server className="w-5 h-5 text-champagne-soft shrink-0 mt-0.5" />
+          <Server className="w-5 h-5 text-mist shrink-0 mt-0.5" />
           <div className="space-y-2">
             <h3 className="font-editorial text-xl text-white">
               {state.language === 'es'
@@ -182,7 +182,7 @@ export const TeamAccessPage: React.FC = () => {
                 ? 'Esta edición es una demostración interactiva frontend con roles simulados y persistencia local en navegador. No pretende sustituir seguridad de producción.'
                 : 'This client demonstration simulates roles and persistence locally in your browser. It intentionally does not claim production-level security.'}
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 text-xs text-champagne-soft">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 text-xs text-mist">
               <div>• Real Authentication & MFA</div>
               <div>• Server-Side Authorization</div>
               <div>• Database Row-Level Security (RLS)</div>

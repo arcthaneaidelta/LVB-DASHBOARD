@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { FolderKanban, Plus, CheckCircle2, Circle } from 'lucide-react';
 import { useApp } from '../../services/store';
 import {
@@ -91,9 +91,9 @@ export const ProjectsPage: React.FC = () => {
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <Badge tone={statusTone(proj.status)}>{proj.status}</Badge>
-                      <span className="text-xs text-slatewarm">{proj.timeframe}</span>
+                      <span className="text-xs text-softgray">{proj.timeframe}</span>
                     </div>
-                    <h2 className="font-editorial text-2xl text-navy mt-1.5">
+                    <h2 className="font-editorial text-2xl text-charcoal mt-1.5">
                       {proj.name}
                     </h2>
                   </div>
@@ -105,7 +105,7 @@ export const ProjectsPage: React.FC = () => {
                         status: e.target.value as Project['status'],
                       })
                     }
-                    className="h-8 px-2 text-xs rounded-lg border border-borderwarm bg-porcelain text-navy"
+                    className="h-8 px-2 text-xs rounded-lg border border-hairline bg-porcelain text-charcoal"
                   >
                     <option value="planning">Planning</option>
                     <option value="active">Active</option>
@@ -114,22 +114,22 @@ export const ProjectsPage: React.FC = () => {
                   </select>
                 </div>
 
-                <p className="text-xs text-slatewarm leading-relaxed">
+                <p className="text-xs text-softgray leading-relaxed">
                   {proj.description}
                 </p>
 
                 <div>
                   <div className="flex justify-between text-xs mb-1">
-                    <span className="text-slatewarm">
-                      Owner: <strong className="text-navy">{proj.ownerName}</strong>
+                    <span className="text-softgray">
+                      Owner: <strong className="text-charcoal">{proj.ownerName}</strong>
                     </span>
-                    <span className="font-semibold text-navy tabular-nums">
+                    <span className="font-semibold text-charcoal tabular-nums">
                       {doneSteps}/{totalSteps} ({pct}%)
                     </span>
                   </div>
-                  <div className="h-1.5 w-full bg-ivory rounded-full overflow-hidden">
+                  <div className="h-1.5 w-full bg-mist rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-champagne rounded-full transition-all duration-300"
+                      className="h-full bg-clay rounded-full transition-all duration-300"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
@@ -146,14 +146,14 @@ export const ProjectsPage: React.FC = () => {
                         );
                         updateProject(proj.id, { steps: nextSteps });
                       }}
-                      className="w-full flex items-center gap-2.5 p-2 rounded-lg border border-borderwarm/70 bg-porcelain/50 hover:bg-porcelain text-left text-xs transition-colors"
+                      className="w-full flex items-center gap-2.5 p-2 rounded-lg border border-hairline/70 bg-porcelain/50 hover:bg-porcelain text-left text-xs transition-colors"
                     >
                       {step.done ? (
-                        <CheckCircle2 className="w-4 h-4 text-sage-dark shrink-0" />
+                        <CheckCircle2 className="w-4 h-4 text-status-green shrink-0" />
                       ) : (
-                        <Circle className="w-4 h-4 text-slatewarm shrink-0" />
+                        <Circle className="w-4 h-4 text-softgray shrink-0" />
                       )}
-                      <span className={step.done ? 'line-through text-slatewarm' : 'text-navy'}>
+                      <span className={step.done ? 'line-through text-softgray' : 'text-charcoal'}>
                         {step.title}
                       </span>
                     </button>
@@ -162,7 +162,7 @@ export const ProjectsPage: React.FC = () => {
               </div>
 
               {proj.notes && (
-                <div className="pt-3 border-t border-borderwarm text-xs text-slatewarm italic">
+                <div className="pt-3 border-t border-hairline text-xs text-softgray italic">
                   {proj.notes}
                 </div>
               )}
@@ -178,40 +178,40 @@ export const ProjectsPage: React.FC = () => {
       >
         <form onSubmit={handleCreate} className="space-y-4">
           <label className="block text-sm">
-            <span className="text-xs font-medium text-navy">Project Name *</span>
+            <span className="text-xs font-medium text-charcoal">Project Name *</span>
             <input
               type="text"
               required
               value={form.name}
               onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-              className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+              className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
             />
           </label>
           <label className="block text-sm">
-            <span className="text-xs font-medium text-navy">Description</span>
+            <span className="text-xs font-medium text-charcoal">Description</span>
             <textarea
               rows={2}
               value={form.description}
               onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-              className="mt-1 w-full p-2.5 rounded-lg border border-borderwarm bg-porcelain"
+              className="mt-1 w-full p-2.5 rounded-lg border border-hairline bg-porcelain"
             />
           </label>
           <div className="grid grid-cols-2 gap-3 text-sm">
             <label className="block">
-              <span className="text-xs font-medium text-navy">Timeframe</span>
+              <span className="text-xs font-medium text-charcoal">Timeframe</span>
               <input
                 type="text"
                 value={form.timeframe}
                 onChange={(e) => setForm((f) => ({ ...f, timeframe: e.target.value }))}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">Lead Owner</span>
+              <span className="text-xs font-medium text-charcoal">Lead Owner</span>
               <select
                 value={form.ownerId}
                 onChange={(e) => setForm((f) => ({ ...f, ownerId: e.target.value }))}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               >
                 {state.users
                   .filter((u) => u.role === 'owner')
@@ -224,13 +224,13 @@ export const ProjectsPage: React.FC = () => {
             </label>
           </div>
           <label className="block text-sm">
-            <span className="text-xs font-medium text-navy">Milestones (one per line)</span>
+            <span className="text-xs font-medium text-charcoal">Milestones (one per line)</span>
             <textarea
               rows={3}
               placeholder="Finalize vendor quote&#10;Confirm studio schedule"
               value={form.stepsText}
               onChange={(e) => setForm((f) => ({ ...f, stepsText: e.target.value }))}
-              className="mt-1 w-full p-2.5 rounded-lg border border-borderwarm bg-porcelain"
+              className="mt-1 w-full p-2.5 rounded-lg border border-hairline bg-porcelain"
             />
           </label>
           <div className="flex justify-end gap-2">

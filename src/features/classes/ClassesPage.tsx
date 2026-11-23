@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+﻿import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   GraduationCap,
@@ -156,7 +156,7 @@ export const ClassesPage: React.FC = () => {
       {/* Search & Filters */}
       <Card className="p-4 flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-slatewarm absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-softgray absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="search"
             value={search}
@@ -166,13 +166,13 @@ export const ClassesPage: React.FC = () => {
                 ? 'Buscar clase o programa...'
                 : 'Search class or program...'
             }
-            className="w-full h-10 pl-9 pr-3 text-sm bg-porcelain border border-borderwarm rounded-lg focus:bg-white"
+            className="w-full h-10 pl-9 pr-3 text-sm bg-porcelain border border-hairline rounded-lg focus:bg-white"
           />
         </div>
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'completed')}
-          className="h-10 px-3 text-sm bg-porcelain border border-borderwarm rounded-lg"
+          className="h-10 px-3 text-sm bg-porcelain border border-hairline rounded-lg"
         >
           <option value="all">{t('all')}</option>
           <option value="active">{state.language === 'es' ? 'Activas' : 'Active'}</option>
@@ -181,7 +181,7 @@ export const ClassesPage: React.FC = () => {
         <select
           value={weekdayFilter}
           onChange={(e) => setWeekdayFilter(e.target.value)}
-          className="h-10 px-3 text-sm bg-porcelain border border-borderwarm rounded-lg"
+          className="h-10 px-3 text-sm bg-porcelain border border-hairline rounded-lg"
         >
           <option value="all">{state.language === 'es' ? 'Todos los días' : 'All weekdays'}</option>
           {WEEKDAYS.map((d) => (
@@ -237,47 +237,47 @@ export const ClassesPage: React.FC = () => {
                             ? 'Completada'
                             : 'Completed'}
                       </Badge>
-                      <h2 className="font-editorial text-2xl text-navy mt-2">
+                      <h2 className="font-editorial text-2xl text-charcoal mt-2">
                         {cls.name}
                       </h2>
-                      <p className="text-xs text-slatewarm mt-0.5">{cls.program}</p>
+                      <p className="text-xs text-softgray mt-0.5">{cls.program}</p>
                     </div>
                     <Badge tone="champagne">
                       Week {cls.currentWeek} / {cls.weeks}
                     </Badge>
                   </div>
 
-                  <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs pt-3 border-t border-borderwarm">
+                  <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs pt-3 border-t border-hairline">
                     <div>
-                      <div className="text-slatewarm">{state.language === 'es' ? 'Día / Inicio' : 'Day / Start'}</div>
-                      <div className="font-medium text-navy mt-0.5">
+                      <div className="text-softgray">{state.language === 'es' ? 'Día / Inicio' : 'Day / Start'}</div>
+                      <div className="font-medium text-charcoal mt-0.5">
                         {cls.weekday} · {cls.startDate}
                       </div>
                     </div>
                     <div>
-                      <div className="text-slatewarm">{state.language === 'es' ? 'Instructora' : 'Instructor'}</div>
-                      <div className="font-medium text-navy mt-0.5">{assignedNames}</div>
+                      <div className="text-softgray">{state.language === 'es' ? 'Instructora' : 'Instructor'}</div>
+                      <div className="font-medium text-charcoal mt-0.5">{assignedNames}</div>
                     </div>
                     <div>
-                      <div className="text-slatewarm">{state.language === 'es' ? 'Alumnas' : 'Enrolled'}</div>
-                      <div className="font-medium text-navy mt-0.5 flex items-center gap-1">
-                        <Users className="w-3.5 h-3.5 text-champagne" />
+                      <div className="text-softgray">{state.language === 'es' ? 'Alumnas' : 'Enrolled'}</div>
+                      <div className="font-medium text-charcoal mt-0.5 flex items-center gap-1">
+                        <Users className="w-3.5 h-3.5 text-clay-dark" />
                         {roster.length}
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-borderwarm flex items-center justify-between gap-3 flex-wrap">
+                <div className="pt-3 border-t border-hairline flex items-center justify-between gap-3 flex-wrap">
                   <div className="text-xs">
-                    <span className="text-slatewarm">
+                    <span className="text-softgray">
                       {state.language === 'es' ? 'Cobranza:' : 'Collected:'}{' '}
                     </span>
-                    <span className="font-semibold text-navy tabular-nums">
+                    <span className="font-semibold text-charcoal tabular-nums">
                       {formatCurrency(totalCollected, state.language)} /{' '}
                       {formatCurrency(totalExpected, state.language)}
                     </span>
-                    <span className="text-slatewarm ml-2">
+                    <span className="text-softgray ml-2">
                       · {submittedWeeks}/{cls.weeks}{' '}
                       {state.language === 'es' ? 'logs' : 'weeks logged'}
                     </span>
@@ -361,7 +361,7 @@ export const ClassesPage: React.FC = () => {
 
               {/* Weekly Progress Grid */}
               <Card className="p-4">
-                <h3 className="text-sm font-semibold text-navy mb-3">
+                <h3 className="text-sm font-semibold text-charcoal mb-3">
                   {state.language === 'es' ? 'Progreso por Semana' : 'Weekly Log Progress'}
                 </h3>
                 <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
@@ -381,15 +381,15 @@ export const ClassesPage: React.FC = () => {
                         }
                         className={`p-2.5 rounded-lg border text-center transition-colors ${
                           submitted
-                            ? 'bg-sage-light/70 border-sage/40 text-navy'
+                            ? 'bg-status-greenBg/70 border-sage/40 text-charcoal'
                             : wk === selectedClass.currentWeek
-                              ? 'bg-champagne-light/60 border-champagne text-navy'
-                              : 'bg-porcelain border-borderwarm text-slatewarm'
+                              ? 'bg-mist/60 border-clay text-charcoal'
+                              : 'bg-porcelain border-hairline text-softgray'
                         }`}
                       >
                         <div className="text-xs font-semibold flex items-center justify-center gap-1">
                           W{wk}
-                          {submitted && <CheckCircle2 className="w-3 h-3 text-sage-dark" />}
+                          {submitted && <CheckCircle2 className="w-3 h-3 text-status-green" />}
                         </div>
                         <div className="text-[11px] tabular-nums mt-1">
                           {formatCurrency(wkCollected, state.language)}
@@ -398,11 +398,11 @@ export const ClassesPage: React.FC = () => {
                     );
                   })}
                 </div>
-                <div className="mt-3 pt-3 border-t border-borderwarm flex justify-between text-xs">
-                  <span className="text-slatewarm">
+                <div className="mt-3 pt-3 border-t border-hairline flex justify-between text-xs">
+                  <span className="text-softgray">
                     {state.language === 'es' ? 'Total recaudado (incl. depósitos)' : 'Total Collected (incl. deposits)'}
                   </span>
-                  <span className="font-semibold text-navy tabular-nums">
+                  <span className="font-semibold text-charcoal tabular-nums">
                     {formatCurrency(totalCollected, state.language)}
                   </span>
                 </div>
@@ -410,10 +410,10 @@ export const ClassesPage: React.FC = () => {
 
               {/* Roster */}
               <Card className="p-4">
-                <h3 className="text-sm font-semibold text-navy mb-3">
+                <h3 className="text-sm font-semibold text-charcoal mb-3">
                   {state.language === 'es' ? 'Lista de Alumnas' : 'Student Roster'} ({roster.length})
                 </h3>
-                <div className="divide-y divide-borderwarm">
+                <div className="divide-y divide-hairline">
                   {roster.map((stu) => {
                     const fin = getStudentFinancialSummary(
                       stu,
@@ -429,15 +429,15 @@ export const ClassesPage: React.FC = () => {
                         className="w-full py-2.5 flex items-center justify-between gap-2 text-left hover:bg-porcelain px-2 -mx-2 rounded-lg text-xs"
                       >
                         <div>
-                          <div className="font-semibold text-navy">{stu.fullName}</div>
-                          <div className="text-slatewarm">{stu.phone}</div>
+                          <div className="font-semibold text-charcoal">{stu.fullName}</div>
+                          <div className="text-softgray">{stu.phone}</div>
                         </div>
                         <div className="text-right tabular-nums">
-                          <div className="font-semibold text-navy">
+                          <div className="font-semibold text-charcoal">
                             {formatCurrency(fin.totalPaid, state.language)} /{' '}
                             {formatCurrency(fin.courseTotal, state.language)}
                           </div>
-                          <div className="text-slatewarm">
+                          <div className="text-softgray">
                             {state.language === 'es' ? 'Saldo:' : 'Bal:'}{' '}
                             {formatCurrency(fin.remainingBalance, state.language)}
                           </div>
@@ -460,13 +460,13 @@ export const ClassesPage: React.FC = () => {
       >
         <form onSubmit={handleCreate} className="space-y-4">
           {formError && (
-            <div className="p-3 rounded-lg bg-terracotta-light text-terracotta-dark text-xs">
+            <div className="p-3 rounded-lg bg-status-redBg text-status-red text-xs">
               {formError}
             </div>
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             <label className="block sm:col-span-2">
-              <span className="text-xs font-medium text-navy">
+              <span className="text-xs font-medium text-charcoal">
                 {state.language === 'es' ? 'Nombre de la Clase *' : 'Class Name *'}
               </span>
               <input
@@ -475,11 +475,11 @@ export const ClassesPage: React.FC = () => {
                 placeholder="Saturday Nail Art Foundations"
                 value={form.name}
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               />
             </label>
             <label className="block sm:col-span-2">
-              <span className="text-xs font-medium text-navy">
+              <span className="text-xs font-medium text-charcoal">
                 {state.language === 'es' ? 'Programa *' : 'Program *'}
               </span>
               <input
@@ -487,17 +487,17 @@ export const ClassesPage: React.FC = () => {
                 required
                 value={form.program}
                 onChange={(e) => setForm((f) => ({ ...f, program: e.target.value }))}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">
+              <span className="text-xs font-medium text-charcoal">
                 {state.language === 'es' ? 'Día de la semana' : 'Weekday'}
               </span>
               <select
                 value={form.weekday}
                 onChange={(e) => setForm((f) => ({ ...f, weekday: e.target.value as Weekday }))}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               >
                 {WEEKDAYS.map((d) => (
                   <option key={d} value={d}>
@@ -507,7 +507,7 @@ export const ClassesPage: React.FC = () => {
               </select>
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">
+              <span className="text-xs font-medium text-charcoal">
                 {state.language === 'es' ? 'Fecha de inicio *' : 'Start Date *'}
               </span>
               <input
@@ -515,11 +515,11 @@ export const ClassesPage: React.FC = () => {
                 required
                 value={form.startDate}
                 onChange={(e) => setForm((f) => ({ ...f, startDate: e.target.value }))}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">
+              <span className="text-xs font-medium text-charcoal">
                 {state.language === 'es' ? 'Duración (semanas) *' : 'Duration (weeks) *'}
               </span>
               <input
@@ -529,11 +529,11 @@ export const ClassesPage: React.FC = () => {
                 required
                 value={form.weeks}
                 onChange={(e) => setForm((f) => ({ ...f, weeks: Number(e.target.value) }))}
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-navy">{t('courseTotal')} ($)</span>
+              <span className="text-xs font-medium text-charcoal">{t('courseTotal')} ($)</span>
               <input
                 type="number"
                 min={50}
@@ -541,12 +541,12 @@ export const ClassesPage: React.FC = () => {
                 onChange={(e) =>
                   setForm((f) => ({ ...f, defaultCourseTotal: Number(e.target.value) }))
                 }
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
               />
             </label>
           </div>
           <div>
-            <span className="text-xs font-medium text-navy block mb-1.5">
+            <span className="text-xs font-medium text-charcoal block mb-1.5">
               {state.language === 'es' ? 'Instructoras Asignadas *' : 'Assigned Instructors *'}
             </span>
             <div className="flex flex-wrap gap-2">
@@ -559,8 +559,8 @@ export const ClassesPage: React.FC = () => {
                     onClick={() => toggleInstructor(inst.id)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
                       active
-                        ? 'bg-navy text-white border-navy'
-                        : 'bg-porcelain text-navy border-borderwarm'
+                        ? 'bg-olive text-white border-olive'
+                        : 'bg-porcelain text-charcoal border-hairline'
                     }`}
                   >
                     {inst.name}

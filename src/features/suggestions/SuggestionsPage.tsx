@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Lightbulb, Plus } from 'lucide-react';
 import { useApp } from '../../services/store';
 import { canManageSuggestions } from '../../permissions/permissions';
@@ -57,15 +57,15 @@ export const SuggestionsPage: React.FC = () => {
                     {sug.status.replace('_', ' ')}
                   </Badge>
                   <Badge tone="champagne">{sug.department}</Badge>
-                  <span className="text-xs text-slatewarm tabular-nums">{sug.date}</span>
+                  <span className="text-xs text-softgray tabular-nums">{sug.date}</span>
                 </div>
-                <h3 className="font-semibold text-navy text-base">{sug.title}</h3>
-                <p className="text-xs text-slatewarm leading-relaxed">{sug.description}</p>
-                <div className="text-xs text-slatewarm pt-1">
-                  Suggested by <strong className="text-navy">{sug.suggestedByName}</strong>
+                <h3 className="font-semibold text-charcoal text-base">{sug.title}</h3>
+                <p className="text-xs text-softgray leading-relaxed">{sug.description}</p>
+                <div className="text-xs text-softgray pt-1">
+                  Suggested by <strong className="text-charcoal">{sug.suggestedByName}</strong>
                 </div>
                 {sug.ownerNotes && (
-                  <div className="text-xs text-sage-dark bg-sage-light/60 px-3 py-1.5 rounded-lg inline-block mt-1">
+                  <div className="text-xs text-status-green bg-status-greenBg/60 px-3 py-1.5 rounded-lg inline-block mt-1">
                     Owner note: {sug.ownerNotes}
                   </div>
                 )}
@@ -79,7 +79,7 @@ export const SuggestionsPage: React.FC = () => {
                     onChange={(e) =>
                       updateSuggestion(sug.id, e.target.value as SuggestionStatus)
                     }
-                    className="h-9 px-3 text-xs rounded-lg border border-borderwarm bg-porcelain text-navy font-medium"
+                    className="h-9 px-3 text-xs rounded-lg border border-hairline bg-porcelain text-charcoal font-medium"
                   >
                     <option value="submitted">Submitted</option>
                     <option value="under_review">Under Review</option>
@@ -111,21 +111,21 @@ export const SuggestionsPage: React.FC = () => {
           className="space-y-4"
         >
           <label className="block text-sm">
-            <span className="text-xs font-medium text-navy">Title *</span>
+            <span className="text-xs font-medium text-charcoal">Title *</span>
             <input
               type="text"
               required
               value={form.title}
               onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-              className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+              className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
             />
           </label>
           <label className="block text-sm">
-            <span className="text-xs font-medium text-navy">Department / Position</span>
+            <span className="text-xs font-medium text-charcoal">Department / Position</span>
             <select
               value={form.department}
               onChange={(e) => setForm((f) => ({ ...f, department: e.target.value }))}
-              className="mt-1 w-full h-10 px-3 rounded-lg border border-borderwarm bg-porcelain"
+              className="mt-1 w-full h-10 px-3 rounded-lg border border-hairline bg-porcelain"
             >
               <option value="Front Desk & Studio">Front Desk & Studio</option>
               <option value="Instruction">Instruction</option>
@@ -134,13 +134,13 @@ export const SuggestionsPage: React.FC = () => {
             </select>
           </label>
           <label className="block text-sm">
-            <span className="text-xs font-medium text-navy">Description *</span>
+            <span className="text-xs font-medium text-charcoal">Description *</span>
             <textarea
               rows={3}
               required
               value={form.description}
               onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-              className="mt-1 w-full p-2.5 rounded-lg border border-borderwarm bg-porcelain"
+              className="mt-1 w-full p-2.5 rounded-lg border border-hairline bg-porcelain"
             />
           </label>
           <div className="flex justify-end gap-2">
