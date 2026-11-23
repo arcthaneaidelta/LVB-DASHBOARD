@@ -24,6 +24,7 @@ import {
   roundCurrency,
 } from '../../calculations/paymentEngine';
 import { Badge, Button, LVBMonogram } from '../../components/ui/Primitives';
+import { useReveal } from '../../hooks/useReveal';
 
 const LOADER_KEY = 'lvb_pulse_v2_loader_seen';
 
@@ -52,6 +53,43 @@ export const LandingPage: React.FC = () => {
     'stu-04': 'P',
   });
   const [simChecks, setSimChecks] = useState([true, true, true, false]);
+  const [calcMode, setCalcMode] = useState<'standard' | 'overpay' | 'skip'>('standard');
+
+  const revOverview = useReveal<HTMLElement>();
+  const revFeatures = useReveal<HTMLElement>();
+  const revStudents = useReveal<HTMLElement>();
+  const revFinance = useReveal<HTMLElement>();
+
+  const calcSchedule =
+    calcMode === 'overpay'
+      ? [
+          { label: 'Dep', amount: '$50', note: 'Confirmed' },
+          { label: 'W1', amount: '$50', note: 'First class' },
+          { label: 'W2', amount: '$50', note: '+$20 extra', accent: true },
+          { label: 'W3', amount: '$25', note: 'Auto lowered', accent: true },
+          { label: 'W4', amount: '$25', note: 'Auto lowered' },
+          { label: 'W5', amount: '$25', note: 'Auto lowered' },
+          { label: 'W6', amount: '$25', note: 'Balanced $250' },
+        ]
+      : calcMode === 'skip'
+        ? [
+            { label: 'Dep', amount: '$50', note: 'Confirmed' },
+            { label: 'W1', amount: '$50', note: 'First class' },
+            { label: 'W2', amount: '$0', note: 'Absent', accent: true },
+            { label: 'W3', amount: '$37.50', note: 'Carried forward', accent: true },
+            { label: 'W4', amount: '$37.50', note: 'Adjusted' },
+            { label: 'W5', amount: '$37.50', note: 'Adjusted' },
+            { label: 'W6', amount: '$37.50', note: 'Balanced $250' },
+          ]
+        : [
+            { label: 'Dep', amount: '$50', note: 'Confirmed' },
+            { label: 'W1', amount: '$50', note: 'First class' },
+            { label: 'W2', amount: '$30', note: 'Weekly' },
+            { label: 'W3', amount: '$30', note: 'Weekly' },
+            { label: 'W4', amount: '$30', note: 'Weekly' },
+            { label: 'W5', amount: '$30', note: 'Weekly' },
+            { label: 'W6', amount: '$30', note: 'Balanced $250' },
+          ];
 
   useEffect(() => {
     if (!showLoader) return;
@@ -345,10 +383,28 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
+      {/* ATELIER CREDENTIALS STRIP */}
+      <div className="bg-white border-b border-hairline">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-4 flex flex-wrap items-center justify-between gap-4 text-[11.5px] text-softgray">
+          <span className="font-medium text-charcoal">
+            La Voute Beauty Academy LLC · City Terrace, Los Angeles
+          </span>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-1">
+            <span>2 {state.language === 'es' ? 'Grupos Activos' : 'Active Cohorts'}</span>
+            <span>14 {state.language === 'es' ? 'Alumnas Inscritas' : 'Enrolled Students'}</span>
+            <span>101 {state.language === 'es' ? 'Productos de Estudio' : 'Studio Products'}</span>
+            <span className="text-olive font-semibold">LVB-00031+ · EN / ES</span>
+          </div>
+        </div>
+      </div>
+
       {/* SECTION A: ACADEMY OPERATIONS OVERVIEW (Asymmetrical Editorial Split) */}
       <section
         id="overview"
-        className="py-20 sm:py-28 px-4 sm:px-6 lg:px-10 max-w-7xl mx-auto"
+        ref={revOverview.ref}
+        className={`py-20 sm:py-28 px-4 sm:px-6 lg:px-10 max-w-7xl mx-auto transition-all duration-700 ${
+          revOverview.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+        }`}
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           <div className="lg:col-span-5 space-y-6">
@@ -399,23 +455,33 @@ export const LandingPage: React.FC = () => {
           </div>
 
           <div className="lg:col-span-7 grid grid-cols-12 gap-4 items-end">
-            <div className="col-span-7 overflow-hidden rounded-atelier bg-mist">
-              <img
-                src="/images/pillar-students.jpg"
-                alt="Nail academy training session"
-                loading="lazy"
-                className="w-full h-[360px] sm:h-[440px] object-cover"
-              />
-            </div>
-            <div className="col-span-5 space-y-4">
+            <figure className="col-span-7 space-y-2">
               <div className="overflow-hidden rounded-atelier bg-mist">
                 <img
-                  src="/images/pillar-classes.jpg"
-                  alt="Manicure workstation and tools"
+                  src="/images/pillar-students.jpg"
+                  alt="Nail academy training session"
                   loading="lazy"
-                  className="w-full h-[200px] sm:h-[250px] object-cover"
+                  className="w-full h-[360px] sm:h-[440px] object-cover transition-transform duration-700 ease-out hover:scale-[1.03]"
                 />
               </div>
+              <figcaption className="text-[10.5px] uppercase tracking-[0.16em] text-softgray">
+                FIG. 01 — {state.language === 'es' ? 'INSTRUCCIÓN EN ESTUDIO' : 'IN-STUDIO INSTRUCTION'}
+              </figcaption>
+            </figure>
+            <div className="col-span-5 space-y-4">
+              <figure className="space-y-2">
+                <div className="overflow-hidden rounded-atelier bg-mist">
+                  <img
+                    src="/images/pillar-classes.jpg"
+                    alt="Manicure workstation and tools"
+                    loading="lazy"
+                    className="w-full h-[200px] sm:h-[250px] object-cover transition-transform duration-700 ease-out hover:scale-[1.03]"
+                  />
+                </div>
+                <figcaption className="text-[10.5px] uppercase tracking-[0.16em] text-softgray">
+                  FIG. 02 — {state.language === 'es' ? 'ESTACIÓN DE PRÁCTICA' : 'TRAINING WORKSTATION'}
+                </figcaption>
+              </figure>
               <div className="p-5 rounded-atelier bg-olive text-porcelain">
                 <div className="text-[10px] uppercase tracking-[0.18em] text-mist/75">
                   City Terrace · Los Angeles
@@ -437,7 +503,10 @@ export const LandingPage: React.FC = () => {
       {/* SECTION B: ATTENDANCE & PAYMENTS (Interactive Studio Preview on Mist Band) */}
       <section
         id="features"
-        className="py-20 sm:py-28 bg-mist/65 border-y border-hairline px-4 sm:px-6 lg:px-10"
+        ref={revFeatures.ref}
+        className={`py-20 sm:py-28 bg-mist/65 border-y border-hairline px-4 sm:px-6 lg:px-10 transition-all duration-700 ${
+          revFeatures.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+        }`}
       >
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Interactive Phone-Style Class Log Preview */}
@@ -536,7 +605,56 @@ export const LandingPage: React.FC = () => {
                 ? 'Toca los botones P / A / C / E en la vista interactiva. Cuando una alumna paga de más, sus próximas cuotas bajan automáticamente; si falta, se omite el pago de la semana y se abre su registro de reposición.'
                 : 'Try tapping P / A / C / E on the live preview. Extra payments automatically lower later weekly dues, skipped weeks redistribute cleanly across remaining sessions, and absences automatically open a makeup record.'}
             </p>
-            <div className="pt-2">
+
+            {/* Interactive $250 Dynamic Tuition Recalculator */}
+            <div className="bg-white border border-hairline rounded-atelier p-4 space-y-3">
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-olive">
+                  {state.language === 'es'
+                    ? 'Simulador Dinámico ($250 / 6 Semanas)'
+                    : 'Live $250 Dynamic Tuition Simulator'}
+                </span>
+                <div className="inline-flex rounded-lg bg-porcelain border border-hairline p-0.5 text-[11px]">
+                  {(
+                    [
+                      ['standard', state.language === 'es' ? 'Estándar' : 'Standard'],
+                      ['overpay', state.language === 'es' ? 'Pago extra +$20' : 'Overpay +$20'],
+                      ['skip', state.language === 'es' ? 'Falta Sem. 2' : 'Skip W2'],
+                    ] as const
+                  ).map(([mode, label]) => (
+                    <button
+                      key={mode}
+                      type="button"
+                      onClick={() => setCalcMode(mode)}
+                      className={`px-2.5 py-1 rounded-md font-medium transition-colors ${
+                        calcMode === mode ? 'bg-olive text-white' : 'text-softgray hover:text-charcoal'
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="grid grid-cols-7 gap-1.5 text-center">
+                {calcSchedule.map((col) => (
+                  <div
+                    key={col.label}
+                    className={`py-2 px-1 rounded-lg border transition-colors ${
+                      col.accent
+                        ? 'bg-clay-light/70 border-clay/40'
+                        : 'bg-porcelain border-hairline'
+                    }`}
+                  >
+                    <div className="text-[10px] font-semibold text-softgray">{col.label}</div>
+                    <div className="text-xs font-bold text-charcoal tabular-nums mt-0.5">
+                      {col.amount}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-1">
               <Button variant="secondary" onClick={() => enterAsUser('user-marisol')}>
                 {state.language === 'es'
                   ? 'Probar Registro de Clase como Marisol'
@@ -549,7 +667,12 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* SECTION C: STUDENT MANAGEMENT & 4-STEP CHECKLIST */}
-      <section className="py-20 sm:py-28 px-4 sm:px-6 lg:px-10 max-w-7xl mx-auto">
+      <section
+        ref={revStudents.ref}
+        className={`py-20 sm:py-28 px-4 sm:px-6 lg:px-10 max-w-7xl mx-auto transition-all duration-700 ${
+          revStudents.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+        }`}
+      >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-5 space-y-5">
             <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-olive">
@@ -638,7 +761,12 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* SECTION D: FINANCIAL VISIBILITY (Soft Charcoal Editorial Band) */}
-      <section className="py-20 sm:py-28 bg-charcoal text-porcelain px-4 sm:px-6 lg:px-10">
+      <section
+        ref={revFinance.ref}
+        className={`py-20 sm:py-28 bg-charcoal text-porcelain px-4 sm:px-6 lg:px-10 transition-all duration-700 ${
+          revFinance.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+        }`}
+      >
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end mb-12">
             <div className="lg:col-span-7 space-y-4">

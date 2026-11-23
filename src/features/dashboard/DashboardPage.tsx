@@ -26,6 +26,7 @@ import {
   roundCurrency,
 } from '../../calculations/paymentEngine';
 import { Badge, Button, Modal } from '../../components/ui/Primitives';
+import { AnimatedNumber } from '../../components/ui/AnimatedNumber';
 import type { Deposit, PaymentMethod } from '../../types';
 import type { TranslationKey } from '../../translations/dictionary';
 
@@ -349,11 +350,17 @@ export const DashboardPage: React.FC = () => {
               {t('kpiCollectedWeek')}
             </div>
             <div className="font-editorial text-3xl text-charcoal tabular-nums mt-1.5">
-              {formatCurrency(metrics.collectedWeek, state.language)}
+              <AnimatedNumber
+                value={metrics.collectedWeek}
+                formatter={(v) => formatCurrency(Math.round(v), state.language)}
+              />
             </div>
             <div className="text-xs text-status-green mt-1">
               {state.language === 'es' ? 'Periodo activo:' : 'Selected range:'}{' '}
-              {formatCurrency(metrics.selectedTotal, state.language)}
+              <AnimatedNumber
+                value={metrics.selectedTotal}
+                formatter={(v) => formatCurrency(Math.round(v), state.language)}
+              />
             </div>
           </button>
 
@@ -366,7 +373,10 @@ export const DashboardPage: React.FC = () => {
               {t('kpiCollectedMonth')}
             </div>
             <div className="font-editorial text-3xl text-charcoal tabular-nums mt-1.5">
-              {formatCurrency(metrics.collectedMonth, state.language)}
+              <AnimatedNumber
+                value={metrics.collectedMonth}
+                formatter={(v) => formatCurrency(Math.round(v), state.language)}
+              />
             </div>
             <div className="text-xs text-softgray mt-1">
               {state.language === 'es' ? 'Noviembre 2026' : 'November 2026'}
@@ -382,7 +392,10 @@ export const DashboardPage: React.FC = () => {
               {t('kpiOutstandingBalances')}
             </div>
             <div className="font-editorial text-3xl text-clay-dark tabular-nums mt-1.5">
-              {formatCurrency(metrics.outstandingBehind, state.language)}
+              <AnimatedNumber
+                value={metrics.outstandingBehind}
+                formatter={(v) => formatCurrency(Math.round(v), state.language)}
+              />
             </div>
             <div className="text-xs text-softgray mt-1">
               {state.language === 'es' ? 'Atrasos acumulados a la fecha' : 'Behind-schedule arrears to date'}
@@ -398,7 +411,10 @@ export const DashboardPage: React.FC = () => {
               {t('kpiRemainingCourse')}
             </div>
             <div className="font-editorial text-3xl text-charcoal tabular-nums mt-1.5">
-              {formatCurrency(metrics.remainingCourseBalances, state.language)}
+              <AnimatedNumber
+                value={metrics.remainingCourseBalances}
+                formatter={(v) => formatCurrency(Math.round(v), state.language)}
+              />
             </div>
             <div className="text-xs text-softgray mt-1">
               {state.language === 'es' ? 'Saldo total restante en cursos' : 'Total remaining contract tuition'}

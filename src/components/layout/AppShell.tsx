@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -29,6 +29,7 @@ import {
   RotateCcw,
   ExternalLink,
   RefreshCw,
+  Sparkles,
 } from 'lucide-react';
 import { useApp } from '../../services/store';
 import {
@@ -39,6 +40,8 @@ import {
 } from '../../permissions/permissions';
 import type { TranslationKey } from '../../translations/dictionary';
 import { Badge, Button, LVBMonogram, Modal } from '../ui/Primitives';
+import { CommandPalette } from './CommandPalette';
+import { DemoGuideDrawer } from './DemoGuideDrawer';
 
 interface NavItemDef {
   module: AppModule;
@@ -100,6 +103,19 @@ export const AppShell: React.FC = () => {
   const [notifOpen, setNotifOpen] = useState(false);
   const [identityMenuOpen, setIdentityMenuOpen] = useState(false);
   const [resetModalOpen, setResetModalOpen] = useState(false);
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const [guideOpen, setGuideOpen] = useState(false);
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setPaletteOpen((v) => !v);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
 
   const authorizedNav = useMemo(
     () => NAV_ITEMS.filter((item) => canAccessModule(currentUser, item.module)),
@@ -543,8 +559,16 @@ export const AppShell: React.FC = () => {
                   ? 'Buscar alumnas, recibos, visitas o inventario...'
                   : 'Search students, receipts, tours, or inventory...'
               }
-              className="w-full h-9 pl-9 pr-3 text-xs sm:text-sm bg-white border border-hairline rounded-lg text-charcoal placeholder:text-softgray focus:border-olive transition-colors"
+              className="w-full h-9 pl-9 pr-14 text-xs sm:text-sm bg-white border border-hairline rounded-lg text-charcoal placeholder:text-softgray focus:border-olive transition-colors"
             />
+            <button
+              type="button"
+              onClick={() => setPaletteOpen(true)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded border border-hairline bg-porcelain text-[10px] font-semibold text-softgray hover:text-charcoal"
+              title="Open Quick Command Palette (Ctrl+K)"
+            >
+              ⌘K
+            </button>
             {searchFocused && searchQuery.trim().length > 0 && (
               <div className="absolute left-0 right-0 top-11 bg-white border border-hairline rounded-atelier shadow-elevated overflow-hidden z-40">
                 {searchResults.length === 0 ? (
@@ -581,8 +605,16 @@ export const AppShell: React.FC = () => {
             )}
           </div>
 
-          {/* Right Controls: Language, Notifications, Role Switcher */}
+          {/* Right Controls: Demo Guide, Language, Notifications, Role Switcher */}
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            <button
+              type="button"
+              onClick={() => setGuideOpen(true)}
+              className="hidden xl:inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-clay-light/85 hover:bg-clay-light text-clay-dark border border-clay/30 text-xs font-semibold transition-colors"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{state.language === 'es' ? 'Guía Demo' : 'Demo Guide'}</span>
+            </button>
             <div
               className="inline-flex items-center rounded-lg border border-hairline bg-white p-0.5"
               role="group"
@@ -820,6 +852,10 @@ export const AppShell: React.FC = () => {
           <span>{state.language === 'es' ? 'Menú' : 'Menu'}</span>
         </button>
       </nav>
+
+      {/* Command Palette & Interactive Demo Walkthrough */}
+      <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
+      <DemoGuideDrawer open={guideOpen} onClose={() => setGuideOpen(false)} />
 
       {/* Reset Demo Data Modal */}
       <Modal

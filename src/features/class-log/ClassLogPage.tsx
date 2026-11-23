@@ -330,6 +330,76 @@ export const ClassLogPage: React.FC = () => {
         </div>
       </Card>
 
+      {/* Live Session Progress + One-Tap Mark Remaining Present */}
+      <div className="bg-white border border-hairline rounded-atelier p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex-1 space-y-1.5">
+          <div className="flex items-center justify-between text-xs">
+            <span className="font-semibold text-charcoal">
+              {state.language === 'es'
+                ? `Progreso de asistencia — Semana ${selectedWeek}`
+                : `Session Attendance Progress — Week ${selectedWeek}`}
+            </span>
+            <span className="tabular-nums font-semibold text-olive">
+              {sessionStats.loggedCount} / {roster.length} (
+              {roster.length > 0
+                ? Math.round((sessionStats.loggedCount / roster.length) * 100)
+                : 0}
+              %)
+            </span>
+          </div>
+          <div className="h-1.5 w-full bg-mist rounded-full overflow-hidden">
+            <div
+              className="h-full bg-olive rounded-full transition-all duration-300"
+              style={{
+                width: `${
+                  roster.length > 0
+                    ? Math.round((sessionStats.loggedCount / roster.length) * 100)
+                    : 0
+                }%`,
+              }}
+            />
+          </div>
+        </div>
+
+        {sessionStats.loggedCount < roster.length && (
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => {
+              let count = 0;
+              roster.forEach((stu) => {
+                const exists = state.attendance.some(
+                  (a) =>
+                    a.studentId === stu.id &&
+                    a.classId === selectedClass.id &&
+                    a.week === selectedWeek
+                );
+                if (!exists) {
+                  recordAttendance({
+                    studentId: stu.id,
+                    classId: selectedClass.id,
+                    week: selectedWeek,
+                    date: sessionDate,
+                    status: 'P',
+                  });
+                  count += 1;
+                }
+              });
+              if (count > 0) {
+                pushToast(
+                  state.language === 'es'
+                    ? `${count} alumnas marcadas como Presentes.`
+                    : `Marked ${count} remaining student${count > 1 ? 's' : ''} Present.`
+                );
+              }
+            }}
+          >
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            {state.language === 'es' ? 'Marcar Restantes Presentes' : 'Mark Remaining Present'}
+          </Button>
+        )}
+      </div>
+
       {/* Attendance Legend / Rule Helper */}
       <div className="px-4 py-2.5 rounded-xl bg-white border border-hairline text-xs text-softgray flex items-center gap-2 flex-wrap">
         <Info className="w-4 h-4 text-clay-dark shrink-0" />
