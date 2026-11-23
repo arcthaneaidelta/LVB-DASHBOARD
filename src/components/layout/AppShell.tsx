@@ -491,14 +491,14 @@ export const AppShell: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen flex bg-porcelain text-charcoal">
-      {/* Desktop Sidebar */}
+    <div className="min-h-screen bg-porcelain text-charcoal">
+      {/* Fixed Desktop Sidebar — stays locked to viewport height while page scrolls */}
       <aside
-        className={`hidden lg:block shrink-0 transition-[width] duration-200 border-r border-hairline no-print ${
+        className={`hidden lg:block fixed inset-y-0 left-0 z-30 transition-[width] duration-200 border-r border-hairline bg-porcelain no-print ${
           collapsed ? 'w-[74px]' : 'w-[248px]'
         }`}
       >
-        <div className="sticky top-0 h-screen">{sidebarContent(false)}</div>
+        <div className="h-full">{sidebarContent(false)}</div>
       </aside>
 
       {/* Mobile Drawer */}
@@ -516,8 +516,12 @@ export const AppShell: React.FC = () => {
         </div>
       )}
 
-      {/* Main Column */}
-      <div className="flex-1 flex flex-col min-w-0">
+      {/* Main Column offset by fixed sidebar width */}
+      <div
+        className={`min-h-screen flex flex-col min-w-0 transition-[padding-left] duration-200 ${
+          collapsed ? 'lg:pl-[74px]' : 'lg:pl-[248px]'
+        }`}
+      >
         {/* Top Utility Command Bar */}
         <header className="sticky top-0 z-30 h-16 bg-porcelain/95 backdrop-blur-sm border-b border-hairline px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4 no-print">
           <div className="flex items-center gap-2.5 min-w-0">
