@@ -1,0 +1,137 @@
+import type { InventoryCategory, InventoryProduct, LeadTimeFlag } from '../../types';
+
+interface RawItem {
+  name: string;
+  category: InventoryCategory;
+  quantity: number;
+  unitCost: number;
+  supplier: string;
+  leadTimeFlag?: LeadTimeFlag;
+  notes?: string;
+}
+
+const RAW_INVENTORY: RawItem[] = [
+  // 1. Acrylic & Liquid Monomer (22 items)
+  { name: 'EMA Liquid Monomer 32oz', category: 'Acrylic & Liquid Monomer', quantity: 3, unitCost: 42.0, supplier: 'Legacy Nails', leadTimeFlag: 'legacy_nails', notes: 'Allow 3–4 weeks restock lead time.' },
+  { name: 'Low-Odor Monomer 16oz', category: 'Acrylic & Liquid Monomer', quantity: 6, unitCost: 26.5, supplier: 'Legacy Nails', leadTimeFlag: 'legacy_nails' },
+  { name: 'Crystal Clear Acrylic Powder 8oz', category: 'Acrylic & Liquid Monomer', quantity: 14, unitCost: 18.0, supplier: 'Legacy Nails', leadTimeFlag: 'legacy_nails' },
+  { name: 'Cover Pink Nude Acrylic 8oz', category: 'Acrylic & Liquid Monomer', quantity: 4, unitCost: 19.5, supplier: 'Legacy Nails', leadTimeFlag: 'legacy_nails', notes: 'Top student shade; reorder immediately.' },
+  { name: 'Soft Blush Cover Acrylic 8oz', category: 'Acrylic & Liquid Monomer', quantity: 11, unitCost: 19.5, supplier: 'Legacy Nails', leadTimeFlag: 'legacy_nails' },
+  { name: 'Warm Almond Cover Acrylic 8oz', category: 'Acrylic & Liquid Monomer', quantity: 8, unitCost: 19.5, supplier: 'Legacy Nails', leadTimeFlag: 'legacy_nails' },
+  { name: 'Pure Bright White Acrylic 8oz', category: 'Acrylic & Liquid Monomer', quantity: 12, unitCost: 18.0, supplier: 'Legacy Nails', leadTimeFlag: 'legacy_nails' },
+  { name: 'Milky White Acrylic Powder 4oz', category: 'Acrylic & Liquid Monomer', quantity: 5, unitCost: 13.5, supplier: 'Legacy Nails', leadTimeFlag: 'legacy_nails' },
+  { name: 'Cappuccino Cover Acrylic 4oz', category: 'Acrylic & Liquid Monomer', quantity: 15, unitCost: 14.0, supplier: 'LA Beauty Supply' },
+  { name: 'Rose Petal Cover Acrylic 4oz', category: 'Acrylic & Liquid Monomer', quantity: 16, unitCost: 14.0, supplier: 'LA Beauty Supply' },
+  { name: 'Acid-Free Primer Bonder 15ml', category: 'Acrylic & Liquid Monomer', quantity: 4, unitCost: 8.5, supplier: 'Legacy Nails', leadTimeFlag: 'legacy_nails' },
+  { name: 'pH Nail Dehydrator 15ml', category: 'Acrylic & Liquid Monomer', quantity: 19, unitCost: 7.25, supplier: 'Legacy Nails', leadTimeFlag: 'legacy_nails' },
+  { name: 'Acrylic Sculpting Forms (500ct Roll)', category: 'Acrylic & Liquid Monomer', quantity: 7, unitCost: 16.0, supplier: 'China Direct Import', leadTimeFlag: 'china', notes: 'Sea freight lead time 4–5 weeks.' },
+  { name: 'Stiletto Extended Nail Forms (300ct)', category: 'Acrylic & Liquid Monomer', quantity: 12, unitCost: 14.5, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'Coffin Clear Full-Cover Tips (500ct)', category: 'Acrylic & Liquid Monomer', quantity: 9, unitCost: 11.0, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'Almond Natural Half-Well Tips (500ct)', category: 'Acrylic & Liquid Monomer', quantity: 18, unitCost: 10.5, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'Square C-Curve Clear Tips (500ct)', category: 'Acrylic & Liquid Monomer', quantity: 14, unitCost: 10.5, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'Brush-On Nail Tip Glue 10g', category: 'Acrylic & Liquid Monomer', quantity: 26, unitCost: 3.25, supplier: 'LA Beauty Supply' },
+  { name: 'Glass Dappen Dish with Lid', category: 'Acrylic & Liquid Monomer', quantity: 22, unitCost: 4.5, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'Acrylic Brush Cleaner Solution 8oz', category: 'Acrylic & Liquid Monomer', quantity: 10, unitCost: 12.0, supplier: 'LA Beauty Supply' },
+  { name: '100% Pure Acetone Gallon', category: 'Acrylic & Liquid Monomer', quantity: 4, unitCost: 22.0, supplier: 'SoCal Salon Wholesale' },
+  { name: 'Cuticle Nourishing Oil 2oz Dropper', category: 'Acrylic & Liquid Monomer', quantity: 13, unitCost: 9.0, supplier: 'LA Beauty Supply' },
+
+  // 2. Gel & Builder Systems (22 items)
+  { name: 'No-Wipe High-Gloss Gel Top Coat 15ml', category: 'Gel & Builder Systems', quantity: 5, unitCost: 10.5, supplier: 'Legacy Nails', leadTimeFlag: 'legacy_nails', notes: 'High consumption in Thursday class.' },
+  { name: 'Velvet Matte Gel Top Coat 15ml', category: 'Gel & Builder Systems', quantity: 11, unitCost: 10.5, supplier: 'Legacy Nails', leadTimeFlag: 'legacy_nails' },
+  { name: 'Rubber Base Gel Coat 15ml', category: 'Gel & Builder Systems', quantity: 8, unitCost: 11.0, supplier: 'Legacy Nails', leadTimeFlag: 'legacy_nails' },
+  { name: 'Clear Builder-in-a-Bottle BIAB 15ml', category: 'Gel & Builder Systems', quantity: 14, unitCost: 12.5, supplier: 'Legacy Nails', leadTimeFlag: 'legacy_nails' },
+  { name: 'Sheer Nude Builder Gel 15ml', category: 'Gel & Builder Systems', quantity: 3, unitCost: 12.5, supplier: 'Legacy Nails', leadTimeFlag: 'legacy_nails' },
+  { name: 'Soft Ivory Builder Gel 15ml', category: 'Gel & Builder Systems', quantity: 12, unitCost: 12.5, supplier: 'Legacy Nails', leadTimeFlag: 'legacy_nails' },
+  { name: 'Polygel Tube — Natural Pink 60g', category: 'Gel & Builder Systems', quantity: 15, unitCost: 14.0, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'Polygel Tube — Crystal Clear 60g', category: 'Gel & Builder Systems', quantity: 13, unitCost: 14.0, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'Polygel Slip Solution 8oz', category: 'Gel & Builder Systems', quantity: 10, unitCost: 8.75, supplier: 'LA Beauty Supply' },
+  { name: 'Gel Polish — Classic French White', category: 'Gel & Builder Systems', quantity: 16, unitCost: 7.5, supplier: 'LA Beauty Supply' },
+  { name: 'Gel Polish — Porcelain Sheer', category: 'Gel & Builder Systems', quantity: 19, unitCost: 7.5, supplier: 'LA Beauty Supply' },
+  { name: 'Gel Polish — Espresso Noir', category: 'Gel & Builder Systems', quantity: 11, unitCost: 7.5, supplier: 'LA Beauty Supply' },
+  { name: 'Gel Polish — Champagne Shimmer', category: 'Gel & Builder Systems', quantity: 14, unitCost: 8.0, supplier: 'LA Beauty Supply' },
+  { name: 'Gel Polish — Bordeaux Velvet', category: 'Gel & Builder Systems', quantity: 12, unitCost: 7.5, supplier: 'LA Beauty Supply' },
+  { name: 'Gel Polish — Dusty Rose', category: 'Gel & Builder Systems', quantity: 9, unitCost: 7.5, supplier: 'LA Beauty Supply' },
+  { name: 'Gel Polish — Jet Black Liner', category: 'Gel & Builder Systems', quantity: 17, unitCost: 8.5, supplier: 'LA Beauty Supply' },
+  { name: 'Chrome Pearl Nail Pigment Jar', category: 'Gel & Builder Systems', quantity: 21, unitCost: 6.0, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'Cat-Eye Magnetic Gel Polish — Silk Gold', category: 'Gel & Builder Systems', quantity: 13, unitCost: 9.25, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'Rhinestone & Charm Builder Glue Gel', category: 'Gel & Builder Systems', quantity: 8, unitCost: 7.0, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: '48W Cordless LED/UV Curing Lamp', category: 'Gel & Builder Systems', quantity: 4, unitCost: 68.0, supplier: 'China Direct Import', leadTimeFlag: 'china', notes: 'Need 4 spare lamps before next cohort.' },
+  { name: 'Mini Flash-Cure Gooseneck Lamp', category: 'Gel & Builder Systems', quantity: 12, unitCost: 18.5, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'Gel Cleanser & Sticky Layer Wipe 16oz', category: 'Gel & Builder Systems', quantity: 16, unitCost: 9.5, supplier: 'SoCal Salon Wholesale' },
+
+  // 3. Tools, Brushes & Implements (20 items)
+  { name: 'Kolinsky Sable Acrylic Brush #10', category: 'Tools, Brushes & Implements', quantity: 5, unitCost: 28.0, supplier: 'Legacy Nails', leadTimeFlag: 'legacy_nails' },
+  { name: 'Kolinsky Sable Acrylic Brush #12', category: 'Tools, Brushes & Implements', quantity: 9, unitCost: 32.0, supplier: 'Legacy Nails', leadTimeFlag: 'legacy_nails' },
+  { name: 'Oval Gel Application Brush #6', category: 'Tools, Brushes & Implements', quantity: 18, unitCost: 9.5, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'Fine Detail Nail Art Liner Set (3pc)', category: 'Tools, Brushes & Implements', quantity: 20, unitCost: 8.0, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'Ombre & Blending Sponge Brush', category: 'Tools, Brushes & Implements', quantity: 15, unitCost: 6.5, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'Stainless Steel Cuticle Pusher', category: 'Tools, Brushes & Implements', quantity: 30, unitCost: 5.5, supplier: 'SoCal Salon Wholesale' },
+  { name: 'Cobalt Steel Cuticle Nipper (Jaw 14)', category: 'Tools, Brushes & Implements', quantity: 14, unitCost: 19.0, supplier: 'SoCal Salon Wholesale' },
+  { name: 'Curved Nail Tip Cutter', category: 'Tools, Brushes & Implements', quantity: 22, unitCost: 6.25, supplier: 'LA Beauty Supply' },
+  { name: 'Pinching C-Curve Tweezers', category: 'Tools, Brushes & Implements', quantity: 17, unitCost: 7.0, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: '35,000 RPM Rechargeable E-File', category: 'Tools, Brushes & Implements', quantity: 3, unitCost: 74.0, supplier: 'China Direct Import', leadTimeFlag: 'china', notes: 'Reserve units for student kit upgrades.' },
+  { name: 'Fine Flame Diamond Cuticle Bit', category: 'Tools, Brushes & Implements', quantity: 24, unitCost: 8.5, supplier: 'Legacy Nails', leadTimeFlag: 'legacy_nails' },
+  { name: 'Medium Safety Carbide Removal Bit', category: 'Tools, Brushes & Implements', quantity: 16, unitCost: 14.0, supplier: 'Legacy Nails', leadTimeFlag: 'legacy_nails' },
+  { name: '5-in-1 Ceramic Tapered Bit (Fine)', category: 'Tools, Brushes & Implements', quantity: 11, unitCost: 13.5, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'Mandrel Shank Bit for Sanding Bands', category: 'Tools, Brushes & Implements', quantity: 28, unitCost: 3.5, supplier: 'LA Beauty Supply' },
+  { name: 'Fine Grit Sanding Bands (200ct Box)', category: 'Tools, Brushes & Implements', quantity: 14, unitCost: 9.0, supplier: 'LA Beauty Supply' },
+  { name: 'Medium Grit Sanding Bands (200ct Box)', category: 'Tools, Brushes & Implements', quantity: 7, unitCost: 9.0, supplier: 'LA Beauty Supply' },
+  { name: 'Dust Collector Vacuum Unit (Desk)', category: 'Tools, Brushes & Implements', quantity: 10, unitCost: 54.0, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'Replacement Dust Collector HEPA Filters', category: 'Tools, Brushes & Implements', quantity: 4, unitCost: 7.5, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'Silicone Articulated Practice Hand', category: 'Tools, Brushes & Implements', quantity: 12, unitCost: 36.0, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'LED Arch Desk Task Lamp', category: 'Tools, Brushes & Implements', quantity: 11, unitCost: 48.0, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+
+  // 4. Sanitation & Disposables (19 items)
+  { name: 'Hospital-Grade Barbicide Concentrate 64oz', category: 'Sanitation & Disposables', quantity: 6, unitCost: 24.0, supplier: 'SoCal Salon Wholesale' },
+  { name: '70% Isopropyl Alcohol Gallon', category: 'Sanitation & Disposables', quantity: 11, unitCost: 18.0, supplier: 'SoCal Salon Wholesale' },
+  { name: 'Black Nitrile Exam Gloves — Small (100ct)', category: 'Sanitation & Disposables', quantity: 18, unitCost: 11.5, supplier: 'SoCal Salon Wholesale' },
+  { name: 'Black Nitrile Exam Gloves — Medium (100ct)', category: 'Sanitation & Disposables', quantity: 5, unitCost: 11.5, supplier: 'SoCal Salon Wholesale', notes: 'Most used size across both cohorts.' },
+  { name: 'Black Nitrile Exam Gloves — Large (100ct)', category: 'Sanitation & Disposables', quantity: 12, unitCost: 11.5, supplier: 'SoCal Salon Wholesale' },
+  { name: '3-Ply Dust Protection Masks (50ct)', category: 'Sanitation & Disposables', quantity: 16, unitCost: 7.5, supplier: 'SoCal Salon Wholesale' },
+  { name: 'Lint-Free Nail Wipes (900ct Pack)', category: 'Sanitation & Disposables', quantity: 21, unitCost: 6.5, supplier: 'LA Beauty Supply' },
+  { name: '100/180 Zebra Half-Moon Nail Files (50ct)', category: 'Sanitation & Disposables', quantity: 9, unitCost: 18.0, supplier: 'LA Beauty Supply' },
+  { name: '180/240 Fine Natural Nail Files (50ct)', category: 'Sanitation & Disposables', quantity: 15, unitCost: 18.0, supplier: 'LA Beauty Supply' },
+  { name: 'White Foam Sponge Nail Buffers (50ct)', category: 'Sanitation & Disposables', quantity: 13, unitCost: 16.5, supplier: 'LA Beauty Supply' },
+  { name: 'Disposable Waterproof Table Mats (125ct)', category: 'Sanitation & Disposables', quantity: 8, unitCost: 14.0, supplier: 'SoCal Salon Wholesale' },
+  { name: 'Autoclave Sterilization Pouches (200ct)', category: 'Sanitation & Disposables', quantity: 14, unitCost: 13.0, supplier: 'SoCal Salon Wholesale' },
+  { name: 'Birch Orangewood Cuticle Sticks (100ct)', category: 'Sanitation & Disposables', quantity: 24, unitCost: 4.25, supplier: 'LA Beauty Supply' },
+  { name: 'Soft Nylon Manicure Dust Brushes', category: 'Sanitation & Disposables', quantity: 26, unitCost: 2.5, supplier: 'LA Beauty Supply' },
+  { name: 'Soak-Off Foil Wraps with Cotton Pad (200ct)', category: 'Sanitation & Disposables', quantity: 12, unitCost: 9.5, supplier: 'LA Beauty Supply' },
+  { name: 'Pump Dispenser Bottles (8oz Lock-Top)', category: 'Sanitation & Disposables', quantity: 19, unitCost: 3.75, supplier: 'LA Beauty Supply' },
+  { name: 'Surface Disinfectant Spray Wipes (160ct)', category: 'Sanitation & Disposables', quantity: 7, unitCost: 12.5, supplier: 'SoCal Salon Wholesale' },
+  { name: 'Micro-Swab Precision Applicators (100ct)', category: 'Sanitation & Disposables', quantity: 22, unitCost: 4.5, supplier: 'LA Beauty Supply' },
+  { name: 'Ivory Microfiber Station Hand Towels (12pk)', category: 'Sanitation & Disposables', quantity: 14, unitCost: 22.0, supplier: 'SoCal Salon Wholesale' },
+
+  // 5. Student Kits & Packaging (18 items)
+  { name: 'LVB Foundations Starter Kit Box (Assembled)', category: 'Student Kits & Packaging', quantity: 4, unitCost: 64.0, supplier: 'In-House Assembly', notes: 'Assemble 10 more ahead of December intake.' },
+  { name: 'LVB Acrylic & Gel Mastery Kit (Assembled)', category: 'Student Kits & Packaging', quantity: 6, unitCost: 98.0, supplier: 'In-House Assembly' },
+  { name: 'Embroidered Navy Academy Apron', category: 'Student Kits & Packaging', quantity: 15, unitCost: 18.5, supplier: 'City Terrace Print Co.' },
+  { name: 'Printed Foundations Workbook (English)', category: 'Student Kits & Packaging', quantity: 18, unitCost: 11.0, supplier: 'City Terrace Print Co.' },
+  { name: 'Printed Foundations Workbook (Spanish)', category: 'Student Kits & Packaging', quantity: 12, unitCost: 11.0, supplier: 'City Terrace Print Co.' },
+  { name: 'Printed Acrylic Mastery Manual (Bilingual)', category: 'Student Kits & Packaging', quantity: 14, unitCost: 14.5, supplier: 'City Terrace Print Co.' },
+  { name: 'Gold-Foil Graduation Certificate Stock (25pk)', category: 'Student Kits & Packaging', quantity: 11, unitCost: 19.0, supplier: 'City Terrace Print Co.' },
+  { name: 'Navy Linen Certificate Presentation Folder', category: 'Student Kits & Packaging', quantity: 20, unitCost: 6.5, supplier: 'City Terrace Print Co.' },
+  { name: 'Canvas Academy Tote Bag (Ivory/Navy)', category: 'Student Kits & Packaging', quantity: 9, unitCost: 8.75, supplier: 'City Terrace Print Co.' },
+  { name: 'Clear Acrylic Practice Swatch Sticks (50ct)', category: 'Student Kits & Packaging', quantity: 25, unitCost: 5.0, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'Magnetic Nail Art Practice Stand Set', category: 'Student Kits & Packaging', quantity: 16, unitCost: 6.75, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'Silicone Desk Protective Mat (Ivory)', category: 'Student Kits & Packaging', quantity: 14, unitCost: 9.25, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'Student Nameplate Acrylic Desk Holder', category: 'Student Kits & Packaging', quantity: 22, unitCost: 3.5, supplier: 'LA Beauty Supply' },
+  { name: 'Velvet Brush Roll Organizer Case', category: 'Student Kits & Packaging', quantity: 13, unitCost: 10.0, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'Cushioned Ergonomic Wrist Rest (Ivory)', category: 'Student Kits & Packaging', quantity: 11, unitCost: 16.5, supplier: 'China Direct Import', leadTimeFlag: 'china' },
+  { name: 'Acrylic Bead Ratio Practice Sheet (Laminated)', category: 'Student Kits & Packaging', quantity: 30, unitCost: 2.25, supplier: 'City Terrace Print Co.' },
+  { name: 'Welcome Folder & Enrollment Contract Packet', category: 'Student Kits & Packaging', quantity: 17, unitCost: 4.5, supplier: 'City Terrace Print Co.' },
+  { name: 'Branded Champagne Gift Tissue & Seal Pack', category: 'Student Kits & Packaging', quantity: 19, unitCost: 5.25, supplier: 'City Terrace Print Co.' },
+];
+
+export const DEMO_INVENTORY: InventoryProduct[] = RAW_INVENTORY.map((item, idx) => ({
+  id: `inv-${String(idx + 1).padStart(3, '0')}`,
+  sku: `LVB-INV-${String(idx + 101)}`,
+  name: item.name,
+  category: item.category,
+  quantity: item.quantity,
+  unitCost: item.unitCost,
+  supplier: item.supplier,
+  leadTimeFlag: item.leadTimeFlag ?? 'none',
+  lastUpdated: idx % 3 === 0 ? '2026-11-23' : idx % 3 === 1 ? '2026-11-20' : '2026-11-17',
+  notes: item.notes ?? '',
+}));
